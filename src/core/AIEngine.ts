@@ -176,6 +176,73 @@ export class AIEngine {
     }
   }
 
+  // Streaming completion with automatic model selection and failover
+  async completeStream(
+    request: AIRequest,
+    onToken: (token: string) => void,
+  ): Promise<AIResponse> {
+    const requestId = request.requestId || generateRequestId();
+    const excludeModelIds: string[] = [];
+    let lastError: Error | null = null;
+    let attempts = 0;
+
+    while (attempts < MAX_FAILOVER_ATTEMPTS) {
+      attempts++;
+
+      const selection = await this.modelSelector.getNextModel(excludeModelIds);
+      if (!selection) break;
+
+      const { model, provider } = selection;
+      const modelLabel = `${provider.name}/${model.displayName || model.name}`;
+      excludeModelIds.push(model.id);
+
+      try {
+        console.log(`[AIEngine][${requestId}] Stream attempt ${attempts}: trying ${modelLabel}...`);
+
+        const adapter = this.getAdapter(provider);
+        const response = await adapter.completeStream(model, { ...request, requestId }, onToken);
+
+        await this.usageTracker.track({
+          providerId: provider.id,
+          modelId: model.id,
+          success: true,
+          latencyMs: response.latencyMs,
+          tokensUsed: response.tokensUsed,
+          inputTokens: response.inputTokens,
+          outputTokens: response.outputTokens,
+        });
+
+        await this.rankingService.maybeRecalculate(model.id);
+
+        console.log(`[AIEngine][${requestId}] Stream success with ${modelLabel} in ${response.latencyMs}ms`);
+        return { ...response, requestId };
+      } catch (error: any) {
+        lastError = error;
+
+        await this.usageTracker.track({
+          providerId: provider.id,
+          modelId: model.id,
+          success: false,
+          latencyMs: 0,
+        });
+
+        const reason = this.determineFailureReason(error);
+        await this.logFailover({
+          fromModelId: excludeModelIds.length > 1 ? excludeModelIds[excludeModelIds.length - 2] : null,
+          toModelId: model.id,
+          reason,
+          errorMessage: error.message,
+        });
+
+        console.error(`[AIEngine][${requestId}] Stream ${modelLabel} failed (${reason}): ${error.message?.substring(0, 150)}`);
+      }
+    }
+
+    throw new Error(
+      `[${requestId}] All AI providers failed streaming after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`
+    );
+  }
+
   // Test a provider connection
   async testProvider(providerId: string): Promise<TestResult> {
     const provider = await this.prisma.aIProvider.findUnique({
@@ -252,6 +319,35 @@ export class AIEngine {
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  // Get rate limit info for a provider/model after a request
+  async getRateLimitInfo(providerId: string, modelId: string): Promise<{
+    providerRpm: number | null;
+    providerRpd: number | null;
+    modelRpm: number | null;
+    modelRpd: number | null;
+    providerUsedMinute: number;
+    providerUsedDay: number;
+    modelUsedMinute: number;
+    modelUsedDay: number;
+  }> {
+    const provider = await this.prisma.aIProvider.findUnique({ where: { id: providerId } });
+    const model = await this.prisma.aIModel.findUnique({ where: { id: modelId } });
+
+    const providerStats = this.usageTracker.getProviderStats(providerId);
+    const modelStats = this.usageTracker.getModelStats(modelId);
+
+    return {
+      providerRpm: provider?.rateLimitRpm ?? null,
+      providerRpd: provider?.rateLimitRpd ?? null,
+      modelRpm: model?.rateLimitRpm ?? null,
+      modelRpd: model?.rateLimitRpd ?? null,
+      providerUsedMinute: providerStats?.requestsThisMinute ?? 0,
+      providerUsedDay: providerStats?.requestsToday ?? 0,
+      modelUsedMinute: modelStats?.requestsThisMinute ?? 0,
+      modelUsedDay: modelStats?.requestsToday ?? 0,
+    };
   }
 
   // Clear adapter cache (after provider config changes)

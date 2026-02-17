@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api, CompletionResponse, Prompt } from '../api';
 
 export default function TestPanel() {
@@ -9,12 +9,23 @@ export default function TestPanel() {
   const [temperature, setTemperature] = useState('0.3');
   const [maxTokens, setMaxTokens] = useState('500');
   const [loading, setLoading] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const [response, setResponse] = useState<CompletionResponse | null>(null);
+  const [streamContent, setStreamContent] = useState('');
+  const [streamMeta, setStreamMeta] = useState<Omit<CompletionResponse, 'content'> | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadPrompts();
   }, []);
+
+  // Auto-scroll the content area during streaming
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    }
+  }, [streamContent]);
 
   const loadPrompts = async () => {
     try {
@@ -32,7 +43,17 @@ export default function TestPanel() {
     setLoading(true);
     setError(null);
     setResponse(null);
+    setStreamContent('');
+    setStreamMeta(null);
 
+    if (streaming) {
+      await handleStreamRequest();
+    } else {
+      await handleNormalRequest();
+    }
+  };
+
+  const handleNormalRequest = async () => {
     try {
       const result = await api.complete({
         prompt,
@@ -48,6 +69,91 @@ export default function TestPanel() {
       setLoading(false);
     }
   };
+
+  const handleStreamRequest = async () => {
+    try {
+      const res = await fetch('/api/complete/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          systemPrompt: systemPrompt || undefined,
+          systemPromptName: systemPromptName || undefined,
+          temperature: parseFloat(temperature),
+          maxTokens: parseInt(maxTokens),
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(errData.error || `HTTP ${res.status}`);
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No readable stream available');
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullContent = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Parse SSE events from buffer
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+
+          try {
+            const data = JSON.parse(line.slice(6));
+
+            if (data.error) {
+              setError(data.error);
+              break;
+            }
+
+            if (data.done) {
+              // Final event with metadata
+              setStreamMeta({
+                model: data.model,
+                modelId: data.modelId,
+                providerId: data.providerId,
+                providerName: data.providerName,
+                tokensUsed: data.tokensUsed,
+                latencyMs: data.latencyMs,
+              });
+            } else {
+              // Token event
+              fullContent += data.token;
+              setStreamContent(fullContent);
+            }
+          } catch {
+            // Skip malformed SSE lines
+          }
+        }
+      }
+
+      // If we got content but no metadata (edge case), still show content
+      if (fullContent && !error) {
+        setStreamContent(fullContent);
+      }
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const hasStreamResult = streamContent || streamMeta;
+  const displayContent = streaming ? streamContent : response?.content;
+  const displayMeta = streaming ? streamMeta : response
+    ? { model: response.model, modelId: response.modelId, providerId: response.providerId, providerName: response.providerName, tokensUsed: response.tokensUsed, latencyMs: response.latencyMs, cost: response.cost }
+    : null;
 
   return (
     <div className="grid grid-cols-2 gap-6">
@@ -126,8 +232,19 @@ export default function TestPanel() {
             </div>
           </div>
 
+          {/* Stream toggle */}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={streaming}
+              onChange={(e) => setStreaming(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+            />
+            <span className="text-sm text-gray-300">Stream response (SSE)</span>
+          </label>
+
           <button type="submit" disabled={loading} className="btn btn-primary w-full">
-            {loading ? 'Processing...' : 'Send Request'}
+            {loading ? (streaming ? 'Streaming...' : 'Processing...') : 'Send Request'}
           </button>
         </form>
       </div>
@@ -142,47 +259,60 @@ export default function TestPanel() {
           </div>
         )}
 
-        {response && (
+        {(response || hasStreamResult) && (
           <div className="space-y-4">
             {/* Metadata */}
-            <div className="card">
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-400">Provider:</span>{' '}
-                  <span className="font-medium">{response.providerName}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Model:</span>{' '}
-                  <span className="font-medium">{response.model}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Latency:</span>{' '}
-                  <span className="font-medium">{response.latencyMs}ms</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Tokens:</span>{' '}
-                  <span className="font-medium">{response.tokensUsed || 'N/A'}</span>
-                </div>
-                {response.cost !== undefined && (
+            {displayMeta && (
+              <div className="card">
+                <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <span className="text-gray-400">Cost:</span>{' '}
-                    <span className="font-medium">${response.cost.toFixed(6)}</span>
+                    <span className="text-gray-400">Provider:</span>{' '}
+                    <span className="font-medium">{displayMeta.providerName}</span>
                   </div>
-                )}
+                  <div>
+                    <span className="text-gray-400">Model:</span>{' '}
+                    <span className="font-medium">{displayMeta.model}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400">Latency:</span>{' '}
+                    <span className="font-medium">{displayMeta.latencyMs}ms</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400">Tokens:</span>{' '}
+                    <span className="font-medium">{displayMeta.tokensUsed || 'N/A'}</span>
+                  </div>
+                  {'cost' in displayMeta && displayMeta.cost !== undefined && (
+                    <div>
+                      <span className="text-gray-400">Cost:</span>{' '}
+                      <span className="font-medium">${(displayMeta.cost as number).toFixed(6)}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Content */}
             <div className="card">
-              <label className="label mb-2">Response Content</label>
-              <div className="bg-gray-900 rounded-lg p-4 whitespace-pre-wrap font-mono text-sm">
-                {response.content}
+              <label className="label mb-2">
+                Response Content
+                {loading && streaming && (
+                  <span className="ml-2 text-blue-400 text-xs animate-pulse">streaming...</span>
+                )}
+              </label>
+              <div
+                ref={contentRef}
+                className="bg-gray-900 rounded-lg p-4 whitespace-pre-wrap font-mono text-sm max-h-96 overflow-y-auto"
+              >
+                {displayContent}
+                {loading && streaming && (
+                  <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-0.5" />
+                )}
               </div>
             </div>
           </div>
         )}
 
-        {!error && !response && (
+        {!error && !response && !hasStreamResult && (
           <div className="card text-center py-16 text-gray-500">
             Send a request to see the response
           </div>

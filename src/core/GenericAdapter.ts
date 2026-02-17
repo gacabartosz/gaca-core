@@ -354,6 +354,314 @@ export class GenericAdapter {
     };
   }
 
+  // Streaming completion — calls onToken for each token, returns final AIResponse
+  async completeStream(
+    model: ModelConfig,
+    request: AIRequest,
+    onToken: (token: string) => void,
+  ): Promise<AIResponse> {
+    const startTime = Date.now();
+    const label = `${this.provider.name}/${model.displayName || model.name}`;
+    const format = this.provider.apiFormat as ApiFormat;
+
+    try {
+      const { url, headers, body } = this.buildStreamRequest(model, request);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000); // longer timeout for streaming
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`${label}: HTTP ${response.status} - ${errorText.substring(0, 300)}`);
+      }
+
+      if (!response.body) {
+        throw new Error(`${label}: no response body for streaming`);
+      }
+
+      switch (format) {
+        case 'google':
+          return await this.parseGoogleStream(model, response, startTime, onToken);
+        case 'anthropic':
+          return await this.parseAnthropicStream(model, response, startTime, onToken);
+        default:
+          return await this.parseOpenAIStream(model, response, startTime, onToken);
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        throw new Error(`${label}: stream timeout after 60s`);
+      }
+      throw error;
+    }
+  }
+
+  private buildStreamRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+    const format = this.provider.apiFormat as ApiFormat;
+
+    switch (format) {
+      case 'google':
+        return this.buildGoogleStreamRequest(model, request);
+      case 'anthropic': {
+        const req = this.buildAnthropicRequest(model, request);
+        req.body.stream = true;
+        return req;
+      }
+      default: {
+        // OpenAI-compatible (Groq, Cerebras, OpenRouter, Mistral, Together, Fireworks, DeepSeek, OpenAI)
+        const req = this.buildOpenAIRequest(model, request);
+        req.body.stream = true;
+        return req;
+      }
+    }
+  }
+
+  private buildGoogleStreamRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+    let fullPrompt = request.prompt;
+    if (request.systemPrompt) {
+      fullPrompt = `${request.systemPrompt}\n\n${request.prompt}`;
+    }
+
+    const url = `${this.provider.baseUrl}/${model.name}:streamGenerateContent?key=${this.provider.apiKey}&alt=sse`;
+
+    return {
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        ...this.provider.customHeaders,
+      },
+      body: {
+        contents: [{ parts: [{ text: fullPrompt }] }],
+        generationConfig: {
+          temperature: request.temperature ?? 0.3,
+          maxOutputTokens: request.maxTokens ?? model.maxTokens ?? 500,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ],
+      },
+    };
+  }
+
+  private async parseOpenAIStream(
+    model: ModelConfig,
+    response: Response,
+    startTime: number,
+    onToken: (token: string) => void,
+  ): Promise<AIResponse> {
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let content = '';
+    let finishReason: string | undefined;
+    let modelName = model.name;
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete SSE lines
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.startsWith(':')) continue;
+          if (!trimmed.startsWith('data: ')) continue;
+
+          const data = trimmed.slice(6);
+          if (data === '[DONE]') continue;
+
+          try {
+            const parsed = JSON.parse(data);
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) {
+              content += delta;
+              onToken(delta);
+            }
+            if (parsed.choices?.[0]?.finish_reason) {
+              finishReason = parsed.choices[0].finish_reason;
+            }
+            if (parsed.model) {
+              modelName = parsed.model;
+            }
+          } catch {
+            // Skip malformed JSON chunks
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const latencyMs = Date.now() - startTime;
+    return {
+      content,
+      model: modelName,
+      modelId: model.id,
+      providerId: this.provider.id,
+      providerName: this.provider.name,
+      latencyMs,
+      finishReason,
+    };
+  }
+
+  private async parseGoogleStream(
+    model: ModelConfig,
+    response: Response,
+    startTime: number,
+    onToken: (token: string) => void,
+  ): Promise<AIResponse> {
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let content = '';
+    let finishReason: string | undefined;
+    let tokensUsed: number | undefined;
+    let inputTokens: number | undefined;
+    let outputTokens: number | undefined;
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith('data: ')) continue;
+
+          const data = trimmed.slice(6);
+          try {
+            const parsed = JSON.parse(data);
+            const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) {
+              content += text;
+              onToken(text);
+            }
+            if (parsed.candidates?.[0]?.finishReason) {
+              finishReason = parsed.candidates[0].finishReason;
+            }
+            if (parsed.usageMetadata) {
+              tokensUsed = parsed.usageMetadata.totalTokenCount;
+              inputTokens = parsed.usageMetadata.promptTokenCount;
+              outputTokens = parsed.usageMetadata.candidatesTokenCount;
+            }
+          } catch {
+            // Skip malformed chunks
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const latencyMs = Date.now() - startTime;
+    return {
+      content,
+      model: model.name,
+      modelId: model.id,
+      providerId: this.provider.id,
+      providerName: this.provider.name,
+      tokensUsed,
+      inputTokens,
+      outputTokens,
+      latencyMs,
+      finishReason,
+      cost: this.calculateCost(model, inputTokens, outputTokens),
+    };
+  }
+
+  private async parseAnthropicStream(
+    model: ModelConfig,
+    response: Response,
+    startTime: number,
+    onToken: (token: string) => void,
+  ): Promise<AIResponse> {
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let content = '';
+    let finishReason: string | undefined;
+    let modelName = model.name;
+    let inputTokens: number | undefined;
+    let outputTokens: number | undefined;
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith('data: ')) continue;
+
+          const data = trimmed.slice(6);
+          try {
+            const parsed = JSON.parse(data);
+
+            if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
+              content += parsed.delta.text;
+              onToken(parsed.delta.text);
+            }
+            if (parsed.type === 'message_start' && parsed.message) {
+              modelName = parsed.message.model || modelName;
+              inputTokens = parsed.message.usage?.input_tokens;
+            }
+            if (parsed.type === 'message_delta') {
+              finishReason = parsed.delta?.stop_reason;
+              outputTokens = parsed.usage?.output_tokens;
+            }
+          } catch {
+            // Skip malformed chunks
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const latencyMs = Date.now() - startTime;
+    const tokensUsed = (inputTokens || 0) + (outputTokens || 0);
+
+    return {
+      content,
+      model: modelName,
+      modelId: model.id,
+      providerId: this.provider.id,
+      providerName: this.provider.name,
+      tokensUsed: tokensUsed || undefined,
+      inputTokens,
+      outputTokens,
+      latencyMs,
+      finishReason,
+      cost: this.calculateCost(model, inputTokens, outputTokens),
+    };
+  }
+
   getProvider(): ProviderConfig {
     return this.provider;
   }

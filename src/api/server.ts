@@ -5,10 +5,10 @@ import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 import { config } from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+import { resolve, join } from 'path';
 
 import { AIEngine } from '../core/AIEngine.js';
-import { DEFAULT_PROVIDERS } from '../core/types.js';
+import { DEFAULT_PROVIDERS, generateRequestId } from '../core/types.js';
 import { createProviderRoutes } from './routes/providers.routes.js';
 import { createModelRoutes } from './routes/models.routes.js';
 import { createRankingRoutes } from './routes/ranking.routes.js';
@@ -33,9 +33,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Request logging
+// Add X-Request-Id to all API responses
+app.use('/api', (req: Request, res: Response, next: NextFunction) => {
+  res.set('X-Request-Id', generateRequestId());
+  next();
+});
+
+// Request logging with timing
 app.use((req: Request, res: Response, next: NextFunction) => {
+  const start = Date.now();
   console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    if (duration > 1000) {
+      console.log(`${new Date().toISOString()} ${req.method} ${req.path} completed in ${duration}ms [${res.statusCode}]`);
+    }
+  });
   next();
 });
 
@@ -55,10 +68,13 @@ app.get('/health', async (req: Request, res: Response) => {
 // Admin: trigger provider sync
 app.post('/api/admin/sync-providers', async (req: Request, res: Response) => {
   try {
-    // Dynamic import to avoid circular deps
-    const { syncProviders } = await import('../../scripts/sync-providers.js');
-    const result = await syncProviders();
-    res.json({ success: true, result });
+    const { execSync } = await import('child_process');
+    const output = execSync('npx tsx scripts/sync-providers.ts', {
+      cwd: process.cwd(),
+      encoding: 'utf-8',
+      timeout: 30000,
+    });
+    res.json({ success: true, output });
   } catch (error: any) {
     res.status(500).json({ error: 'Sync failed', message: error.message });
   }
@@ -93,6 +109,20 @@ app.use('/api/models', createModelRoutes(prisma, engine));
 app.use('/api/ranking', createRankingRoutes(prisma, engine));
 app.use('/api/prompts', createPromptRoutes());
 app.use('/api/complete', createCompleteRoutes(prisma, engine));
+
+// Serve frontend static files (production build)
+const frontendPath = resolve(process.cwd(), 'dist/frontend');
+if (existsSync(frontendPath)) {
+  app.use(express.static(frontendPath));
+  // SPA fallback — serve index.html for non-API routes
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api/') || req.path === '/health') {
+      return next();
+    }
+    res.sendFile(join(frontendPath, 'index.html'));
+  });
+  console.log('Serving frontend from dist/frontend/');
+}
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
