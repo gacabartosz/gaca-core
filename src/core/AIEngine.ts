@@ -6,6 +6,7 @@ import { GenericAdapter } from './GenericAdapter.js';
 import { ModelSelector } from './ModelSelector.js';
 import { RankingService } from './RankingService.js';
 import { UsageTracker } from './UsageTracker.js';
+import { logger } from './logger.js';
 
 const MAX_FAILOVER_ATTEMPTS = 30;
 
@@ -45,7 +46,7 @@ export class AIEngine {
       excludeModelIds.push(model.id);
 
       try {
-        console.log(`[AIEngine][${requestId}] Attempt ${attempts}: trying ${modelLabel}...`);
+        logger.info({ requestId, attempt: attempts, model: modelLabel }, 'Attempting completion');
 
         const adapter = this.getAdapter(provider);
         const response = await adapter.complete(model, { ...request, requestId });
@@ -64,7 +65,7 @@ export class AIEngine {
         // Maybe recalculate ranking
         await this.rankingService.maybeRecalculate(model.id);
 
-        console.log(`[AIEngine][${requestId}] Success with ${modelLabel} in ${response.latencyMs}ms`);
+        logger.info({ requestId, model: modelLabel, latencyMs: response.latencyMs }, 'Completion OK');
 
         return { ...response, requestId };
       } catch (error: any) {
@@ -87,7 +88,7 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        console.error(`[AIEngine][${requestId}] ${modelLabel} failed (${reason}): ${error.message?.substring(0, 150)}`);
+        logger.warn({ requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) }, 'Completion failed, failing over');
       }
     }
 
@@ -110,7 +111,7 @@ export class AIEngine {
     const adapter = this.getAdapter(provider);
 
     try {
-      console.log(`[AIEngine][${requestId}] Using ${modelLabel}`);
+      logger.info({ requestId, model: modelLabel }, 'Using model');
       const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
@@ -150,7 +151,7 @@ export class AIEngine {
     const adapter = this.getAdapter(provider);
 
     try {
-      console.log(`[AIEngine][${requestId}] Using ${modelLabel}`);
+      logger.info({ requestId, model: modelLabel }, 'Using model');
       const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
@@ -197,7 +198,7 @@ export class AIEngine {
       excludeModelIds.push(model.id);
 
       try {
-        console.log(`[AIEngine][${requestId}] Stream attempt ${attempts}: trying ${modelLabel}...`);
+        logger.info({ requestId, attempt: attempts, model: modelLabel }, 'Stream attempt');
 
         const adapter = this.getAdapter(provider);
         const response = await adapter.completeStream(model, { ...request, requestId }, onToken);
@@ -214,7 +215,7 @@ export class AIEngine {
 
         await this.rankingService.maybeRecalculate(model.id);
 
-        console.log(`[AIEngine][${requestId}] Stream success with ${modelLabel} in ${response.latencyMs}ms`);
+        logger.info({ requestId, model: modelLabel, latencyMs: response.latencyMs }, 'Stream OK');
         return { ...response, requestId };
       } catch (error: any) {
         lastError = error;
@@ -234,7 +235,7 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        console.error(`[AIEngine][${requestId}] Stream ${modelLabel} failed (${reason}): ${error.message?.substring(0, 150)}`);
+        logger.warn({ requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) }, 'Stream failed, failing over');
       }
     }
 
@@ -397,7 +398,7 @@ export class AIEngine {
         },
       });
     } catch (error) {
-      console.error('[AIEngine] Failed to log failover:', error);
+      logger.error({ err: error }, 'Failed to log failover');
     }
   }
 }

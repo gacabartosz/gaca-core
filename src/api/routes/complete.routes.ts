@@ -6,6 +6,7 @@ import { AIEngine } from '../../core/AIEngine.js';
 import { loadPrompt } from '../../prompts/loader.js';
 import { generateRequestId } from '../../core/types.js';
 import { validateBody, CompleteRequestSchema, StreamRequestSchema } from '../../core/validation.js';
+import { logger } from '../../core/logger.js';
 
 export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
@@ -87,7 +88,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
 
       res.json(response);
     } catch (error: any) {
-      console.error(`[API][${requestId}] Completion failed:`, error.message);
+      logger.error({ requestId, err: error.message }, 'Completion failed');
       res.status(500).json({ error: error.message, requestId });
     }
   });
@@ -148,7 +149,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
 
       res.end();
     } catch (error: any) {
-      console.error(`[API][${requestId}] Stream failed:`, error.message);
+      logger.error({ requestId, err: error.message }, 'Stream failed');
 
       // If headers already sent, send error as SSE event
       if (res.headersSent) {

@@ -2,6 +2,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { UsageData } from './types.js';
+import { logger } from './logger.js';
 
 // In-memory cache for fast rate limit checking
 interface UsageCache {
@@ -50,8 +51,8 @@ export class UsageTracker {
     modelCache.lastRequestAt = new Date();
 
     // Update DB asynchronously (don't await to not block)
-    this.updateProviderUsageInDb(providerId, success, latencyMs, tokensUsed).catch(console.error);
-    this.updateModelUsageInDb(modelId, success, latencyMs, tokensUsed).catch(console.error);
+    this.updateProviderUsageInDb(providerId, success, latencyMs, tokensUsed).catch((err) => logger.error({ err }, 'Failed to update provider usage in DB'));
+    this.updateModelUsageInDb(modelId, success, latencyMs, tokensUsed).catch((err) => logger.error({ err }, 'Failed to update model usage in DB'));
   }
 
   // Load usage from DB into cache
@@ -182,12 +183,12 @@ export class UsageTracker {
 
   private checkLimits(cache: UsageCache, rateLimitRpm: number | null, rateLimitRpd: number | null, name: string): boolean {
     if (rateLimitRpm && cache.requestsThisMinute >= rateLimitRpm) {
-      console.log(`[UsageTracker] ${name} hit RPM limit (${cache.requestsThisMinute}/${rateLimitRpm})`);
+      logger.warn({ name, used: cache.requestsThisMinute, limit: rateLimitRpm }, 'RPM limit hit');
       return false;
     }
 
     if (rateLimitRpd && cache.requestsToday >= rateLimitRpd) {
-      console.log(`[UsageTracker] ${name} hit RPD limit (${cache.requestsToday}/${rateLimitRpd})`);
+      logger.warn({ name, used: cache.requestsToday, limit: rateLimitRpd }, 'RPD limit hit');
       return false;
     }
 

@@ -9,6 +9,7 @@ import { resolve, join } from 'path';
 
 import { AIEngine } from '../core/AIEngine.js';
 import { DEFAULT_PROVIDERS, generateRequestId } from '../core/types.js';
+import { logger } from '../core/logger.js';
 import { createProviderRoutes } from './routes/providers.routes.js';
 import { createModelRoutes } from './routes/models.routes.js';
 import { createRankingRoutes } from './routes/ranking.routes.js';
@@ -42,11 +43,11 @@ app.use('/api', (req: Request, res: Response, next: NextFunction) => {
 // Request logging with timing
 app.use((req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
-  console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+  logger.info({ method: req.method, path: req.path }, 'Request');
   res.on('finish', () => {
     const duration = Date.now() - start;
     if (duration > 1000) {
-      console.log(`${new Date().toISOString()} ${req.method} ${req.path} completed in ${duration}ms [${res.statusCode}]`);
+      logger.info({ method: req.method, path: req.path, durationMs: duration, status: res.statusCode }, 'Slow request');
     }
   });
   next();
@@ -121,12 +122,12 @@ if (existsSync(frontendPath)) {
     }
     res.sendFile(join(frontendPath, 'index.html'));
   });
-  console.log('Serving frontend from dist/frontend/');
+  logger.info('Serving frontend from dist/frontend/');
 }
 
 // Error handling
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('Server error:', err);
+  logger.error({ err }, 'Server error');
   res.status(500).json({ error: 'Internal server error', message: err.message });
 });
 
@@ -139,44 +140,26 @@ app.use((req: Request, res: Response) => {
 async function start() {
   try {
     await prisma.$connect();
-    console.log('Database connected');
+    logger.info('Database connected');
 
     app.listen(PORT, () => {
-      console.log(`
-╔════════════════════════════════════════════════════════╗
-║                     GACA-Core API                      ║
-╠════════════════════════════════════════════════════════╣
-║  Server running on http://localhost:${PORT}              ║
-║                                                        ║
-║  Endpoints:                                            ║
-║  - GET  /health                Health check            ║
-║  - GET  /api/providers         List providers          ║
-║  - POST /api/providers         Create provider         ║
-║  - POST /api/providers/:id/test Test provider          ║
-║  - GET  /api/models            List models             ║
-║  - POST /api/models            Create model            ║
-║  - GET  /api/ranking           Get rankings            ║
-║  - POST /api/ranking/recalculate Recalculate ranks     ║
-║  - GET  /api/prompts           List prompts            ║
-║  - POST /api/complete          AI completion           ║
-╚════════════════════════════════════════════════════════╝
-      `);
+      logger.info({ port: PORT }, 'GACA-Core API server started');
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.fatal({ err: error }, 'Failed to start server');
     process.exit(1);
   }
 }
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-  console.log('\nShutting down...');
+  logger.info('Shutting down...');
   await prisma.$disconnect();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('\nShutting down...');
+  logger.info('Shutting down...');
   await prisma.$disconnect();
   process.exit(0);
 });

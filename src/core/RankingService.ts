@@ -2,6 +2,7 @@
 
 import { PrismaClient } from '@prisma/client';
 import { RankingWeights } from './types.js';
+import { logger } from './logger.js';
 
 const DEFAULT_WEIGHTS: RankingWeights = {
   successRate: 0.4,
@@ -79,7 +80,7 @@ export class RankingService {
       },
     });
 
-    console.log(`[RankingService] Recalculated ranking for model ${modelId}: score=${score.toFixed(3)}`);
+    logger.info({ modelId, score: score.toFixed(3) }, 'Recalculated ranking');
   }
 
   // Recalculate rankings for all models
@@ -95,7 +96,7 @@ export class RankingService {
       }
     }
 
-    console.log(`[RankingService] Recalculated rankings for ${models.length} models`);
+    logger.info({ modelCount: models.length }, 'Recalculated all rankings');
   }
 
   // Get ranking for a model
