@@ -2,6 +2,13 @@
 
 export type ApiFormat = 'openai' | 'anthropic' | 'google' | 'custom';
 
+// Generate a short unique request ID for tracking
+export function generateRequestId(): string {
+  const ts = Date.now().toString(36);
+  const rand = Math.random().toString(36).substring(2, 6);
+  return `req_${ts}_${rand}`;
+}
+
 // Request to AI completion
 export interface AIRequest {
   prompt: string;
@@ -11,6 +18,7 @@ export interface AIRequest {
   temperature?: number;
   maxTokens?: number;
   customBody?: Record<string, unknown>;  // For custom API formats
+  requestId?: string;      // Unique request ID for tracking/debugging
 }
 
 // Response from AI completion
@@ -26,6 +34,7 @@ export interface AIResponse {
   latencyMs: number;
   finishReason?: string;
   cost?: number;           // Estimated cost in USD
+  requestId?: string;      // Request ID for tracking/debugging
 }
 
 // Provider configuration (from database)

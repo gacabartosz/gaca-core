@@ -1,7 +1,7 @@
 // AIEngine - Main AI completion engine with failover and ranking
 
 import { PrismaClient } from '@prisma/client';
-import { AIRequest, AIResponse, FailoverEvent, ProviderConfig, ModelConfig, TestResult } from './types.js';
+import { AIRequest, AIResponse, FailoverEvent, ProviderConfig, ModelConfig, TestResult, generateRequestId } from './types.js';
 import { GenericAdapter } from './GenericAdapter.js';
 import { ModelSelector } from './ModelSelector.js';
 import { RankingService } from './RankingService.js';
@@ -25,6 +25,7 @@ export class AIEngine {
 
   // Main completion method with automatic model selection and failover
   async complete(request: AIRequest): Promise<AIResponse> {
+    const requestId = request.requestId || generateRequestId();
     const excludeModelIds: string[] = [];
     let lastError: Error | null = null;
     let attempts = 0;
@@ -40,13 +41,14 @@ export class AIEngine {
       }
 
       const { model, provider } = selection;
+      const modelLabel = `${provider.name}/${model.displayName || model.name}`;
       excludeModelIds.push(model.id);
 
       try {
-        console.log(`[AIEngine] Trying ${provider.name} → ${model.displayName || model.name}...`);
+        console.log(`[AIEngine][${requestId}] Attempt ${attempts}: trying ${modelLabel}...`);
 
         const adapter = this.getAdapter(provider);
-        const response = await adapter.complete(model, request);
+        const response = await adapter.complete(model, { ...request, requestId });
 
         // Track successful usage
         await this.usageTracker.track({
@@ -62,9 +64,9 @@ export class AIEngine {
         // Maybe recalculate ranking
         await this.rankingService.maybeRecalculate(model.id);
 
-        console.log(`[AIEngine] Success with ${provider.name}/${model.name} in ${response.latencyMs}ms`);
+        console.log(`[AIEngine][${requestId}] Success with ${modelLabel} in ${response.latencyMs}ms`);
 
-        return response;
+        return { ...response, requestId };
       } catch (error: any) {
         lastError = error;
 
@@ -85,28 +87,31 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        console.error(`[AIEngine] ${provider.name}/${model.name} failed (${reason}):`, error.message?.substring(0, 100));
+        console.error(`[AIEngine][${requestId}] ${modelLabel} failed (${reason}): ${error.message?.substring(0, 150)}`);
       }
     }
 
     throw new Error(
-      `All AI providers failed after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`
+      `[${requestId}] All AI providers failed after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`
     );
   }
 
   // Complete with specific provider
   async completeWithProvider(providerId: string, request: AIRequest): Promise<AIResponse> {
+    const requestId = request.requestId || generateRequestId();
     const selection = await this.modelSelector.selectBestModel(providerId);
 
     if (!selection) {
-      throw new Error(`Provider ${providerId} is not available`);
+      throw new Error(`[${requestId}] Provider ${providerId} is not available or has no enabled models`);
     }
 
     const { model, provider } = selection;
+    const modelLabel = `${provider.name}/${model.displayName || model.name}`;
     const adapter = this.getAdapter(provider);
 
     try {
-      const response = await adapter.complete(model, request);
+      console.log(`[AIEngine][${requestId}] Using ${modelLabel}`);
+      const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
         providerId: provider.id,
@@ -118,7 +123,7 @@ export class AIEngine {
 
       await this.rankingService.maybeRecalculate(model.id);
 
-      return response;
+      return { ...response, requestId };
     } catch (error: any) {
       await this.usageTracker.track({
         providerId: provider.id,
@@ -127,23 +132,26 @@ export class AIEngine {
         latencyMs: 0,
       });
 
-      throw error;
+      throw new Error(`[${requestId}] ${modelLabel} failed: ${error.message}`);
     }
   }
 
   // Complete with specific model
   async completeWithModel(modelId: string, request: AIRequest): Promise<AIResponse> {
+    const requestId = request.requestId || generateRequestId();
     const selection = await this.modelSelector.selectBestModel(undefined, modelId);
 
     if (!selection) {
-      throw new Error(`Model ${modelId} is not available`);
+      throw new Error(`[${requestId}] Model ${modelId} is not available or is disabled`);
     }
 
     const { model, provider } = selection;
+    const modelLabel = `${provider.name}/${model.displayName || model.name}`;
     const adapter = this.getAdapter(provider);
 
     try {
-      const response = await adapter.complete(model, request);
+      console.log(`[AIEngine][${requestId}] Using ${modelLabel}`);
+      const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
         providerId: provider.id,
@@ -155,7 +163,7 @@ export class AIEngine {
 
       await this.rankingService.maybeRecalculate(model.id);
 
-      return response;
+      return { ...response, requestId };
     } catch (error: any) {
       await this.usageTracker.track({
         providerId: provider.id,
@@ -164,7 +172,7 @@ export class AIEngine {
         latencyMs: 0,
       });
 
-      throw error;
+      throw new Error(`[${requestId}] ${modelLabel} failed: ${error.message}`);
     }
   }
 

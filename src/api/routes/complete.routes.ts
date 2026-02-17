@@ -4,12 +4,15 @@ import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
 import { loadPrompt } from '../../prompts/loader.js';
+import { generateRequestId } from '../../core/types.js';
 
 export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
 
   // POST /api/complete - Execute AI completion
   router.post('/', async (req: Request, res: Response) => {
+    const requestId = generateRequestId();
+
     try {
       const {
         prompt,
@@ -22,7 +25,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
       } = req.body;
 
       if (!prompt) {
-        return res.status(400).json({ error: 'prompt is required' });
+        return res.status(400).json({ error: 'prompt is required', requestId });
       }
 
       // Load system prompt from file if name provided
@@ -31,41 +34,31 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
         try {
           finalSystemPrompt = loadPrompt(systemPromptName);
         } catch (e) {
-          return res.status(400).json({ error: `System prompt not found: ${systemPromptName}` });
+          return res.status(400).json({ error: `System prompt not found: ${systemPromptName}`, requestId });
         }
       }
 
       let response;
+      const aiRequest = {
+        prompt,
+        systemPrompt: finalSystemPrompt,
+        temperature,
+        maxTokens,
+        requestId,
+      };
 
       if (modelId) {
-        // Use specific model
-        response = await engine.completeWithModel(modelId, {
-          prompt,
-          systemPrompt: finalSystemPrompt,
-          temperature,
-          maxTokens,
-        });
+        response = await engine.completeWithModel(modelId, aiRequest);
       } else if (providerId) {
-        // Use specific provider
-        response = await engine.completeWithProvider(providerId, {
-          prompt,
-          systemPrompt: finalSystemPrompt,
-          temperature,
-          maxTokens,
-        });
+        response = await engine.completeWithProvider(providerId, aiRequest);
       } else {
-        // Auto-select best model
-        response = await engine.complete({
-          prompt,
-          systemPrompt: finalSystemPrompt,
-          temperature,
-          maxTokens,
-        });
+        response = await engine.complete(aiRequest);
       }
 
       res.json(response);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      console.error(`[API][${requestId}] Completion failed:`, error.message);
+      res.status(500).json({ error: error.message, requestId });
     }
   });
 

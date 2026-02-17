@@ -22,8 +22,8 @@
 - [ ] Add unit tests for GenericAdapter (all 4 formats)
 - [ ] Add unit tests for ModelSelector
 - [ ] Add unit tests for sync-providers logic
-- [ ] Improve error messages (include provider name and model in all errors)
-- [ ] Add request ID tracking for debugging
+- [x] Improve error messages (include provider name and model in all errors)
+- [x] Add request ID tracking for debugging
 
 ## Priority 4: Frontend Dashboard
 - [ ] Verify React admin dashboard works with new providers

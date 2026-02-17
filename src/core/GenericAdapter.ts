@@ -12,6 +12,7 @@ export class GenericAdapter {
 
   async complete(model: ModelConfig, request: AIRequest): Promise<AIResponse> {
     const startTime = Date.now();
+    const label = `${this.provider.name}/${model.displayName || model.name}`;
 
     try {
       const { url, headers, body } = this.buildRequest(model, request);
@@ -32,14 +33,14 @@ export class GenericAdapter {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`${this.provider.name} API error: ${response.status} - ${errorText}`);
+        throw new Error(`${label}: HTTP ${response.status} - ${errorText.substring(0, 300)}`);
       }
 
       const data = await response.json();
       return this.parseResponse(model, data, latencyMs);
     } catch (error: any) {
       if (error.name === 'AbortError') {
-        throw new Error(`${this.provider.name} request timeout after 30s`);
+        throw new Error(`${label}: request timeout after 30s`);
       }
       throw error;
     }
@@ -232,7 +233,7 @@ export class GenericAdapter {
 
   private parseOpenAIResponse(model: ModelConfig, data: any, latencyMs: number): AIResponse {
     if (!data.choices || !data.choices[0]?.message?.content) {
-      throw new Error(`Invalid ${this.provider.name} response format`);
+      throw new Error(`${this.provider.name}/${model.name}: invalid response format (missing choices[0].message.content)`);
     }
 
     const inputTokens = data.usage?.prompt_tokens;
@@ -257,9 +258,9 @@ export class GenericAdapter {
   private parseGoogleResponse(model: ModelConfig, data: any, latencyMs: number): AIResponse {
     if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
       if (data.candidates?.[0]?.finishReason === 'SAFETY') {
-        throw new Error('Content blocked by safety filters');
+        throw new Error(`${this.provider.name}/${model.name}: content blocked by safety filters`);
       }
-      throw new Error(`Invalid ${this.provider.name} response format`);
+      throw new Error(`${this.provider.name}/${model.name}: invalid response format (missing candidates[0].content.parts[0].text)`);
     }
 
     const tokensUsed = data.usageMetadata?.totalTokenCount;
@@ -283,7 +284,7 @@ export class GenericAdapter {
 
   private parseAnthropicResponse(model: ModelConfig, data: any, latencyMs: number): AIResponse {
     if (!data.content || !data.content[0]?.text) {
-      throw new Error(`Invalid ${this.provider.name} response format`);
+      throw new Error(`${this.provider.name}/${model.name}: invalid response format (missing content[0].text)`);
     }
 
     const inputTokens = data.usage?.input_tokens;
@@ -310,7 +311,7 @@ export class GenericAdapter {
     const content = data.content || data.text || data.response || data.output || data.choices?.[0]?.message?.content;
 
     if (!content) {
-      throw new Error(`Could not parse ${this.provider.name} response`);
+      throw new Error(`${this.provider.name}/${model.name}: could not parse response`);
     }
 
     return {
