@@ -1,5 +1,10 @@
 # G.A.C.A. — Generative AI Arbitrage Engine
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gacabartosz/gaca-core/pulls)
+
 > Universal AI Bus with automatic failover, performance ranking, rate limiting, and **50+ free LLM models** from 11 providers.
 
 **G.A.C.A.** (Generative AI Completion Architecture) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently.
@@ -48,7 +53,7 @@ npm install
 
 # 3. Configure
 cp .env.example .env
-# Edit .env — add your free API keys (see below)
+# Edit .env — add your free API keys (see step-by-step guide below)
 
 # 4. Initialize database
 npx prisma generate
@@ -61,22 +66,173 @@ npm run dev
 # Dashboard: http://localhost:5173
 ```
 
-## Free API Keys — Where to Get Them
+---
 
-All these providers offer **free tiers** with no credit card required:
+## Getting API Keys — Step-by-Step Guide
 
-| Provider | Free Tier | Models | Get Key |
-|----------|-----------|--------|---------|
-| **Groq** | 30 RPM, 14,400 RPD | Llama 3.3 70B, Llama 3.1 8B, Qwen 3, Kimi K2, GPT-OSS | [console.groq.com/keys](https://console.groq.com/keys) |
-| **Cerebras** | 30 RPM, 14,400 RPD | Llama 3.3 70B, Qwen 3 235B, GPT-OSS 120B | [cloud.cerebras.ai](https://cloud.cerebras.ai/) |
-| **Google AI Studio** | 30 RPM, 14,400 RPD | Gemini 2.0/2.5 Flash, Gemma 3 | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
-| **OpenRouter** | 20 RPM, 50 RPD | Llama 3.3, DeepSeek R1, Gemma 3, Kimi K2 (all :free) | [openrouter.ai/keys](https://openrouter.ai/keys) |
-| **Mistral AI** | 1 RPM, 500 RPD | Mistral Small, Nemo, Codestral | [console.mistral.ai/api-keys](https://console.mistral.ai/api-keys) |
-| **HuggingFace** | Inference API | Llama 3.3, Mixtral, Qwen 2.5 | [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens) |
-| **Together AI** | $25 free credits | Llama 3.3, Qwen Coder, DeepSeek R1 | [api.together.xyz/settings](https://api.together.xyz/settings/api-keys) |
-| **Fireworks AI** | Free tier | Llama 3.3, Qwen 3 235B | [fireworks.ai/api-keys](https://fireworks.ai/api-keys) |
+All free providers require **no credit card**. You can set up all 8 free providers in about 10 minutes.
 
-Paid providers (optional): DeepSeek ($0.0001/1K tokens), Anthropic, OpenAI.
+### Groq (FREE — 30 RPM, 14,400 RPD)
+
+**Models:** Llama 3.3 70B, Llama 3.1 8B, Llama 4 Maverick/Scout, Qwen 3 32B, Kimi K2, GPT-OSS 120B/20B
+
+1. Go to [console.groq.com](https://console.groq.com)
+2. Click **"Sign Up"** — use Google or GitHub (no credit card needed)
+3. In the left sidebar, click **"API Keys"**
+4. Click **"Create API Key"**, give it a name (e.g. "gaca")
+5. Copy the key (starts with `gsk_...`)
+6. Paste into your `.env` file:
+   ```
+   GROQ_API_KEY=gsk_your_key_here
+   ```
+
+### Cerebras (FREE — 30 RPM, 14,400 RPD)
+
+**Models:** Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B, ZAI GLM 4.7
+
+1. Go to [cloud.cerebras.ai](https://cloud.cerebras.ai/)
+2. Click **"Sign Up"** — use Google or email
+3. After login, click your avatar → **"API Keys"** in the dropdown
+4. Click **"Create API Key"**
+5. Copy the key (starts with `csk-...`)
+6. Paste into your `.env` file:
+   ```
+   CEREBRAS_API_KEY=csk-your_key_here
+   ```
+
+### Google AI Studio (FREE — 30 RPM, 14,400 RPD)
+
+**Models:** Gemini 2.0 Flash, Gemini 2.5 Flash Lite, Gemma 3 (27B, 12B, 4B, 1B)
+
+1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Sign in with your Google account
+3. Click **"Create API key"**
+4. Select a Google Cloud project (or create a new one — it's free)
+5. Copy the key (starts with `AIza...`)
+6. Paste into your `.env` file:
+   ```
+   GOOGLE_AI_API_KEY=AIzaSy_your_key_here
+   ```
+
+### OpenRouter (FREE — 20 RPM, 50 RPD on free models)
+
+**Models:** Llama 3.3 70B, DeepSeek R1, Gemma 3, Kimi K2, GPT-OSS (all `:free` suffix)
+
+1. Go to [openrouter.ai](https://openrouter.ai/)
+2. Click **"Sign Up"** — use Google, GitHub, or email
+3. After login, click your avatar → **"Keys"**
+4. Click **"Create Key"**, give it a name
+5. Copy the key (starts with `sk-or-...`)
+6. Paste into your `.env` file:
+   ```
+   OPENROUTER_API_KEY=sk-or-your_key_here
+   ```
+
+> **Note:** Free models on OpenRouter have `:free` suffix (e.g. `meta-llama/llama-3.3-70b-instruct:free`). GACA handles this automatically.
+
+### Mistral AI (FREE — 1 RPM, 500 RPD)
+
+**Models:** Mistral Small, Mistral Nemo, Codestral
+
+1. Go to [console.mistral.ai](https://console.mistral.ai/)
+2. Click **"Sign Up"** — use email or GitHub
+3. After login, click **"API Keys"** in the left sidebar
+4. Click **"Create new key"**
+5. Copy the key
+6. Paste into your `.env` file:
+   ```
+   MISTRAL_API_KEY=your_key_here
+   ```
+
+### HuggingFace (FREE — Inference API)
+
+**Models:** Llama 3.3 70B, Mixtral 8x7B, Qwen 2.5 72B
+
+1. Go to [huggingface.co](https://huggingface.co/)
+2. Click **"Sign Up"** — use email, Google, or GitHub
+3. Click your avatar → **"Settings"**
+4. In the left sidebar, click **"Access Tokens"**
+5. Click **"New token"**, select **"Read"** permission, give it a name
+6. Copy the token (starts with `hf_...`)
+7. Paste into your `.env` file:
+   ```
+   HUGGINGFACE_API_KEY=hf_your_token_here
+   ```
+
+### Together AI (FREE — $25 credits, 60 RPM)
+
+**Models:** Llama 3.3 70B Turbo, Qwen 2.5 Coder 32B, DeepSeek R1
+
+1. Go to [api.together.xyz](https://api.together.xyz/)
+2. Click **"Sign Up"** — use Google, GitHub, or email
+3. You'll get **$25 free credits** (enough for thousands of requests)
+4. Click your avatar → **"Settings"** → **"API Keys"**
+5. Copy the existing key or create a new one
+6. Paste into your `.env` file:
+   ```
+   TOGETHER_API_KEY=your_key_here
+   ```
+
+### Fireworks AI (FREE tier — 20 RPM)
+
+**Models:** Llama 3.3 70B, Qwen 3 235B
+
+1. Go to [fireworks.ai](https://fireworks.ai/)
+2. Click **"Sign Up"** — use Google, GitHub, or email
+3. After login, click your avatar → **"API Keys"**
+4. Click **"Create API Key"**
+5. Copy the key (starts with `fw_...`)
+6. Paste into your `.env` file:
+   ```
+   FIREWORKS_API_KEY=fw_your_key_here
+   ```
+
+### DeepSeek (BUDGET — $0.0001/1K input tokens)
+
+**Models:** DeepSeek Chat, DeepSeek Coder, DeepSeek Reasoner
+
+1. Go to [platform.deepseek.com](https://platform.deepseek.com/)
+2. Click **"Sign Up"** — use email
+3. Add credits (minimum $1 — lasts thousands of requests)
+4. Click **"API Keys"** in the left sidebar
+5. Click **"Create new secret key"**
+6. Copy the key (starts with `sk-...`)
+7. Paste into your `.env` file:
+   ```
+   DEEPSEEK_API_KEY=sk-your_key_here
+   ```
+
+### Anthropic (PAID)
+
+**Models:** Claude Sonnet 4, Claude Opus 4, Claude 3.5 Haiku
+
+1. Go to [console.anthropic.com](https://console.anthropic.com/)
+2. Click **"Sign Up"** — use email or Google
+3. Add a payment method in **"Billing"**
+4. Click **"API Keys"** in the left sidebar
+5. Click **"Create Key"**
+6. Copy the key (starts with `sk-ant-...`)
+7. Paste into your `.env` file:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-your_key_here
+   ```
+
+### OpenAI (PAID)
+
+**Models:** GPT-4o, GPT-4o Mini, O1, O3 Mini
+
+1. Go to [platform.openai.com](https://platform.openai.com/)
+2. Click **"Sign Up"** — use email, Google, or Microsoft
+3. Add a payment method in **"Billing"**
+4. Click **"API Keys"** in the left sidebar
+5. Click **"Create new secret key"**
+6. Copy the key (starts with `sk-...`)
+7. Paste into your `.env` file:
+   ```
+   OPENAI_API_KEY=sk-your_key_here
+   ```
+
+---
 
 ## Available Free Models (36+)
 
@@ -192,7 +348,7 @@ curl http://localhost:3002/api/complete/available
 
 ```bash
 curl http://localhost:3002/health
-# {"status":"ok","providers":6,"models":36,"version":"1.0.0"}
+# {"status":"ok","providers":6,"models":51,"version":"1.0.0"}
 ```
 
 ### Providers CRUD
@@ -255,9 +411,9 @@ G.A.C.A. includes a smart auto-update mechanism that keeps your models in sync:
 1. **Source of truth** = `DEFAULT_PROVIDERS` array in `src/core/types.ts`
 2. **Database** stores runtime state (API keys, usage stats, rankings)
 3. **Sync script** compares code vs database and applies non-destructive changes:
-   - New providers/models -> created automatically
-   - Removed models -> disabled (not deleted, preserves history)
-   - Config changes (URLs, rate limits) -> updated
+   - New providers/models → created automatically
+   - Removed models → disabled (not deleted, preserves history)
+   - Config changes (URLs, rate limits) → updated
    - **Never touches**: API keys, usage data, rankings, enabled/disabled state
 
 ### Manual Sync
@@ -278,7 +434,7 @@ npm run auto-update
 
 # Set up cron (every 6 hours)
 crontab -e
-# Add: 0 */6 * * * /root/gaca-core/scripts/auto-update.sh --cron >> /root/gaca-core/logs/auto-update.log 2>&1
+# Add: 0 */6 * * * /path/to/gaca-core/scripts/auto-update.sh --cron >> /path/to/gaca-core/logs/auto-update.log 2>&1
 ```
 
 ### API Trigger
@@ -403,12 +559,22 @@ console.log(`Provider: ${response.providerName}, Model: ${response.model}`);
 
 ## Tech Stack
 
-- **Runtime**: Node.js + TypeScript
-- **API**: Express.js
+- **Runtime**: Node.js 18+ / TypeScript 5.7
+- **API**: Express.js 4
 - **Database**: SQLite via Prisma ORM
-- **Frontend**: React 19 + Vite + Tailwind CSS
-- **AI Protocols**: OpenAI, Google AI, Anthropic, Custom
+- **Frontend**: React 19 + Vite 6 + Tailwind CSS
+- **AI Protocols**: OpenAI-compatible, Google AI, Anthropic, Custom
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT License - Bartosz Gaca
+MIT License — [Bartosz Gaca](https://github.com/gacabartosz)
