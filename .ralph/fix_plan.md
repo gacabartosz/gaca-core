@@ -60,40 +60,32 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
   - `CreatePromptSchema`, `UpdatePromptSchema`
 - [x] Create `validateBody(schema)` Express middleware that returns 400 with Zod errors
 
-### Task 2.2: Apply validation to all routes
-- [ ] Apply to `POST /api/complete` and `POST /api/complete/stream`
-- [ ] Apply to POST/PUT on providers, models, prompts
-- [ ] Test: send invalid request, verify 400 with clear error message
+### Task 2.2: Apply validation to all routes (DONE)
+- [x] Apply to `POST /api/complete` and `POST /api/complete/stream`
+- [x] Apply to POST/PUT on providers, models, prompts
+- [x] Apply to PUT on ranking (quality score, weights)
+- [x] Test: send invalid request, verify 400 with clear error message
 
 ---
 
 ## Priority 3: Structured Logging with Pino
 
-### Task 3.1: Setup Pino logger
-- [ ] Run: `npm install pino` and `npm install -D pino-pretty`
-- [ ] Create `src/core/logger.ts`:
-  ```typescript
-  import pino from 'pino';
-  export const logger = pino({
-    level: process.env.LOG_LEVEL || 'info',
-    ...(process.env.NODE_ENV !== 'production' && {
-      transport: { target: 'pino-pretty', options: { colorize: true } },
-    }),
-  });
-  ```
-- [ ] Replace ALL `console.log` and `console.error` in src/ with logger calls
-- [ ] Use structured logging: `logger.info({ requestId, provider, model, latencyMs }, 'Completion OK')`
-- [ ] Keep log output clean — don't log full request/response bodies
+### Task 3.1: Setup Pino logger (DONE)
+- [x] Run: `npm install pino` and `npm install -D pino-pretty`
+- [x] Create `src/core/logger.ts` with pino + pino-pretty
+- [x] Replace ALL `console.log` and `console.error` in src/ with logger calls
+- [x] Use structured logging: `logger.info({ requestId, provider, model, latencyMs }, 'Completion OK')`
+- [x] Keep log output clean — don't log full request/response bodies
 
 ---
 
 ## Priority 4: Testing with Vitest
 
-### Task 4.1: Setup Vitest framework
-- [ ] Run: `npm install -D vitest`
-- [ ] Create `vitest.config.ts` in project root
-- [ ] Add scripts: `"test": "vitest run"`, `"test:watch": "vitest"`
-- [ ] Verify setup: create a trivial test, run `npm test`
+### Task 4.1: Setup Vitest framework (DONE)
+- [x] Run: `npm install -D vitest`
+- [x] Create `vitest.config.ts` in project root
+- [x] Add scripts: `"test": "vitest run"`, `"test:watch": "vitest"`
+- [x] Verify setup: create a trivial test, run `npm test`
 
 ### Task 4.2: Write RankingService tests
 - [ ] Create `src/core/__tests__/RankingService.test.ts`
