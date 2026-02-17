@@ -3,6 +3,7 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
+import { validateBody, CreateModelSchema, UpdateModelSchema } from '../../core/validation.js';
 
 interface IdParams {
   id: string;
@@ -58,7 +59,7 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
   });
 
   // POST /api/models - Create model
-  router.post('/', async (req: Request, res: Response) => {
+  router.post('/', validateBody(CreateModelSchema), async (req: Request, res: Response) => {
     try {
       const {
         providerId,
@@ -73,10 +74,6 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
         isEnabled,
         isDefault,
       } = req.body;
-
-      if (!providerId || !name) {
-        return res.status(400).json({ error: 'providerId and name are required' });
-      }
 
       // If setting as default, unset other defaults for this provider
       if (isDefault) {
@@ -134,7 +131,7 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
   });
 
   // PUT /api/models/:id - Update model
-  router.put('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.put('/:id', validateBody(UpdateModelSchema), async (req: Request<IdParams>, res: Response) => {
     try {
       const {
         name,

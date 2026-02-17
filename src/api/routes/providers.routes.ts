@@ -3,6 +3,7 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
+import { validateBody, CreateProviderSchema, UpdateProviderSchema } from '../../core/validation.js';
 
 interface IdParams {
   id: string;
@@ -67,13 +68,9 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // POST /api/providers - Create provider
-  router.post('/', async (req: Request, res: Response) => {
+  router.post('/', validateBody(CreateProviderSchema), async (req: Request, res: Response) => {
     try {
       const { name, slug, baseUrl, apiKey, apiFormat, authHeader, authPrefix, customHeaders, rateLimitRpm, rateLimitRpd, priority, isEnabled } = req.body;
-
-      if (!name || !slug || !baseUrl) {
-        return res.status(400).json({ error: 'name, slug, and baseUrl are required' });
-      }
 
       const provider = await prisma.aIProvider.create({
         data: {
@@ -115,7 +112,7 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // PUT /api/providers/:id - Update provider
-  router.put('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.put('/:id', validateBody(UpdateProviderSchema), async (req: Request<IdParams>, res: Response) => {
     try {
       const { name, slug, baseUrl, apiKey, apiFormat, authHeader, authPrefix, customHeaders, rateLimitRpm, rateLimitRpd, priority, isEnabled } = req.body;
 

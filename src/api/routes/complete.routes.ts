@@ -5,12 +5,13 @@ import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
 import { loadPrompt } from '../../prompts/loader.js';
 import { generateRequestId } from '../../core/types.js';
+import { validateBody, CompleteRequestSchema, StreamRequestSchema } from '../../core/validation.js';
 
 export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
 
   // POST /api/complete - Execute AI completion
-  router.post('/', async (req: Request, res: Response) => {
+  router.post('/', validateBody(CompleteRequestSchema), async (req: Request, res: Response) => {
     const requestId = generateRequestId();
 
     try {
@@ -23,10 +24,6 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
         providerId,
         modelId,
       } = req.body;
-
-      if (!prompt) {
-        return res.status(400).json({ error: 'prompt is required', requestId });
-      }
 
       // Load system prompt from file if name provided
       let finalSystemPrompt = systemPrompt;
@@ -96,7 +93,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // POST /api/complete/stream - SSE streaming completion
-  router.post('/stream', async (req: Request, res: Response) => {
+  router.post('/stream', validateBody(StreamRequestSchema), async (req: Request, res: Response) => {
     const requestId = generateRequestId();
 
     try {
@@ -107,10 +104,6 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
         temperature,
         maxTokens,
       } = req.body;
-
-      if (!prompt) {
-        return res.status(400).json({ error: 'prompt is required', requestId });
-      }
 
       let finalSystemPrompt = systemPrompt;
       if (systemPromptName && !systemPrompt) {

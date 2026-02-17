@@ -3,6 +3,7 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
+import { validateBody, UpdateQualityScoreSchema, UpdateRankingWeightsSchema } from '../../core/validation.js';
 
 interface ModelIdParams {
   modelId: string;
@@ -59,13 +60,9 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
   });
 
   // PUT /api/ranking/:modelId/quality - Update quality score for model
-  router.put('/:modelId/quality', async (req: Request<ModelIdParams>, res: Response) => {
+  router.put('/:modelId/quality', validateBody(UpdateQualityScoreSchema), async (req: Request<ModelIdParams>, res: Response) => {
     try {
       const { qualityScore } = req.body;
-
-      if (qualityScore === undefined || qualityScore < 0 || qualityScore > 1) {
-        return res.status(400).json({ error: 'qualityScore must be a number between 0 and 1' });
-      }
 
       await engine.getRankingService().updateQualityScore(req.params.modelId, qualityScore);
       const ranking = await engine.getRankingService().getRanking(req.params.modelId);
@@ -87,7 +84,7 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
   });
 
   // PUT /api/ranking/weights - Update ranking weights
-  router.put('/config/weights', async (req: Request, res: Response) => {
+  router.put('/config/weights', validateBody(UpdateRankingWeightsSchema), async (req: Request, res: Response) => {
     try {
       const { successRate, latency, quality } = req.body;
 

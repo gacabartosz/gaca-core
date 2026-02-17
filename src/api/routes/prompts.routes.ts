@@ -2,6 +2,7 @@
 
 import { Router, Request, Response } from 'express';
 import { loadPrompt, savePrompt, deletePrompt, listPrompts } from '../../prompts/loader.js';
+import { validateBody, CreatePromptSchema, UpdatePromptSchema } from '../../core/validation.js';
 
 interface NameParams {
   name: string;
@@ -34,13 +35,9 @@ export function createPromptRoutes(): Router {
   });
 
   // POST /api/prompts - Create/update custom prompt
-  router.post('/', async (req: Request, res: Response) => {
+  router.post('/', validateBody(CreatePromptSchema), async (req: Request, res: Response) => {
     try {
       const { name, content } = req.body;
-
-      if (!name || !content) {
-        return res.status(400).json({ error: 'name and content are required' });
-      }
 
       // Don't allow overwriting default prompts
       const existing = listPrompts();
@@ -58,13 +55,9 @@ export function createPromptRoutes(): Router {
   });
 
   // PUT /api/prompts/:name - Update custom prompt
-  router.put('/:name', async (req: Request<NameParams>, res: Response) => {
+  router.put('/:name', validateBody(UpdatePromptSchema), async (req: Request<NameParams>, res: Response) => {
     try {
       const { content } = req.body;
-
-      if (!content) {
-        return res.status(400).json({ error: 'content is required' });
-      }
 
       // Check if it's a default prompt
       const existing = listPrompts();
