@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// DOSTAWCY (Providers)
+// ============================================
+
+model AIProvider {
+  id              String   @id @default(uuid())
+  name            String   @unique          // "Groq", "OpenAI", "Custom Provider X"
+  slug            String   @unique          // "groq", "openai", "custom-x"
+
+  // Konfiguracja API
+  baseUrl         String                    // "https://api.groq.com/openai/v1"
+  apiKey          String?                   // Klucz API
+  apiFormat       String   @default("openai")  // openai, anthropic, google, custom
+  authHeader      String   @default("Authorization")  // "Authorization", "x-api-key"
+  authPrefix      String   @default("Bearer ")  // "Bearer ", "sk-", ""
+
+  // Opcjonalne headery (JSON)
+  customHeaders   String   @default("{}")   // {"X-Custom": "value"}
+
+  // Limity na poziomie dostawcy
+  rateLimitRpm    Int?                      // Max requests/minute (wszystkie modele razem)
+  rateLimitRpd    Int?                      // Max requests/day
+
+  // Status
+  isEnabled       Boolean  @default(true)
+  priority        Int      @default(100)    // Niższy = wyższy priorytet
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relacje
+  models          AIModel[]
+  usage           AIProviderUsage?
+}
+
+// ============================================
+// MODELE (per dostawca)
+// ============================================
+
+model AIModel {
+  id              String   @id @default(uuid())
+  providerId      String
+
+  name            String                    // "llama-3.3-70b-versatile"
+  displayName     String?                   // "Llama 3.3 70B" (dla UI)
+
+  // Limity PER MODEL (oddzielne od providera!)
+  rateLimitRpm    Int?                      // Max requests/minute dla tego modelu
+  rateLimitRpd    Int?                      // Max requests/day dla tego modelu
+
+  // Koszty
+  costPer1kInput  Float    @default(0)      // USD per 1000 input tokens
+  costPer1kOutput Float    @default(0)      // USD per 1000 output tokens
+
+  // Parametry
+  maxTokens       Int      @default(4096)   // Max output tokens
+  contextWindow   Int      @default(8192)   // Context size
+
+  // Status
+  isEnabled       Boolean  @default(true)
+  isDefault       Boolean  @default(false)  // Domyślny model dla providera
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relacje
+  provider        AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  usage           AIModelUsage?
+  ranking         AIModelRanking?
+
+  @@unique([providerId, name])
+}
+
+// ============================================
+// UŻYCIE (per provider)
+// ============================================
+
+model AIProviderUsage {
+  id                  String    @id @default(uuid())
+  providerId          String    @unique
+
+  requestsToday       Int       @default(0)
+  requestsThisMinute  Int       @default(0)
+  lastRequestAt       DateTime?
+  minuteResetAt       DateTime?
+  dayResetAt          DateTime?
+
+  totalTokensUsed     Int       @default(0)
+  totalCostUsd        Float     @default(0)
+
+  provider            AIProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// UŻYCIE (per model)
+// ============================================
+
+model AIModelUsage {
+  id                  String    @id @default(uuid())
+  modelId             String    @unique
+
+  requestsToday       Int       @default(0)
+  requestsThisMinute  Int       @default(0)
+  lastRequestAt       DateTime?
+  minuteResetAt       DateTime?
+  dayResetAt          DateTime?
+
+  totalCalls          Int       @default(0)
+  successCount        Int       @default(0)
+  failureCount        Int       @default(0)
+  avgLatencyMs        Int       @default(0)
+  totalTokensUsed     Int       @default(0)
+
+  model               AIModel   @relation(fields: [modelId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// RANKING MODELI
+// ============================================
+
+model AIModelRanking {
+  id              String   @id @default(uuid())
+  modelId         String   @unique
+
+  // Metryki skuteczności
+  successRate     Float    @default(0)      // 0.0 - 1.0 (% udanych)
+  avgLatencyMs    Float    @default(0)      // Średni czas odpowiedzi
+  avgQualityScore Float    @default(0)      // 0.0 - 1.0 (jakość odpowiedzi)
+
+  // Waga w rankingu (obliczana automatycznie)
+  // score = successRate * 0.4 + (1 - normalizedLatency) * 0.3 + qualityScore * 0.3
+  score           Float    @default(0)
+
+  // Dane do obliczeń
+  sampleSize      Int      @default(0)      // Ile requestów wzięto pod uwagę
+  lastCalculatedAt DateTime @default(now())
+
+  model           AIModel  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// FAILOVER EVENTS (historia)
+// ============================================
+
+model AIFailoverEvent {
+  id              String    @id @default(uuid())
+  fromModelId     String?
+  toModelId       String?
+  reason          String                    // rate_limit, timeout, error, quality
+  errorMessage    String?
+  latencyMs       Int?
+  createdAt       DateTime  @default(now())
+}

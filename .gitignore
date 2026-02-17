@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Database
+*.db
+*.db-journal
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Ralph logs (keep config, ignore logs)
+.ralph/logs/
+.ralph/docs/generated/
+
+# OS
+.DS_Store
+Thumbs.db
