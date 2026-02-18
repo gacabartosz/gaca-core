@@ -21,6 +21,7 @@ config();
 
 const PORT = process.env.PORT || 3002;
 const ADMIN_KEY = process.env.GACA_ADMIN_KEY;
+const CORS_ORIGINS = process.env.CORS_ORIGINS;
 
 // Auth middleware: protects write operations when GACA_ADMIN_KEY is set
 function authMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -52,7 +53,13 @@ const engine = new AIEngine(prisma);
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors(
+    CORS_ORIGINS
+      ? { origin: CORS_ORIGINS.split(',').map((o) => o.trim()) }
+      : undefined,
+  ),
+);
 app.use(express.json());
 
 // Add X-Request-Id to all API responses
