@@ -88,7 +88,10 @@ export const UpdateRankingWeightsSchema = z.object({
 // ============================================
 
 export const CreatePromptSchema = z.object({
-  name: z.string().min(1, 'name is required'),
+  name: z
+    .string()
+    .min(1, 'name is required')
+    .regex(/^[a-zA-Z0-9_-]+$/, 'name must only contain alphanumeric characters, hyphens, and underscores'),
   content: z.string().min(1, 'content is required'),
 });
 

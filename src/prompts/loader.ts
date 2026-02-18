@@ -24,6 +24,14 @@ const getPromptsDir = (): string => {
 
 const promptsDir = getPromptsDir();
 
+// Validate prompt name to prevent path traversal
+const SAFE_NAME_REGEX = /^[a-zA-Z0-9_-]+$/;
+function validatePromptName(name: string): void {
+  if (!SAFE_NAME_REGEX.test(name)) {
+    throw new Error(`Invalid prompt name: "${name}". Only alphanumeric characters, hyphens, and underscores are allowed.`);
+  }
+}
+
 // Cache for loaded prompts
 const promptCache: Map<string, string> = new Map();
 
@@ -37,6 +45,7 @@ export type DefaultPromptName = 'system' | 'analysis' | 'decision';
  * @returns Prompt content
  */
 export function loadPrompt(name: string, useCache: boolean = true): string {
+  validatePromptName(name);
   if (useCache && promptCache.has(name)) {
     return promptCache.get(name)!;
   }
@@ -68,6 +77,7 @@ export function loadPrompt(name: string, useCache: boolean = true): string {
  * @param content - Prompt content
  */
 export function savePrompt(name: string, content: string): void {
+  validatePromptName(name);
   const customDir = path.join(promptsDir, 'custom');
 
   // Ensure custom directory exists
@@ -88,6 +98,7 @@ export function savePrompt(name: string, content: string): void {
  * @returns true if deleted, false if not found
  */
 export function deletePrompt(name: string): boolean {
+  validatePromptName(name);
   const filePath = path.join(promptsDir, 'custom', `${name}.txt`);
 
   if (!fs.existsSync(filePath)) {
