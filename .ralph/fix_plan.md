@@ -155,10 +155,10 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 - [x] Add "Clear" button
 - [x] Persist to localStorage (last 50 entries)
 
-### Task 8.4: Add provider health dashboard
-- [ ] In ProviderList, show colored status dots (green/yellow/red)
-- [ ] Add "Test All Providers" button → test each sequentially, show results
-- [ ] Show mini latency comparison (text or simple bars)
+### Task 8.4: Add provider health dashboard (DONE)
+- [x] In ProviderList, show colored status dots (green=passed, yellow=untested, red=failed, gray=disabled)
+- [x] Add "Test All Providers" button → tests each enabled provider sequentially, shows summary toast
+- [x] Show mini latency comparison bars (color-coded: green <1s, yellow <3s, red >3s)
 
 ### Task 8.5: Add sync/admin controls to header
 - [ ] Add "Sync Providers" button to App header (calls POST /api/admin/sync-providers)

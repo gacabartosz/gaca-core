@@ -14,6 +14,7 @@ export default function ProviderList() {
   const [expandedProvider, setExpandedProvider] = useState<string | null>(null);
   const [testResults, setTestResults] = useState<Record<string, TestResult>>({});
   const [testing, setTesting] = useState<string | null>(null);
+  const [testingAll, setTestingAll] = useState(false);
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -54,6 +55,33 @@ export default function ProviderList() {
     }
   };
 
+  const handleTestAll = async () => {
+    setTestingAll(true);
+    const enabledProviders = providers.filter((p) => p.isEnabled && p.apiKey);
+    let passed = 0;
+    let failed = 0;
+
+    for (const provider of enabledProviders) {
+      setTesting(provider.id);
+      try {
+        const result = await api.testProvider(provider.id);
+        setTestResults((prev) => ({ ...prev, [provider.id]: result }));
+        if (result.success) passed++;
+        else failed++;
+      } catch (e: any) {
+        setTestResults((prev) => ({
+          ...prev,
+          [provider.id]: { success: false, error: e.message },
+        }));
+        failed++;
+      }
+      setTesting(null);
+    }
+
+    addToast(`Test complete: ${passed} passed, ${failed} failed`, passed > 0 && failed === 0 ? 'success' : 'error');
+    setTestingAll(false);
+  };
+
   const handleToggle = async (provider: Provider) => {
     try {
       await api.updateProvider(provider.id, { isEnabled: !provider.isEnabled });
@@ -88,6 +116,19 @@ export default function ProviderList() {
     }
   };
 
+  const getStatusDot = (provider: Provider) => {
+    if (!provider.isEnabled) return 'bg-gray-500';
+    const result = testResults[provider.id];
+    if (!result) return 'bg-yellow-500'; // untested
+    return result.success ? 'bg-green-500' : 'bg-red-500';
+  };
+
+  // Find max latency for scaling bars
+  const testedLatencies = Object.values(testResults)
+    .filter((r) => r.success && r.latencyMs)
+    .map((r) => r.latencyMs!);
+  const maxLatency = Math.max(...testedLatencies, 1);
+
   if (loading) {
     return <ProviderListSkeleton />;
   }
@@ -96,15 +137,24 @@ export default function ProviderList() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">AI Providers</h2>
-        <button
-          onClick={() => {
-            setEditingProvider(null);
-            setShowForm(true);
-          }}
-          className="btn btn-primary btn-sm"
-        >
-          + Add Provider
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTestAll}
+            disabled={testingAll}
+            className="btn btn-secondary btn-sm"
+          >
+            {testingAll ? 'Testing All...' : 'Test All Providers'}
+          </button>
+          <button
+            onClick={() => {
+              setEditingProvider(null);
+              setShowForm(true);
+            }}
+            className="btn btn-primary btn-sm"
+          >
+            + Add Provider
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -113,11 +163,41 @@ export default function ProviderList() {
         </div>
       )}
 
+      {/* Latency comparison */}
+      {testedLatencies.length > 1 && (
+        <div className="card mb-4">
+          <h3 className="text-sm font-medium text-gray-400 mb-3">Latency Comparison</h3>
+          <div className="space-y-2">
+            {providers
+              .filter((p) => testResults[p.id]?.success && testResults[p.id]?.latencyMs)
+              .sort((a, b) => (testResults[a.id].latencyMs || 0) - (testResults[b.id].latencyMs || 0))
+              .map((provider) => {
+                const latency = testResults[provider.id].latencyMs!;
+                const width = Math.max((latency / maxLatency) * 100, 5);
+                return (
+                  <div key={provider.id} className="flex items-center gap-3">
+                    <span className="text-xs text-gray-400 w-24 truncate">{provider.name}</span>
+                    <div className="flex-1 h-4 bg-gray-700 rounded overflow-hidden">
+                      <div
+                        className={`h-full rounded ${latency < 1000 ? 'bg-green-600' : latency < 3000 ? 'bg-yellow-600' : 'bg-red-600'}`}
+                        style={{ width: `${width}%` }}
+                      />
+                    </div>
+                    <span className="text-xs font-mono text-gray-300 w-16 text-right">{latency}ms</span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
       <div className="space-y-3">
         {providers.map((provider) => (
           <div key={provider.id} className="card">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
+                {/* Status dot */}
+                <div className={`w-3 h-3 rounded-full shrink-0 ${getStatusDot(provider)}`} />
                 <button
                   onClick={() => handleToggle(provider)}
                   className={`w-10 h-6 rounded-full transition-colors ${
@@ -152,7 +232,7 @@ export default function ProviderList() {
                 )}
                 <button
                   onClick={() => handleTest(provider.id)}
-                  disabled={testing === provider.id}
+                  disabled={testing === provider.id || testingAll}
                   className="btn btn-secondary btn-sm"
                 >
                   {testing === provider.id ? 'Testing...' : 'Test'}
