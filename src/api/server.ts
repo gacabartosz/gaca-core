@@ -2,6 +2,7 @@
 
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import { PrismaClient } from '@prisma/client';
 import { config } from 'dotenv';
 import { existsSync, readFileSync } from 'fs';
@@ -22,6 +23,7 @@ config();
 const PORT = process.env.PORT || 3002;
 const ADMIN_KEY = process.env.GACA_ADMIN_KEY;
 const CORS_ORIGINS = process.env.CORS_ORIGINS;
+const RATE_LIMIT_RPM = parseInt(process.env.RATE_LIMIT_RPM || '60', 10);
 
 // Auth middleware: protects write operations when GACA_ADMIN_KEY is set
 function authMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -137,8 +139,16 @@ app.use('/api/providers', authMiddleware, createProviderRoutes(prisma, engine));
 app.use('/api/models', authMiddleware, createModelRoutes(prisma, engine));
 app.use('/api/ranking', authMiddleware, createRankingRoutes(prisma, engine));
 app.use('/api/prompts', authMiddleware, createPromptRoutes());
-// Complete endpoints are publicly accessible (no auth)
-app.use('/api/complete', createCompleteRoutes(prisma, engine));
+// Rate limiter for completion endpoints
+const completionLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: RATE_LIMIT_RPM,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
+// Complete endpoints are publicly accessible (no auth) but rate-limited
+app.use('/api/complete', completionLimiter, createCompleteRoutes(prisma, engine));
 
 // Serve frontend static files (production build)
 const frontendPath = resolve(process.cwd(), 'dist/frontend');
