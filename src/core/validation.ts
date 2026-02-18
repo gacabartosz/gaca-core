@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 // ============================================
 
 export const CompleteRequestSchema = z.object({
-  prompt: z.string().min(1, 'prompt is required'),
+  prompt: z.string().min(1, 'prompt is required').max(100000, 'prompt exceeds maximum length of 100,000 characters'),
   systemPrompt: z.string().optional(),
   systemPromptName: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
@@ -18,7 +18,7 @@ export const CompleteRequestSchema = z.object({
 });
 
 export const StreamRequestSchema = z.object({
-  prompt: z.string().min(1, 'prompt is required'),
+  prompt: z.string().min(1, 'prompt is required').max(100000, 'prompt exceeds maximum length of 100,000 characters'),
   systemPrompt: z.string().optional(),
   systemPromptName: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
@@ -92,11 +92,11 @@ export const CreatePromptSchema = z.object({
     .string()
     .min(1, 'name is required')
     .regex(/^[a-zA-Z0-9_-]+$/, 'name must only contain alphanumeric characters, hyphens, and underscores'),
-  content: z.string().min(1, 'content is required'),
+  content: z.string().min(1, 'content is required').max(50000, 'content exceeds maximum length of 50,000 characters'),
 });
 
 export const UpdatePromptSchema = z.object({
-  content: z.string().min(1, 'content is required'),
+  content: z.string().min(1, 'content is required').max(50000, 'content exceeds maximum length of 50,000 characters'),
 });
 
 // ============================================

@@ -62,7 +62,7 @@ app.use(
       : undefined,
   ),
 );
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
 // Add X-Request-Id to all API responses
 app.use('/api', (req: Request, res: Response, next: NextFunction) => {
