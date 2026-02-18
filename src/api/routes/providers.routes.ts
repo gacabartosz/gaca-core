@@ -35,6 +35,54 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
     }
   });
 
+  // GET /api/providers/stats/usage - Get usage summary
+  // IMPORTANT: Must be registered BEFORE /:id to avoid being shadowed
+  router.get('/stats/usage', async (req: Request, res: Response) => {
+    try {
+      const providers = await prisma.aIProvider.findMany({
+        include: { usage: true },
+      });
+
+      const todayStart = new Date();
+      todayStart.setUTCHours(0, 0, 0, 0);
+
+      const failoverCount = await prisma.aIFailoverEvent.count({
+        where: { createdAt: { gte: todayStart } },
+      });
+
+      let totalRequests = 0;
+      let totalTokens = 0;
+      let totalCost = 0;
+
+      const providerStats = providers.map((p) => {
+        const usage = p.usage;
+        totalRequests += usage?.requestsToday || 0;
+        totalTokens += usage?.totalTokensUsed || 0;
+        totalCost += usage?.totalCostUsd || 0;
+
+        return {
+          id: p.id,
+          name: p.name,
+          requestsToday: usage?.requestsToday || 0,
+          dailyLimit: p.rateLimitRpd,
+          usagePercent: p.rateLimitRpd ? Math.round(((usage?.requestsToday || 0) / p.rateLimitRpd) * 100) : 0,
+          totalTokensUsed: usage?.totalTokensUsed || 0,
+          isEnabled: p.isEnabled,
+        };
+      });
+
+      res.json({
+        totalRequestsToday: totalRequests,
+        totalTokensToday: totalTokens,
+        estimatedCost: Math.round(totalCost * 10000) / 10000,
+        failoverEventsToday: failoverCount,
+        providers: providerStats,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // GET /api/providers/:id - Get single provider
   router.get('/:id', async (req: Request, res: Response) => {
     try {
@@ -197,53 +245,6 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
       res.json(result);
     } catch (error: any) {
       res.status(500).json({ success: false, error: error.message });
-    }
-  });
-
-  // GET /api/providers/usage - Get usage summary
-  router.get('/stats/usage', async (req: Request, res: Response) => {
-    try {
-      const providers = await prisma.aIProvider.findMany({
-        include: { usage: true },
-      });
-
-      const todayStart = new Date();
-      todayStart.setUTCHours(0, 0, 0, 0);
-
-      const failoverCount = await prisma.aIFailoverEvent.count({
-        where: { createdAt: { gte: todayStart } },
-      });
-
-      let totalRequests = 0;
-      let totalTokens = 0;
-      let totalCost = 0;
-
-      const providerStats = providers.map((p) => {
-        const usage = p.usage;
-        totalRequests += usage?.requestsToday || 0;
-        totalTokens += usage?.totalTokensUsed || 0;
-        totalCost += usage?.totalCostUsd || 0;
-
-        return {
-          id: p.id,
-          name: p.name,
-          requestsToday: usage?.requestsToday || 0,
-          dailyLimit: p.rateLimitRpd,
-          usagePercent: p.rateLimitRpd ? Math.round(((usage?.requestsToday || 0) / p.rateLimitRpd) * 100) : 0,
-          totalTokensUsed: usage?.totalTokensUsed || 0,
-          isEnabled: p.isEnabled,
-        };
-      });
-
-      res.json({
-        totalRequestsToday: totalRequests,
-        totalTokensToday: totalTokens,
-        estimatedCost: Math.round(totalCost * 10000) / 10000,
-        failoverEventsToday: failoverCount,
-        providers: providerStats,
-      });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
     }
   });
 
