@@ -5,10 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
 import { validateBody, UpdateQualityScoreSchema, UpdateRankingWeightsSchema } from '../../core/validation.js';
 
-interface ModelIdParams {
-  modelId: string;
-}
-
 export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
 
@@ -23,9 +19,9 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
   });
 
   // GET /api/ranking/:modelId - Get ranking for specific model
-  router.get('/:modelId', async (req: Request<ModelIdParams>, res: Response) => {
+  router.get('/:modelId', async (req: Request, res: Response) => {
     try {
-      const ranking = await engine.getRankingService().getRanking(req.params.modelId);
+      const ranking = await engine.getRankingService().getRanking(req.params.modelId as string);
 
       if (!ranking) {
         return res.status(404).json({ error: 'Ranking not found for this model' });
@@ -49,10 +45,10 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
   });
 
   // POST /api/ranking/:modelId/recalculate - Recalculate ranking for specific model
-  router.post('/:modelId/recalculate', async (req: Request<ModelIdParams>, res: Response) => {
+  router.post('/:modelId/recalculate', async (req: Request, res: Response) => {
     try {
-      await engine.getRankingService().recalculateForModel(req.params.modelId);
-      const ranking = await engine.getRankingService().getRanking(req.params.modelId);
+      await engine.getRankingService().recalculateForModel(req.params.modelId as string);
+      const ranking = await engine.getRankingService().getRanking(req.params.modelId as string);
       res.json(ranking);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -60,12 +56,12 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
   });
 
   // PUT /api/ranking/:modelId/quality - Update quality score for model
-  router.put('/:modelId/quality', validateBody(UpdateQualityScoreSchema), async (req: Request<ModelIdParams>, res: Response) => {
+  router.put('/:modelId/quality', validateBody(UpdateQualityScoreSchema), async (req: Request, res: Response) => {
     try {
       const { qualityScore } = req.body;
 
-      await engine.getRankingService().updateQualityScore(req.params.modelId, qualityScore);
-      const ranking = await engine.getRankingService().getRanking(req.params.modelId);
+      await engine.getRankingService().updateQualityScore(req.params.modelId as string, qualityScore);
+      const ranking = await engine.getRankingService().getRanking(req.params.modelId as string);
 
       res.json(ranking);
     } catch (error: any) {

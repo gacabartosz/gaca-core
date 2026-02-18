@@ -137,10 +137,11 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 
 ## Priority 8: Frontend Improvements
 
-### Task 8.1: Add loading skeletons
-- [ ] Create `src/frontend/components/Skeleton.tsx` — animated pulse placeholder
-- [ ] Replace "Loading..." text in ProviderList, RankingTable, UsageStats
-- [ ] Use Tailwind `animate-pulse bg-gray-700 rounded` pattern
+### Task 8.1: Add loading skeletons (DONE)
+- [x] Create `src/frontend/components/Skeleton.tsx` — animated pulse placeholder
+- [x] Replace "Loading..." text in ProviderList, RankingTable, UsageStats
+- [x] Use Tailwind `animate-pulse bg-gray-700 rounded` pattern
+- [x] Fixed pre-existing Express route param TypeScript errors (removed typed params, added `as string` casts)
 
 ### Task 8.2: Add toast notification system
 - [ ] Create `src/frontend/components/Toast.tsx` — stack of toasts in top-right

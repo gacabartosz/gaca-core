@@ -5,10 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
 import { validateBody, CreateModelSchema, UpdateModelSchema } from '../../core/validation.js';
 
-interface IdParams {
-  id: string;
-}
-
 export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
 
@@ -36,9 +32,9 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
   });
 
   // GET /api/models/:id - Get single model
-  router.get('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.get('/:id', async (req: Request, res: Response) => {
     try {
-      const modelId = req.params.id;
+      const modelId = req.params.id as string;
       const model = await prisma.aIModel.findUnique({
         where: { id: modelId },
         include: {
@@ -131,7 +127,7 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
   });
 
   // PUT /api/models/:id - Update model
-  router.put('/:id', validateBody(UpdateModelSchema), async (req: Request<IdParams>, res: Response) => {
+  router.put('/:id', validateBody(UpdateModelSchema), async (req: Request, res: Response) => {
     try {
       const {
         name,
@@ -190,7 +186,7 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
   });
 
   // DELETE /api/models/:id - Delete model
-  router.delete('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.delete('/:id', async (req: Request, res: Response) => {
     try {
       await prisma.aIModel.delete({
         where: { id: req.params.id as string },

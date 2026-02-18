@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api, Provider, TestResult } from '../api';
 import ProviderForm from './ProviderForm';
 import ModelList from './ModelList';
+import { ProviderListSkeleton } from './Skeleton';
 
 export default function ProviderList() {
   const [providers, setProviders] = useState<Provider[]>([]);
@@ -80,7 +81,7 @@ export default function ProviderList() {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading providers...</div>;
+    return <ProviderListSkeleton />;
   }
 
   return (

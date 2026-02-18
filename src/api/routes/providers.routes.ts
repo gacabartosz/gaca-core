@@ -5,10 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
 import { validateBody, CreateProviderSchema, UpdateProviderSchema } from '../../core/validation.js';
 
-interface IdParams {
-  id: string;
-}
-
 export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Router {
   const router = Router();
 
@@ -40,10 +36,10 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // GET /api/providers/:id - Get single provider
-  router.get('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.get('/:id', async (req: Request, res: Response) => {
     try {
       const provider = await prisma.aIProvider.findUnique({
-        where: { id: req.params.id },
+        where: { id: req.params.id as string },
         include: {
           models: {
             orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
@@ -112,7 +108,7 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // PUT /api/providers/:id - Update provider
-  router.put('/:id', validateBody(UpdateProviderSchema), async (req: Request<IdParams>, res: Response) => {
+  router.put('/:id', validateBody(UpdateProviderSchema), async (req: Request, res: Response) => {
     try {
       const { name, slug, baseUrl, apiKey, apiFormat, authHeader, authPrefix, customHeaders, rateLimitRpm, rateLimitRpd, priority, isEnabled } = req.body;
 
@@ -132,11 +128,11 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
       if (isEnabled !== undefined) updateData.isEnabled = isEnabled;
 
       const provider = await prisma.aIProvider.update({
-        where: { id: req.params.id },
+        where: { id: req.params.id as string },
         data: updateData,
       });
 
-      engine.clearAdapterCache(req.params.id);
+      engine.clearAdapterCache(req.params.id as string);
 
       res.json({
         ...provider,
@@ -151,13 +147,13 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // DELETE /api/providers/:id - Delete provider
-  router.delete('/:id', async (req: Request<IdParams>, res: Response) => {
+  router.delete('/:id', async (req: Request, res: Response) => {
     try {
       await prisma.aIProvider.delete({
-        where: { id: req.params.id },
+        where: { id: req.params.id as string },
       });
 
-      engine.clearAdapterCache(req.params.id);
+      engine.clearAdapterCache(req.params.id as string);
 
       res.status(204).send();
     } catch (error: any) {
@@ -169,9 +165,9 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   });
 
   // POST /api/providers/:id/test - Test provider connection
-  router.post('/:id/test', async (req: Request<IdParams>, res: Response) => {
+  router.post('/:id/test', async (req: Request, res: Response) => {
     try {
-      const result = await engine.testProvider(req.params.id);
+      const result = await engine.testProvider(req.params.id as string);
       res.json(result);
     } catch (error: any) {
       res.status(500).json({ success: false, error: error.message });

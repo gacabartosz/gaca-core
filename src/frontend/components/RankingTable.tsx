@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api, Ranking } from '../api';
+import { RankingTableSkeleton } from './Skeleton';
 
 export default function RankingTable() {
   const [rankings, setRankings] = useState<Ranking[]>([]);
@@ -50,7 +51,7 @@ export default function RankingTable() {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading rankings...</div>;
+    return <RankingTableSkeleton />;
   }
 
   return (

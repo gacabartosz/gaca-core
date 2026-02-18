@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../api';
+import { UsageStatsSkeleton } from './Skeleton';
 
 interface UsageSummary {
   totalRequestsToday: number;
@@ -76,7 +77,7 @@ export default function UsageStats() {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading usage data...</div>;
+    return <UsageStatsSkeleton />;
   }
 
   return (
