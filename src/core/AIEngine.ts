@@ -409,8 +409,8 @@ export class AIEngine {
   private async logFailover(event: FailoverEvent): Promise<void> {
     try {
       await this.persistence.logFailoverEvent({
-        fromModelId: event.fromModelId,
-        toModelId: event.toModelId,
+        fromModelId: event.fromModelId ?? null,
+        toModelId: event.toModelId ?? null,
         reason: event.reason,
         errorMessage: event.errorMessage || null,
         latencyMs: event.latencyMs || null,

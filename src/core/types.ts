@@ -9,32 +9,69 @@ export function generateRequestId(): string {
   return `req_${ts}_${rand}`;
 }
 
-// Request to AI completion
+// Message format (OpenAI-compatible)
+export interface CompletionMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string | ContentPart[];
+}
+
+export interface ContentPart {
+  type: 'text' | 'image_url';
+  text?: string;
+  image_url?: {
+    url: string;
+    detail?: 'auto' | 'low' | 'high';
+  };
+}
+
+// Token usage tracking
+export interface TokenUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+}
+
+// Request to AI completion - supports both prompt (simple) and messages (OpenAI-style)
 export interface AIRequest {
-  prompt: string;
+  // Option 1: Simple prompt format
+  prompt?: string;
   systemPrompt?: string;
+  // Option 2: OpenAI-style messages format
+  messages?: CompletionMessage[];
+  // Common options
   model?: string; // Optional - will use best available
   providerId?: string; // Optional - will select best provider
   temperature?: number;
   maxTokens?: number;
+  topP?: number;
+  frequencyPenalty?: number;
+  presencePenalty?: number;
+  stop?: string[];
+  responseFormat?: { type: 'text' | 'json_object' };
+  stream?: boolean;
   customBody?: Record<string, unknown>; // For custom API formats
   requestId?: string; // Unique request ID for tracking/debugging
+  tenantId?: string; // For multi-tenant support
 }
 
 // Response from AI completion
 export interface AIResponse {
+  id: string; // Request ID
   content: string;
   model: string;
   modelId: string;
   providerId: string;
   providerName: string;
-  tokensUsed?: number;
-  inputTokens?: number;
-  outputTokens?: number;
+  usage: TokenUsage;
+  tokensUsed?: number; // Deprecated - use usage.totalTokens
+  inputTokens?: number; // Deprecated - use usage.promptTokens
+  outputTokens?: number; // Deprecated - use usage.completionTokens
   latencyMs: number;
-  finishReason?: string;
-  cost?: number; // Estimated cost in USD
+  finishReason: 'stop' | 'length' | 'content_filter' | 'error';
+  cost: number; // Estimated cost in USD
   requestId?: string; // Request ID for tracking/debugging
+  failoverAttempts?: number;
+  failoverHistory?: FailoverEvent[];
 }
 
 // Provider configuration (from database)
@@ -117,11 +154,30 @@ export interface UsageData {
   outputTokens?: number;
 }
 
+// Failover reason types
+export type FailoverReason =
+  | 'rate_limit'
+  | 'timeout'
+  | 'api_error'
+  | 'error'
+  | 'invalid_response'
+  | 'model_unavailable'
+  | 'model_not_found'
+  | 'content_filter'
+  | 'quota_exceeded'
+  | 'network_error'
+  | 'authentication_error'
+  | 'quality';
+
 // Failover event
 export interface FailoverEvent {
-  fromModelId: string | null;
-  toModelId: string | null;
-  reason: 'rate_limit' | 'timeout' | 'error' | 'quality' | 'model_not_found' | 'quota_exceeded';
+  timestamp?: Date;
+  fromModelId?: string | null;
+  toModelId?: string | null;
+  providerId?: string;
+  modelId?: string;
+  reason: FailoverReason;
+  error?: string;
   errorMessage?: string;
   latencyMs?: number;
 }
