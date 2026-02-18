@@ -240,31 +240,47 @@ export class UsageTracker {
   ): Promise<void> {
     const cache = this.modelUsageCache.get(modelId);
 
-    await this.prisma.aIModelUsage.upsert({
+    // Check if record exists
+    const existing = await this.prisma.aIModelUsage.findUnique({
       where: { modelId },
-      create: {
-        modelId,
-        requestsToday: 1,
-        requestsThisMinute: 1,
-        lastRequestAt: new Date(),
-        minuteResetAt: new Date(),
-        dayResetAt: new Date(),
-        totalCalls: 1,
-        successCount: success ? 1 : 0,
-        failureCount: success ? 0 : 1,
-        avgLatencyMs: latencyMs,
-        totalTokensUsed: tokensUsed || 0,
-      },
-      update: {
-        requestsToday: { increment: 1 },
-        requestsThisMinute: cache?.requestsThisMinute || 1,
-        lastRequestAt: new Date(),
-        totalCalls: { increment: 1 },
-        successCount: success ? { increment: 1 } : undefined,
-        failureCount: success ? undefined : { increment: 1 },
-        totalTokensUsed: tokensUsed ? { increment: tokensUsed } : undefined,
-        avgLatencyMs: success ? Math.min(Math.round(latencyMs), 30000) : undefined,
-      },
     });
+
+    if (!existing) {
+      await this.prisma.aIModelUsage.create({
+        data: {
+          modelId,
+          requestsToday: 1,
+          requestsThisMinute: 1,
+          lastRequestAt: new Date(),
+          minuteResetAt: new Date(),
+          dayResetAt: new Date(),
+          totalCalls: 1,
+          successCount: success ? 1 : 0,
+          failureCount: success ? 0 : 1,
+          avgLatencyMs: latencyMs,
+          totalTokensUsed: tokensUsed || 0,
+        },
+      });
+    } else {
+      const newTotalCalls = existing.totalCalls + 1;
+      // Incremental average: newAvg = oldAvg + (latencyMs - oldAvg) / newTotalCalls
+      const newAvgLatency = success
+        ? Math.round(existing.avgLatencyMs + (latencyMs - existing.avgLatencyMs) / newTotalCalls)
+        : existing.avgLatencyMs;
+
+      await this.prisma.aIModelUsage.update({
+        where: { modelId },
+        data: {
+          requestsToday: { increment: 1 },
+          requestsThisMinute: cache?.requestsThisMinute || 1,
+          lastRequestAt: new Date(),
+          totalCalls: { increment: 1 },
+          successCount: success ? { increment: 1 } : undefined,
+          failureCount: success ? undefined : { increment: 1 },
+          totalTokensUsed: tokensUsed ? { increment: tokensUsed } : undefined,
+          avgLatencyMs: newAvgLatency,
+        },
+      });
+    }
   }
 }
