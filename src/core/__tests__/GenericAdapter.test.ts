@@ -384,7 +384,7 @@ describe('GenericAdapter - parseResponse', () => {
       expect(result.inputTokens).toBe(8);
       expect(result.outputTokens).toBe(4);
       expect(result.tokensUsed).toBe(12);
-      expect(result.finishReason).toBe('STOP');
+      expect(result.finishReason).toBe('stop');
     });
 
     it('should throw on safety-blocked Google response', async () => {
@@ -427,7 +427,7 @@ describe('GenericAdapter - parseResponse', () => {
       expect(result.inputTokens).toBe(12);
       expect(result.outputTokens).toBe(6);
       expect(result.tokensUsed).toBe(18); // sum of input + output
-      expect(result.finishReason).toBe('end_turn');
+      expect(result.finishReason).toBe('stop');
     });
 
     it('should throw on invalid Anthropic response', async () => {
