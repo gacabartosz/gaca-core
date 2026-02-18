@@ -84,7 +84,7 @@ export function createRankingRoutes(prisma: PrismaClient, engine: AIEngine): Rou
     try {
       const { successRate, latency, quality } = req.body;
 
-      const weights: any = {};
+      const weights: Record<string, number> = {};
       if (successRate !== undefined) weights.successRate = successRate;
       if (latency !== undefined) weights.latency = latency;
       if (quality !== undefined) weights.quality = quality;

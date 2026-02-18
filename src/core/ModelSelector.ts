@@ -1,8 +1,26 @@
 // ModelSelector - Selects the best available model based on ranking and limits
 
 import { PrismaClient } from '@prisma/client';
-import { ModelWithRanking, ProviderWithModels } from './types.js';
+import type { AIProvider, AIModel, AIModelRanking, AIModelUsage, AIProviderUsage } from '@prisma/client';
+import { ModelWithRanking, ProviderWithModels, ApiFormat } from './types.js';
 import { UsageTracker } from './UsageTracker.js';
+
+// Prisma query result types (what findMany/findUnique with includes returns)
+type DbModelWithRelations = AIModel & {
+  ranking: AIModelRanking | null;
+  usage: AIModelUsage | null;
+};
+
+type DbProviderWithRelations = AIProvider & {
+  models: DbModelWithRelations[];
+  usage: AIProviderUsage | null;
+};
+
+type DbModelWithProvider = AIModel & {
+  provider: AIProvider & { usage: AIProviderUsage | null };
+  ranking: AIModelRanking | null;
+  usage: AIModelUsage | null;
+};
 
 export class ModelSelector {
   private prisma: PrismaClient;
@@ -133,7 +151,7 @@ export class ModelSelector {
       return null;
     }
 
-    const provider = this.formatProvider(model.provider);
+    const provider = this.formatProvider({ ...model.provider, models: [] });
     const formattedModel = this.formatModel(model);
 
     return { model: formattedModel, provider };
@@ -206,14 +224,14 @@ export class ModelSelector {
     return providers.map((p) => this.formatProvider(p));
   }
 
-  private formatProvider(provider: any): ProviderWithModels {
+  private formatProvider(provider: DbProviderWithRelations): ProviderWithModels {
     return {
       id: provider.id,
       name: provider.name,
       slug: provider.slug,
       baseUrl: provider.baseUrl,
       apiKey: provider.apiKey,
-      apiFormat: provider.apiFormat as any,
+      apiFormat: provider.apiFormat as ApiFormat,
       authHeader: provider.authHeader,
       authPrefix: provider.authPrefix,
       customHeaders: JSON.parse(provider.customHeaders || '{}'),
@@ -221,7 +239,7 @@ export class ModelSelector {
       rateLimitRpd: provider.rateLimitRpd,
       isEnabled: provider.isEnabled,
       priority: provider.priority,
-      models: (provider.models || []).map((m: any) => this.formatModel(m)),
+      models: (provider.models || []).map((m) => this.formatModel(m)),
       usage: provider.usage
         ? {
             requestsToday: provider.usage.requestsToday,
@@ -233,7 +251,7 @@ export class ModelSelector {
     };
   }
 
-  private formatModel(model: any): ModelWithRanking {
+  private formatModel(model: DbModelWithRelations): ModelWithRanking {
     return {
       id: model.id,
       providerId: model.providerId,

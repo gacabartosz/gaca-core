@@ -142,7 +142,7 @@ export function createModelRoutes(prisma: PrismaClient, engine: AIEngine): Route
         isDefault,
       } = req.body;
 
-      const updateData: any = {};
+      const updateData: Record<string, unknown> = {};
 
       if (name !== undefined) updateData.name = name;
       if (displayName !== undefined) updateData.displayName = displayName;
