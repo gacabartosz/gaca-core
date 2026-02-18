@@ -149,11 +149,11 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 - [x] Show toasts for: provider test result, ranking recalculate, errors
 - [x] Auto-dismiss after 4 seconds with slide-in animation
 
-### Task 8.3: Improve TestPanel with conversation history
-- [ ] Store prompt/response pairs in component state
-- [ ] Show scrollable history: each entry shows prompt, response, provider badge, latency
-- [ ] Add "Clear" button
-- [ ] Persist to localStorage
+### Task 8.3: Improve TestPanel with conversation history (DONE)
+- [x] Store prompt/response pairs in component state (HistoryEntry interface)
+- [x] Show scrollable history: each entry shows prompt, response, provider badge, latency
+- [x] Add "Clear" button
+- [x] Persist to localStorage (last 50 entries)
 
 ### Task 8.4: Add provider health dashboard
 - [ ] In ProviderList, show colored status dots (green/yellow/red)

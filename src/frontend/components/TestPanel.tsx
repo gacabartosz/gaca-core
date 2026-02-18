@@ -1,6 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api, CompletionResponse, Prompt } from '../api';
 
+interface HistoryEntry {
+  id: number;
+  prompt: string;
+  content: string;
+  providerName: string;
+  model: string;
+  latencyMs: number;
+  tokensUsed?: number;
+  timestamp: number;
+}
+
+const HISTORY_KEY = 'gaca-test-history';
+
+function loadHistory(): HistoryEntry[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(history: HistoryEntry[]) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-50)));
+}
+
 export default function TestPanel() {
   const [prompt, setPrompt] = useState('');
   const [systemPrompt, setSystemPrompt] = useState('');
@@ -14,7 +40,9 @@ export default function TestPanel() {
   const [streamContent, setStreamContent] = useState('');
   const [streamMeta, setStreamMeta] = useState<Omit<CompletionResponse, 'content'> | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>(loadHistory);
   const contentRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadPrompts();
@@ -36,10 +64,32 @@ export default function TestPanel() {
     }
   };
 
+  const addToHistory = (promptText: string, content: string, meta: { providerName: string; model: string; latencyMs: number; tokensUsed?: number }) => {
+    const entry: HistoryEntry = {
+      id: Date.now(),
+      prompt: promptText,
+      content,
+      providerName: meta.providerName,
+      model: meta.model,
+      latencyMs: meta.latencyMs,
+      tokensUsed: meta.tokensUsed,
+      timestamp: Date.now(),
+    };
+    const updated = [...history, entry];
+    setHistory(updated);
+    saveHistory(updated);
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem(HISTORY_KEY);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
+    const submittedPrompt = prompt;
     setLoading(true);
     setError(null);
     setResponse(null);
@@ -47,22 +97,23 @@ export default function TestPanel() {
     setStreamMeta(null);
 
     if (streaming) {
-      await handleStreamRequest();
+      await handleStreamRequest(submittedPrompt);
     } else {
-      await handleNormalRequest();
+      await handleNormalRequest(submittedPrompt);
     }
   };
 
-  const handleNormalRequest = async () => {
+  const handleNormalRequest = async (submittedPrompt: string) => {
     try {
       const result = await api.complete({
-        prompt,
+        prompt: submittedPrompt,
         systemPrompt: systemPrompt || undefined,
         systemPromptName: systemPromptName || undefined,
         temperature: parseFloat(temperature),
         maxTokens: parseInt(maxTokens),
       });
       setResponse(result);
+      addToHistory(submittedPrompt, result.content, result);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -70,13 +121,13 @@ export default function TestPanel() {
     }
   };
 
-  const handleStreamRequest = async () => {
+  const handleStreamRequest = async (submittedPrompt: string) => {
     try {
       const res = await fetch('/api/complete/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt,
+          prompt: submittedPrompt,
           systemPrompt: systemPrompt || undefined,
           systemPromptName: systemPromptName || undefined,
           temperature: parseFloat(temperature),
@@ -95,6 +146,7 @@ export default function TestPanel() {
       const decoder = new TextDecoder();
       let buffer = '';
       let fullContent = '';
+      let finalMeta: any = null;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -118,15 +170,15 @@ export default function TestPanel() {
             }
 
             if (data.done) {
-              // Final event with metadata
-              setStreamMeta({
+              finalMeta = {
                 model: data.model,
                 modelId: data.modelId,
                 providerId: data.providerId,
                 providerName: data.providerName,
                 tokensUsed: data.tokensUsed,
                 latencyMs: data.latencyMs,
-              });
+              };
+              setStreamMeta(finalMeta);
             } else {
               // Token event
               fullContent += data.token;
@@ -142,6 +194,11 @@ export default function TestPanel() {
       if (fullContent && !error) {
         setStreamContent(fullContent);
       }
+
+      // Add to history after stream completes
+      if (fullContent && finalMeta) {
+        addToHistory(submittedPrompt, fullContent, finalMeta);
+      }
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -156,168 +213,206 @@ export default function TestPanel() {
     : null;
 
   return (
-    <div className="grid grid-cols-2 gap-6">
-      {/* Input */}
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Test AI Completion</h2>
+    <div>
+      <div className="grid grid-cols-2 gap-6">
+        {/* Input */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Test AI Completion</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="label">System Prompt (select or enter)</label>
-            <div className="flex gap-2 mb-2">
-              <select
-                className="input flex-1"
-                value={systemPromptName}
-                onChange={(e) => {
-                  setSystemPromptName(e.target.value);
-                  if (e.target.value) {
-                    setSystemPrompt('');
-                  }
-                }}
-              >
-                <option value="">Custom (below)</option>
-                {prompts.map((p) => (
-                  <option key={p.name} value={p.name}>
-                    {p.name} {p.isCustom ? '' : '(default)'}
-                  </option>
-                ))}
-              </select>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="label">System Prompt (select or enter)</label>
+              <div className="flex gap-2 mb-2">
+                <select
+                  className="input flex-1"
+                  value={systemPromptName}
+                  onChange={(e) => {
+                    setSystemPromptName(e.target.value);
+                    if (e.target.value) {
+                      setSystemPrompt('');
+                    }
+                  }}
+                >
+                  <option value="">Custom (below)</option>
+                  {prompts.map((p) => (
+                    <option key={p.name} value={p.name}>
+                      {p.name} {p.isCustom ? '' : '(default)'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {!systemPromptName && (
+                <textarea
+                  className="input"
+                  rows={3}
+                  value={systemPrompt}
+                  onChange={(e) => setSystemPrompt(e.target.value)}
+                  placeholder="Optional: Enter a custom system prompt..."
+                />
+              )}
             </div>
-            {!systemPromptName && (
+
+            <div>
+              <label className="label">Prompt</label>
               <textarea
                 className="input"
-                rows={3}
-                value={systemPrompt}
-                onChange={(e) => setSystemPrompt(e.target.value)}
-                placeholder="Optional: Enter a custom system prompt..."
-              />
-            )}
-          </div>
-
-          <div>
-            <label className="label">Prompt</label>
-            <textarea
-              className="input"
-              rows={6}
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt here..."
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Temperature</label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="2"
-                className="input"
-                value={temperature}
-                onChange={(e) => setTemperature(e.target.value)}
+                rows={6}
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="Enter your prompt here..."
+                required
               />
             </div>
-            <div>
-              <label className="label">Max Tokens</label>
-              <input
-                type="number"
-                min="1"
-                max="4096"
-                className="input"
-                value={maxTokens}
-                onChange={(e) => setMaxTokens(e.target.value)}
-              />
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="label">Temperature</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="2"
+                  className="input"
+                  value={temperature}
+                  onChange={(e) => setTemperature(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label">Max Tokens</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="4096"
+                  className="input"
+                  value={maxTokens}
+                  onChange={(e) => setMaxTokens(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Stream toggle */}
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={streaming}
-              onChange={(e) => setStreaming(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
-            />
-            <span className="text-sm text-gray-300">Stream response (SSE)</span>
-          </label>
+            {/* Stream toggle */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={streaming}
+                onChange={(e) => setStreaming(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+              />
+              <span className="text-sm text-gray-300">Stream response (SSE)</span>
+            </label>
 
-          <button type="submit" disabled={loading} className="btn btn-primary w-full">
-            {loading ? (streaming ? 'Streaming...' : 'Processing...') : 'Send Request'}
-          </button>
-        </form>
-      </div>
+            <button type="submit" disabled={loading} className="btn btn-primary w-full">
+              {loading ? (streaming ? 'Streaming...' : 'Processing...') : 'Send Request'}
+            </button>
+          </form>
+        </div>
 
-      {/* Output */}
-      <div>
-        <h2 className="text-lg font-semibold mb-4">Response</h2>
+        {/* Output */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Response</h2>
 
-        {error && (
-          <div className="bg-red-900/50 border border-red-700 rounded-lg p-4 text-red-300">
-            <strong>Error:</strong> {error}
-          </div>
-        )}
+          {error && (
+            <div className="bg-red-900/50 border border-red-700 rounded-lg p-4 text-red-300">
+              <strong>Error:</strong> {error}
+            </div>
+          )}
 
-        {(response || hasStreamResult) && (
-          <div className="space-y-4">
-            {/* Metadata */}
-            {displayMeta && (
-              <div className="card">
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-gray-400">Provider:</span>{' '}
-                    <span className="font-medium">{displayMeta.providerName}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400">Model:</span>{' '}
-                    <span className="font-medium">{displayMeta.model}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400">Latency:</span>{' '}
-                    <span className="font-medium">{displayMeta.latencyMs}ms</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400">Tokens:</span>{' '}
-                    <span className="font-medium">{displayMeta.tokensUsed || 'N/A'}</span>
-                  </div>
-                  {'cost' in displayMeta && displayMeta.cost !== undefined && (
+          {(response || hasStreamResult) && (
+            <div className="space-y-4">
+              {/* Metadata */}
+              {displayMeta && (
+                <div className="card">
+                  <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                      <span className="text-gray-400">Cost:</span>{' '}
-                      <span className="font-medium">${(displayMeta.cost as number).toFixed(6)}</span>
+                      <span className="text-gray-400">Provider:</span>{' '}
+                      <span className="font-medium">{displayMeta.providerName}</span>
                     </div>
+                    <div>
+                      <span className="text-gray-400">Model:</span>{' '}
+                      <span className="font-medium">{displayMeta.model}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Latency:</span>{' '}
+                      <span className="font-medium">{displayMeta.latencyMs}ms</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Tokens:</span>{' '}
+                      <span className="font-medium">{displayMeta.tokensUsed || 'N/A'}</span>
+                    </div>
+                    {'cost' in displayMeta && displayMeta.cost !== undefined && (
+                      <div>
+                        <span className="text-gray-400">Cost:</span>{' '}
+                        <span className="font-medium">${(displayMeta.cost as number).toFixed(6)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="card">
+                <label className="label mb-2">
+                  Response Content
+                  {loading && streaming && (
+                    <span className="ml-2 text-blue-400 text-xs animate-pulse">streaming...</span>
+                  )}
+                </label>
+                <div
+                  ref={contentRef}
+                  className="bg-gray-900 rounded-lg p-4 whitespace-pre-wrap font-mono text-sm max-h-96 overflow-y-auto"
+                >
+                  {displayContent}
+                  {loading && streaming && (
+                    <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-0.5" />
                   )}
                 </div>
               </div>
-            )}
-
-            {/* Content */}
-            <div className="card">
-              <label className="label mb-2">
-                Response Content
-                {loading && streaming && (
-                  <span className="ml-2 text-blue-400 text-xs animate-pulse">streaming...</span>
-                )}
-              </label>
-              <div
-                ref={contentRef}
-                className="bg-gray-900 rounded-lg p-4 whitespace-pre-wrap font-mono text-sm max-h-96 overflow-y-auto"
-              >
-                {displayContent}
-                {loading && streaming && (
-                  <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-0.5" />
-                )}
-              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {!error && !response && !hasStreamResult && (
-          <div className="card text-center py-16 text-gray-500">
-            Send a request to see the response
-          </div>
-        )}
+          {!error && !response && !hasStreamResult && (
+            <div className="card text-center py-16 text-gray-500">
+              Send a request to see the response
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Conversation History */}
+      {history.length > 0 && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">History ({history.length})</h2>
+            <button onClick={clearHistory} className="btn btn-danger btn-sm">
+              Clear
+            </button>
+          </div>
+          <div ref={historyRef} className="space-y-3 max-h-96 overflow-y-auto">
+            {[...history].reverse().map((entry) => (
+              <div key={entry.id} className="card">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="badge badge-info">{entry.providerName}</span>
+                    <span className="text-xs text-gray-400">{entry.model}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <span>{entry.latencyMs}ms</span>
+                    {entry.tokensUsed && <span>{entry.tokensUsed} tokens</span>}
+                    <span>{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                  </div>
+                </div>
+                <div className="text-sm text-gray-300 mb-1">
+                  <span className="text-gray-500 font-medium">Prompt: </span>
+                  {entry.prompt.length > 100 ? entry.prompt.substring(0, 100) + '...' : entry.prompt}
+                </div>
+                <div className="bg-gray-900 rounded p-2 text-sm font-mono whitespace-pre-wrap max-h-32 overflow-y-auto">
+                  {entry.content.length > 500 ? entry.content.substring(0, 500) + '...' : entry.content}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
