@@ -26,6 +26,37 @@ export const StreamRequestSchema = z.object({
 });
 
 // ============================================
+// Gaca-compat completion schema (accepts messages OR prompt)
+// ============================================
+
+const ChatMessageSchema = z.object({
+  role: z.enum(['system', 'user', 'assistant']),
+  content: z.string().min(1),
+});
+
+export const GacaCompleteSchema = z
+  .object({
+    prompt: z.string().max(100000).optional(),
+    messages: z.array(ChatMessageSchema).min(1).optional(),
+    systemPrompt: z.string().optional(),
+    systemPromptName: z.string().optional(),
+    temperature: z.number().min(0).max(2).optional(),
+    maxTokens: z.number().int().min(1).max(100000).optional(),
+    max_tokens: z.number().int().min(1).max(100000).optional(),
+    providerId: z.string().optional(),
+    modelId: z.string().optional(),
+    model: z.string().optional(),
+  })
+  .refine((data) => data.prompt || data.messages, {
+    message: 'Either "prompt" or "messages" is required',
+  })
+  .transform((data) => ({
+    ...data,
+    maxTokens: data.maxTokens ?? data.max_tokens,
+    modelId: data.modelId ?? data.model,
+  }));
+
+// ============================================
 // Provider schemas
 // ============================================
 

@@ -16,6 +16,7 @@ import { createModelRoutes } from './routes/models.routes.js';
 import { createRankingRoutes } from './routes/ranking.routes.js';
 import { createPromptRoutes } from './routes/prompts.routes.js';
 import { createCompleteRoutes } from './routes/complete.routes.js';
+import { createCompatRoutes } from './routes/compat.routes.js';
 
 // Load environment variables
 config();
@@ -149,6 +150,8 @@ const completionLimiter = rateLimit({
 });
 // Complete endpoints are publicly accessible (no auth) but rate-limited
 app.use('/api/complete', completionLimiter, createCompleteRoutes(prisma, engine));
+// Compat endpoints for bartoszgaca.pl services (/api/gaca/*)
+app.use('/api/gaca', completionLimiter, createCompatRoutes(prisma, engine));
 
 // Serve frontend static files (production build)
 const frontendPath = resolve(process.cwd(), 'dist/frontend');
