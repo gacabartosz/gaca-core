@@ -175,7 +175,10 @@ app.use((req: Request, res: Response) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-// Start server
+// Export app for testing (supertest)
+export { app };
+
+// Start server (skip in test mode)
 async function start() {
   try {
     await prisma.$connect();
@@ -203,4 +206,6 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-start();
+if (process.env.NODE_ENV !== 'test') {
+  start();
+}
