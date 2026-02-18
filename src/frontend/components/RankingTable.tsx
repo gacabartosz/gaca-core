@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { api, Ranking } from '../api';
 import { RankingTableSkeleton } from './Skeleton';
+import { useToast } from './Toast';
 
 export default function RankingTable() {
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recalculating, setRecalculating] = useState(false);
+  const { addToast } = useToast();
 
   useEffect(() => {
     loadRankings();
@@ -30,8 +32,10 @@ export default function RankingTable() {
     try {
       const result = await api.recalculateRankings();
       setRankings(result.rankings);
+      addToast(`Rankings recalculated (${result.rankings.length} models)`, 'success');
     } catch (e: any) {
       setError(e.message);
+      addToast(`Recalculate failed: ${e.message}`, 'error');
     } finally {
       setRecalculating(false);
     }

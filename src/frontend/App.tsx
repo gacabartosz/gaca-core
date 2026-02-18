@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ToastProvider } from './components/Toast';
 import ProviderList from './components/ProviderList';
 import RankingTable from './components/RankingTable';
 import PromptEditor from './components/PromptEditor';
@@ -19,6 +20,7 @@ function App() {
   ];
 
   return (
+    <ToastProvider>
     <div className="min-h-screen">
       {/* Header */}
       <header className="bg-gray-800 border-b border-gray-700">
@@ -71,6 +73,7 @@ function App() {
         {activeTab === 'usage' && <UsageStats />}
       </main>
     </div>
+    </ToastProvider>
   );
 }
 

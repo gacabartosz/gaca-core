@@ -3,6 +3,7 @@ import { api, Provider, TestResult } from '../api';
 import ProviderForm from './ProviderForm';
 import ModelList from './ModelList';
 import { ProviderListSkeleton } from './Skeleton';
+import { useToast } from './Toast';
 
 export default function ProviderList() {
   const [providers, setProviders] = useState<Provider[]>([]);
@@ -13,6 +14,7 @@ export default function ProviderList() {
   const [expandedProvider, setExpandedProvider] = useState<string | null>(null);
   const [testResults, setTestResults] = useState<Record<string, TestResult>>({});
   const [testing, setTesting] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   useEffect(() => {
     loadProviders();
@@ -36,11 +38,17 @@ export default function ProviderList() {
     try {
       const result = await api.testProvider(providerId);
       setTestResults((prev) => ({ ...prev, [providerId]: result }));
+      if (result.success) {
+        addToast(`Provider test passed (${result.latencyMs}ms)`, 'success');
+      } else {
+        addToast(`Provider test failed: ${result.error}`, 'error');
+      }
     } catch (e: any) {
       setTestResults((prev) => ({
         ...prev,
         [providerId]: { success: false, error: e.message },
       }));
+      addToast(`Test error: ${e.message}`, 'error');
     } finally {
       setTesting(null);
     }
