@@ -2,14 +2,16 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Get prompts directory - relative to project root
 const getPromptsDir = (): string => {
+  const currentDir = path.dirname(fileURLToPath(import.meta.url));
   // Try to find the prompts directory relative to cwd or dist
   const possiblePaths = [
     path.join(process.cwd(), 'src', 'prompts'),
     path.join(process.cwd(), 'dist', 'prompts'),
-    path.join(__dirname),
+    currentDir,
   ];
 
   for (const p of possiblePaths) {
