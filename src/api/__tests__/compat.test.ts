@@ -178,45 +178,45 @@ describe('Compat API (/api/gaca/*)', () => {
       });
     });
 
-    it('converts messages array to prompt', async () => {
+    it('passes messages directly to engine', async () => {
       mockEngineComplete.mockResolvedValueOnce(MOCK_RESPONSE);
+
+      const messages = [
+        { role: 'system', content: 'You are helpful.' },
+        { role: 'user', content: 'Hi there' },
+      ];
 
       const res = await request(app)
         .post('/api/gaca/complete')
-        .send({
-          messages: [
-            { role: 'system', content: 'You are helpful.' },
-            { role: 'user', content: 'Hi there' },
-          ],
-        });
+        .send({ messages });
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.data.content).toBe('Hello! How can I help?');
 
-      // Verify engine was called with converted prompt
+      // Verify engine was called with messages passed through (not converted to prompt)
       const call = mockEngineComplete.mock.calls[0][0];
-      expect(call.prompt).toBe('Hi there');
-      expect(call.systemPrompt).toBe('You are helpful.');
+      expect(call.messages).toEqual(messages);
+      expect(call.prompt).toBeUndefined();
+      expect(call.systemPrompt).toBeUndefined();
     });
 
-    it('converts multi-turn messages to formatted prompt', async () => {
+    it('passes multi-turn messages directly to engine', async () => {
       mockEngineComplete.mockResolvedValueOnce(MOCK_RESPONSE);
+
+      const messages = [
+        { role: 'user', content: 'Hello' },
+        { role: 'assistant', content: 'Hi!' },
+        { role: 'user', content: 'How are you?' },
+      ];
 
       await request(app)
         .post('/api/gaca/complete')
-        .send({
-          messages: [
-            { role: 'user', content: 'Hello' },
-            { role: 'assistant', content: 'Hi!' },
-            { role: 'user', content: 'How are you?' },
-          ],
-        });
+        .send({ messages });
 
       const call = mockEngineComplete.mock.calls[0][0];
-      expect(call.prompt).toContain('User: Hello');
-      expect(call.prompt).toContain('Assistant: Hi!');
-      expect(call.prompt).toContain('User: How are you?');
+      expect(call.messages).toEqual(messages);
+      expect(call.prompt).toBeUndefined();
     });
 
     it('returns 400 without prompt or messages', async () => {

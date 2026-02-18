@@ -4,7 +4,6 @@
 import { Router, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AIEngine } from '../../core/AIEngine.js';
-import { convertMessages } from '../../core/messageConverter.js';
 import { loadPrompt } from '../../prompts/loader.js';
 import { generateRequestId } from '../../core/types.js';
 import { validateBody, GacaCompleteSchema } from '../../core/validation.js';
@@ -18,20 +17,11 @@ export function createCompatRoutes(prisma: PrismaClient, engine: AIEngine): Rout
     const requestId = generateRequestId();
 
     try {
-      const { prompt, messages, systemPrompt, systemPromptName, temperature, maxTokens, providerId, modelId } =
+      const { prompt, messages, systemPrompt, systemPromptName, temperature, maxTokens, providerId, modelId, responseFormat } =
         req.body;
 
-      // Resolve prompt from messages if needed
-      let finalPrompt = prompt;
+      // Resolve system prompt from file if name provided
       let finalSystemPrompt = systemPrompt;
-
-      if (messages && !prompt) {
-        const converted = convertMessages(messages, systemPrompt);
-        finalPrompt = converted.prompt;
-        finalSystemPrompt = converted.systemPrompt ?? finalSystemPrompt;
-      }
-
-      // Load system prompt from file if name provided
       if (systemPromptName && !finalSystemPrompt) {
         try {
           finalSystemPrompt = loadPrompt(systemPromptName);
@@ -40,13 +30,29 @@ export function createCompatRoutes(prisma: PrismaClient, engine: AIEngine): Rout
         }
       }
 
-      const aiRequest = {
-        prompt: finalPrompt,
-        systemPrompt: finalSystemPrompt,
+      // Build AI request — pass messages directly to engine when available
+      const aiRequest: Record<string, unknown> = {
         temperature,
         maxTokens,
         requestId,
       };
+
+      if (messages && !prompt) {
+        // Messages mode: pass through directly (supports vision/multimodal)
+        aiRequest.messages = messages;
+        // Only set systemPrompt if provided separately (not inside messages)
+        if (finalSystemPrompt) {
+          aiRequest.systemPrompt = finalSystemPrompt;
+        }
+      } else {
+        // Prompt mode: simple text completion
+        aiRequest.prompt = prompt;
+        aiRequest.systemPrompt = finalSystemPrompt;
+      }
+
+      if (responseFormat) {
+        aiRequest.responseFormat = responseFormat;
+      }
 
       let response;
       if (modelId) {
