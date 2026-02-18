@@ -1,7 +1,15 @@
 // AIEngine - Main AI completion engine with failover and ranking
 
 import { PrismaClient } from '@prisma/client';
-import { AIRequest, AIResponse, FailoverEvent, ProviderConfig, ModelConfig, TestResult, generateRequestId } from './types.js';
+import {
+  AIRequest,
+  AIResponse,
+  FailoverEvent,
+  ProviderConfig,
+  ModelConfig,
+  TestResult,
+  generateRequestId,
+} from './types.js';
 import { GenericAdapter } from './GenericAdapter.js';
 import { ModelSelector } from './ModelSelector.js';
 import { RankingService } from './RankingService.js';
@@ -88,12 +96,15 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        logger.warn({ requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) }, 'Completion failed, failing over');
+        logger.warn(
+          { requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) },
+          'Completion failed, failing over',
+        );
       }
     }
 
     throw new Error(
-      `[${requestId}] All AI providers failed after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`
+      `[${requestId}] All AI providers failed after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`,
     );
   }
 
@@ -178,10 +189,7 @@ export class AIEngine {
   }
 
   // Streaming completion with automatic model selection and failover
-  async completeStream(
-    request: AIRequest,
-    onToken: (token: string) => void,
-  ): Promise<AIResponse> {
+  async completeStream(request: AIRequest, onToken: (token: string) => void): Promise<AIResponse> {
     const requestId = request.requestId || generateRequestId();
     const excludeModelIds: string[] = [];
     let lastError: Error | null = null;
@@ -235,12 +243,15 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        logger.warn({ requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) }, 'Stream failed, failing over');
+        logger.warn(
+          { requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) },
+          'Stream failed, failing over',
+        );
       }
     }
 
     throw new Error(
-      `[${requestId}] All AI providers failed streaming after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`
+      `[${requestId}] All AI providers failed streaming after ${attempts} attempts. Last error: ${lastError?.message || 'Unknown error'}`,
     );
   }
 
@@ -323,7 +334,10 @@ export class AIEngine {
   }
 
   // Get rate limit info for a provider/model after a request
-  async getRateLimitInfo(providerId: string, modelId: string): Promise<{
+  async getRateLimitInfo(
+    providerId: string,
+    modelId: string,
+  ): Promise<{
     providerRpm: number | null;
     providerRpd: number | null;
     modelRpm: number | null;

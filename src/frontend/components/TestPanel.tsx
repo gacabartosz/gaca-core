@@ -64,7 +64,11 @@ export default function TestPanel() {
     }
   };
 
-  const addToHistory = (promptText: string, content: string, meta: { providerName: string; model: string; latencyMs: number; tokensUsed?: number }) => {
+  const addToHistory = (
+    promptText: string,
+    content: string,
+    meta: { providerName: string; model: string; latencyMs: number; tokensUsed?: number },
+  ) => {
     const entry: HistoryEntry = {
       id: Date.now(),
       prompt: promptText,
@@ -208,9 +212,19 @@ export default function TestPanel() {
 
   const hasStreamResult = streamContent || streamMeta;
   const displayContent = streaming ? streamContent : response?.content;
-  const displayMeta = streaming ? streamMeta : response
-    ? { model: response.model, modelId: response.modelId, providerId: response.providerId, providerName: response.providerName, tokensUsed: response.tokensUsed, latencyMs: response.latencyMs, cost: response.cost }
-    : null;
+  const displayMeta = streaming
+    ? streamMeta
+    : response
+      ? {
+          model: response.model,
+          modelId: response.modelId,
+          providerId: response.providerId,
+          providerName: response.providerName,
+          tokensUsed: response.tokensUsed,
+          latencyMs: response.latencyMs,
+          cost: response.cost,
+        }
+      : null;
 
   return (
     <div>
@@ -362,18 +376,14 @@ export default function TestPanel() {
                   className="bg-gray-900 rounded-lg p-4 whitespace-pre-wrap font-mono text-sm max-h-96 overflow-y-auto"
                 >
                   {displayContent}
-                  {loading && streaming && (
-                    <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-0.5" />
-                  )}
+                  {loading && streaming && <span className="inline-block w-2 h-4 bg-blue-400 animate-pulse ml-0.5" />}
                 </div>
               </div>
             </div>
           )}
 
           {!error && !response && !hasStreamResult && (
-            <div className="card text-center py-16 text-gray-500">
-              Send a request to see the response
-            </div>
+            <div className="card text-center py-16 text-gray-500">Send a request to see the response</div>
           )}
         </div>
       </div>

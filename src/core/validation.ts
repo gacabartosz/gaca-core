@@ -31,7 +31,10 @@ export const StreamRequestSchema = z.object({
 
 export const CreateProviderSchema = z.object({
   name: z.string().min(1, 'name is required'),
-  slug: z.string().min(1, 'slug is required').regex(/^[a-z0-9-]+$/, 'slug must be lowercase alphanumeric with hyphens'),
+  slug: z
+    .string()
+    .min(1, 'slug is required')
+    .regex(/^[a-z0-9-]+$/, 'slug must be lowercase alphanumeric with hyphens'),
   baseUrl: z.url('baseUrl must be a valid URL'),
   apiKey: z.string().nullable().optional(),
   apiFormat: z.enum(['openai', 'anthropic', 'google', 'custom']).default('openai'),

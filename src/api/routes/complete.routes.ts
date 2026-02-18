@@ -16,15 +16,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
     const requestId = generateRequestId();
 
     try {
-      const {
-        prompt,
-        systemPrompt,
-        systemPromptName,
-        temperature,
-        maxTokens,
-        providerId,
-        modelId,
-      } = req.body;
+      const { prompt, systemPrompt, systemPromptName, temperature, maxTokens, providerId, modelId } = req.body;
 
       // Load system prompt from file if name provided
       let finalSystemPrompt = systemPrompt;
@@ -63,14 +55,8 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
       try {
         const rateInfo = await engine.getRateLimitInfo(response.providerId, response.modelId);
 
-        const effectiveRpm = Math.min(
-          rateInfo.providerRpm ?? Infinity,
-          rateInfo.modelRpm ?? Infinity
-        );
-        const effectiveRpd = Math.min(
-          rateInfo.providerRpd ?? Infinity,
-          rateInfo.modelRpd ?? Infinity
-        );
+        const effectiveRpm = Math.min(rateInfo.providerRpm ?? Infinity, rateInfo.modelRpm ?? Infinity);
+        const effectiveRpd = Math.min(rateInfo.providerRpd ?? Infinity, rateInfo.modelRpd ?? Infinity);
         const usedMinute = Math.max(rateInfo.providerUsedMinute, rateInfo.modelUsedMinute);
         const usedDay = Math.max(rateInfo.providerUsedDay, rateInfo.modelUsedDay);
 
@@ -98,13 +84,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
     const requestId = generateRequestId();
 
     try {
-      const {
-        prompt,
-        systemPrompt,
-        systemPromptName,
-        temperature,
-        maxTokens,
-      } = req.body;
+      const { prompt, systemPrompt, systemPromptName, temperature, maxTokens } = req.body;
 
       let finalSystemPrompt = systemPrompt;
       if (systemPromptName && !systemPrompt) {
@@ -135,17 +115,19 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
       });
 
       // Send final event with metadata
-      res.write(`data: ${JSON.stringify({
-        token: '',
-        done: true,
-        model: response.model,
-        modelId: response.modelId,
-        providerId: response.providerId,
-        providerName: response.providerName,
-        tokensUsed: response.tokensUsed,
-        latencyMs: response.latencyMs,
-        requestId,
-      })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({
+          token: '',
+          done: true,
+          model: response.model,
+          modelId: response.modelId,
+          providerId: response.providerId,
+          providerName: response.providerName,
+          tokensUsed: response.tokensUsed,
+          latencyMs: response.latencyMs,
+          requestId,
+        })}\n\n`,
+      );
 
       res.end();
     } catch (error: any) {
@@ -175,7 +157,7 @@ export function createCompleteRoutes(prisma: PrismaClient, engine: AIEngine): Ro
           score: item.model.ranking?.score || 0,
           successRate: item.model.ranking?.successRate || 0,
           avgLatencyMs: item.model.ranking?.avgLatencyMs || 0,
-        }))
+        })),
       );
     } catch (error: any) {
       res.status(500).json({ error: error.message });

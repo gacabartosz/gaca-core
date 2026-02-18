@@ -56,11 +56,13 @@ function makeDbModel(overrides: Record<string, any> = {}) {
 }
 
 // Create a mock Prisma + UsageTracker
-function createMocks(options: {
-  providers?: any[];
-  canUseProvider?: boolean | ((id: string) => boolean);
-  canUseModel?: boolean | ((id: string) => boolean);
-} = {}) {
+function createMocks(
+  options: {
+    providers?: any[];
+    canUseProvider?: boolean | ((id: string) => boolean);
+    canUseModel?: boolean | ((id: string) => boolean);
+  } = {},
+) {
   const { providers = [], canUseProvider = true, canUseModel = true } = options;
 
   const prisma = {
@@ -83,12 +85,9 @@ function createMocks(options: {
   } as any;
 
   const usageTracker = {
-    canUseProvider: typeof canUseProvider === 'function'
-      ? vi.fn(canUseProvider)
-      : vi.fn().mockReturnValue(canUseProvider),
-    canUseModel: typeof canUseModel === 'function'
-      ? vi.fn(canUseModel)
-      : vi.fn().mockReturnValue(canUseModel),
+    canUseProvider:
+      typeof canUseProvider === 'function' ? vi.fn(canUseProvider) : vi.fn().mockReturnValue(canUseProvider),
+    canUseModel: typeof canUseModel === 'function' ? vi.fn(canUseModel) : vi.fn().mockReturnValue(canUseModel),
   } as unknown as UsageTracker;
 
   return { prisma, usageTracker };
@@ -97,9 +96,21 @@ function createMocks(options: {
 describe('ModelSelector', () => {
   describe('model selection order (highest ranking first)', () => {
     it('should select model with highest ranking score', async () => {
-      const modelA = makeDbModel({ id: 'model-a', name: 'model-a', ranking: { score: 0.6, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
-      const modelB = makeDbModel({ id: 'model-b', name: 'model-b', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 200, sampleSize: 50 } });
-      const modelC = makeDbModel({ id: 'model-c', name: 'model-c', ranking: { score: 0.75, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        name: 'model-a',
+        ranking: { score: 0.6, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        name: 'model-b',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 200, sampleSize: 50 },
+      });
+      const modelC = makeDbModel({
+        id: 'model-c',
+        name: 'model-c',
+        ranking: { score: 0.75, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });
@@ -108,14 +119,22 @@ describe('ModelSelector', () => {
       const available = await selector.getAvailableModels();
 
       expect(available).toHaveLength(3);
-      expect(available[0].model.id).toBe('model-b');  // score 0.9
-      expect(available[1].model.id).toBe('model-c');  // score 0.75
-      expect(available[2].model.id).toBe('model-a');  // score 0.6
+      expect(available[0].model.id).toBe('model-b'); // score 0.9
+      expect(available[1].model.id).toBe('model-c'); // score 0.75
+      expect(available[2].model.id).toBe('model-a'); // score 0.6
     });
 
     it('should prefer default models when scores are equal', async () => {
-      const modelA = makeDbModel({ id: 'model-a', isDefault: false, ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 } });
-      const modelB = makeDbModel({ id: 'model-b', isDefault: true, ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        isDefault: false,
+        ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        isDefault: true,
+        ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });
@@ -128,8 +147,16 @@ describe('ModelSelector', () => {
     });
 
     it('should prefer lower provider priority when scores and default are equal', async () => {
-      const model1 = makeDbModel({ id: 'model-1', providerId: 'prov-1', ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 } });
-      const model2 = makeDbModel({ id: 'model-2', providerId: 'prov-2', ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 } });
+      const model1 = makeDbModel({
+        id: 'model-1',
+        providerId: 'prov-1',
+        ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 },
+      });
+      const model2 = makeDbModel({
+        id: 'model-2',
+        providerId: 'prov-2',
+        ranking: { score: 0.8, successRate: 1.0, avgLatencyMs: 200, sampleSize: 10 },
+      });
 
       const provider1 = makeDbProvider({ id: 'prov-1', priority: 5, models: [model1] });
       const provider2 = makeDbProvider({ id: 'prov-2', priority: 1, models: [model2] });
@@ -144,7 +171,10 @@ describe('ModelSelector', () => {
     });
 
     it('should treat null ranking score as 0', async () => {
-      const modelRanked = makeDbModel({ id: 'model-ranked', ranking: { score: 0.3, successRate: 0.5, avgLatencyMs: 1000, sampleSize: 5 } });
+      const modelRanked = makeDbModel({
+        id: 'model-ranked',
+        ranking: { score: 0.3, successRate: 0.5, avgLatencyMs: 1000, sampleSize: 5 },
+      });
       const modelUnranked = makeDbModel({ id: 'model-unranked', ranking: null });
 
       const provider = makeDbProvider({ models: [modelUnranked, modelRanked] });
@@ -158,8 +188,14 @@ describe('ModelSelector', () => {
     });
 
     it('should select first available via selectBestModel', async () => {
-      const modelA = makeDbModel({ id: 'model-a', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
-      const modelB = makeDbModel({ id: 'model-b', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 200, sampleSize: 50 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 200, sampleSize: 50 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });
@@ -174,8 +210,16 @@ describe('ModelSelector', () => {
 
   describe('rate limit filtering', () => {
     it('should skip providers that are rate-limited', async () => {
-      const model1 = makeDbModel({ id: 'model-1', providerId: 'prov-limited', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 } });
-      const model2 = makeDbModel({ id: 'model-2', providerId: 'prov-ok', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
+      const model1 = makeDbModel({
+        id: 'model-1',
+        providerId: 'prov-limited',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 },
+      });
+      const model2 = makeDbModel({
+        id: 'model-2',
+        providerId: 'prov-ok',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
 
       const provLimited = makeDbProvider({ id: 'prov-limited', models: [model1] });
       const provOk = makeDbProvider({ id: 'prov-ok', models: [model2] });
@@ -193,8 +237,14 @@ describe('ModelSelector', () => {
     });
 
     it('should skip models that are rate-limited', async () => {
-      const modelLimited = makeDbModel({ id: 'model-limited', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 } });
-      const modelOk = makeDbModel({ id: 'model-ok', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
+      const modelLimited = makeDbModel({
+        id: 'model-limited',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 },
+      });
+      const modelOk = makeDbModel({
+        id: 'model-ok',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
 
       const provider = makeDbProvider({ models: [modelLimited, modelOk] });
 
@@ -262,9 +312,18 @@ describe('ModelSelector', () => {
 
   describe('getNextModel (excluded models)', () => {
     it('should skip excluded model IDs', async () => {
-      const modelA = makeDbModel({ id: 'model-a', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 } });
-      const modelB = makeDbModel({ id: 'model-b', ranking: { score: 0.7, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 } });
-      const modelC = makeDbModel({ id: 'model-c', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        ranking: { score: 0.7, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 },
+      });
+      const modelC = makeDbModel({
+        id: 'model-c',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });
@@ -277,9 +336,18 @@ describe('ModelSelector', () => {
     });
 
     it('should skip multiple excluded models', async () => {
-      const modelA = makeDbModel({ id: 'model-a', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 } });
-      const modelB = makeDbModel({ id: 'model-b', ranking: { score: 0.7, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 } });
-      const modelC = makeDbModel({ id: 'model-c', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        ranking: { score: 0.7, successRate: 0.9, avgLatencyMs: 300, sampleSize: 20 },
+      });
+      const modelC = makeDbModel({
+        id: 'model-c',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });
@@ -304,8 +372,14 @@ describe('ModelSelector', () => {
     });
 
     it('should return first model when no exclusions', async () => {
-      const modelA = makeDbModel({ id: 'model-a', ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 } });
-      const modelB = makeDbModel({ id: 'model-b', ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 } });
+      const modelA = makeDbModel({
+        id: 'model-a',
+        ranking: { score: 0.9, successRate: 1.0, avgLatencyMs: 100, sampleSize: 50 },
+      });
+      const modelB = makeDbModel({
+        id: 'model-b',
+        ranking: { score: 0.5, successRate: 0.8, avgLatencyMs: 500, sampleSize: 10 },
+      });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
       const { prisma, usageTracker } = createMocks({ providers: [provider] });

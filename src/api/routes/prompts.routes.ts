@@ -57,7 +57,7 @@ export function createPromptRoutes(): Router {
 
       // Check if it's a default prompt
       const existing = listPrompts();
-      const isDefault = existing.find((p) => p.name === req.params.name as string && !p.isCustom);
+      const isDefault = existing.find((p) => p.name === (req.params.name as string) && !p.isCustom);
 
       if (isDefault) {
         return res.status(400).json({ error: 'Cannot modify default prompts' });
@@ -75,7 +75,7 @@ export function createPromptRoutes(): Router {
     try {
       // Check if it's a default prompt
       const existing = listPrompts();
-      const isDefault = existing.find((p) => p.name === req.params.name as string && !p.isCustom);
+      const isDefault = existing.find((p) => p.name === (req.params.name as string) && !p.isCustom);
 
       if (isDefault) {
         return res.status(400).json({ error: 'Cannot delete default prompts' });

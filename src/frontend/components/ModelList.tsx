@@ -42,18 +42,14 @@ export default function ModelList({ providerId, models, onRefresh }: Props) {
   };
 
   const handleSave = async (data: Partial<Model>) => {
-    try {
-      if (editingModel) {
-        await api.updateModel(editingModel.id, data);
-      } else {
-        await api.createModel({ ...data, providerId });
-      }
-      setShowForm(false);
-      setEditingModel(null);
-      onRefresh();
-    } catch (e: any) {
-      throw e;
+    if (editingModel) {
+      await api.updateModel(editingModel.id, data);
+    } else {
+      await api.createModel({ ...data, providerId });
     }
+    setShowForm(false);
+    setEditingModel(null);
+    onRefresh();
   };
 
   return (
@@ -72,9 +68,7 @@ export default function ModelList({ providerId, models, onRefresh }: Props) {
       </div>
 
       {error && (
-        <div className="bg-red-900/50 border border-red-700 rounded-lg p-2 mb-3 text-red-300 text-sm">
-          {error}
-        </div>
+        <div className="bg-red-900/50 border border-red-700 rounded-lg p-2 mb-3 text-red-300 text-sm">{error}</div>
       )}
 
       <table className="table">
@@ -146,10 +140,7 @@ export default function ModelList({ providerId, models, onRefresh }: Props) {
                   >
                     Edit
                   </button>
-                  <button
-                    onClick={() => handleDelete(model.id)}
-                    className="btn btn-danger btn-sm"
-                  >
+                  <button onClick={() => handleDelete(model.id)} className="btn btn-danger btn-sm">
                     Delete
                   </button>
                 </div>

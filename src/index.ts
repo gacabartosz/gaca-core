@@ -32,7 +32,9 @@ let prismaInstance: PrismaClient | null = null;
  * @param databaseUrl - Optional database URL (defaults to DATABASE_URL env var)
  * @returns Initialized AIEngine instance
  */
-export async function initGacaCore(databaseUrl?: string): Promise<InstanceType<typeof import('./core/AIEngine.js').AIEngine>> {
+export async function initGacaCore(
+  databaseUrl?: string,
+): Promise<InstanceType<typeof import('./core/AIEngine.js').AIEngine>> {
   if (engineInstance) {
     return engineInstance;
   }
@@ -93,7 +95,7 @@ export async function complete(
     maxTokens?: number;
     providerId?: string;
     modelId?: string;
-  }
+  },
 ): Promise<string> {
   const engine = getEngine();
 

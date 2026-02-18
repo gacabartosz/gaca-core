@@ -63,24 +63,14 @@ export default function RankingTable() {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-lg font-semibold">Model Rankings</h2>
-          <p className="text-sm text-gray-400">
-            Models sorted by effectiveness score (success rate, latency, quality)
-          </p>
+          <p className="text-sm text-gray-400">Models sorted by effectiveness score (success rate, latency, quality)</p>
         </div>
-        <button
-          onClick={handleRecalculate}
-          disabled={recalculating}
-          className="btn btn-secondary btn-sm"
-        >
+        <button onClick={handleRecalculate} disabled={recalculating} className="btn btn-secondary btn-sm">
           {recalculating ? 'Recalculating...' : 'Recalculate All'}
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">{error}</div>}
 
       <div className="card overflow-hidden">
         <table className="table">
@@ -101,15 +91,11 @@ export default function RankingTable() {
                 <td className="font-mono text-gray-500">{index + 1}</td>
                 <td className="font-medium">{ranking.modelName}</td>
                 <td className="text-gray-400">{ranking.providerName}</td>
-                <td className={`text-right font-mono ${getScoreColor(ranking.score)}`}>
-                  {ranking.score.toFixed(3)}
-                </td>
+                <td className={`text-right font-mono ${getScoreColor(ranking.score)}`}>{ranking.score.toFixed(3)}</td>
                 <td className={`text-right font-mono ${getSuccessRateColor(ranking.successRate)}`}>
                   {(ranking.successRate * 100).toFixed(1)}%
                 </td>
-                <td className="text-right font-mono text-gray-400">
-                  {ranking.avgLatencyMs.toFixed(0)}ms
-                </td>
+                <td className="text-right font-mono text-gray-400">{ranking.avgLatencyMs.toFixed(0)}ms</td>
                 <td className="text-right text-gray-500">{ranking.sampleSize}</td>
               </tr>
             ))}

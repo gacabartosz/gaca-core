@@ -48,10 +48,7 @@ export default function UsageStats() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [usageData, failoverData] = await Promise.all([
-        api.getUsageSummary(),
-        api.getFailovers(20),
-      ]);
+      const [usageData, failoverData] = await Promise.all([api.getUsageSummary(), api.getFailovers(20)]);
       setUsage(usageData);
       setFailovers(failoverData);
       setError(null);
@@ -89,11 +86,7 @@ export default function UsageStats() {
 
   return (
     <div>
-      {error && (
-        <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">{error}</div>}
 
       {/* Summary cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">
@@ -144,9 +137,7 @@ export default function UsageStats() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-sm text-gray-400">
-                    {provider.requestsToday} requests (no limit)
-                  </div>
+                  <div className="text-sm text-gray-400">{provider.requestsToday} requests (no limit)</div>
                 )}
               </div>
             ))}
@@ -169,9 +160,7 @@ export default function UsageStats() {
                 <tbody>
                   {failovers.map((event) => (
                     <tr key={event.id}>
-                      <td className="text-sm text-gray-400">
-                        {new Date(event.createdAt).toLocaleTimeString()}
-                      </td>
+                      <td className="text-sm text-gray-400">{new Date(event.createdAt).toLocaleTimeString()}</td>
                       <td>{getReasonBadge(event.reason)}</td>
                       <td className="text-sm text-gray-400 truncate max-w-[200px]">
                         {event.errorMessage?.substring(0, 50) || '-'}

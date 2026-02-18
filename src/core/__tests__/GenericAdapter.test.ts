@@ -130,10 +130,12 @@ describe('GenericAdapter - buildRequest', () => {
     });
 
     it('should add OpenRouter-specific headers for openrouter slug', async () => {
-      const adapter = new GenericAdapter(makeProvider({
-        apiFormat: 'openai',
-        slug: 'openrouter',
-      }));
+      const adapter = new GenericAdapter(
+        makeProvider({
+          apiFormat: 'openai',
+          slug: 'openrouter',
+        }),
+      );
 
       mockFetchResponse({
         choices: [{ message: { content: 'OK' }, finish_reason: 'stop' }],
@@ -147,10 +149,12 @@ describe('GenericAdapter - buildRequest', () => {
     });
 
     it('should skip auth header when no apiKey', async () => {
-      const adapter = new GenericAdapter(makeProvider({
-        apiFormat: 'openai',
-        apiKey: null,
-      }));
+      const adapter = new GenericAdapter(
+        makeProvider({
+          apiFormat: 'openai',
+          apiKey: null,
+        }),
+      );
 
       mockFetchResponse({
         choices: [{ message: { content: 'OK' }, finish_reason: 'stop' }],
@@ -182,7 +186,9 @@ describe('GenericAdapter - buildRequest', () => {
       const [url, opts] = fetchSpy.mock.calls[0];
       const body = JSON.parse(opts.body);
 
-      expect(url).toBe('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=google-key');
+      expect(url).toBe(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=google-key',
+      );
       expect(body.contents).toEqual([{ parts: [{ text: 'Hello' }] }]);
       expect(body.generationConfig.temperature).toBe(0.3);
       expect(body.generationConfig.maxOutputTokens).toBe(500);
@@ -254,10 +260,12 @@ describe('GenericAdapter - buildRequest', () => {
     });
 
     it('should skip x-api-key when no apiKey', async () => {
-      const adapter = new GenericAdapter(makeProvider({
-        apiFormat: 'anthropic',
-        apiKey: null,
-      }));
+      const adapter = new GenericAdapter(
+        makeProvider({
+          apiFormat: 'anthropic',
+          apiKey: null,
+        }),
+      );
 
       mockFetchResponse({
         content: [{ text: 'OK' }],
@@ -274,10 +282,12 @@ describe('GenericAdapter - buildRequest', () => {
 
   describe('Custom format', () => {
     it('should build correct custom request', async () => {
-      const adapter = new GenericAdapter(makeProvider({
-        apiFormat: 'custom',
-        baseUrl: 'https://custom-api.com/generate',
-      }));
+      const adapter = new GenericAdapter(
+        makeProvider({
+          apiFormat: 'custom',
+          baseUrl: 'https://custom-api.com/generate',
+        }),
+      );
 
       mockFetchResponse({ content: 'OK' });
 
@@ -329,8 +339,7 @@ describe('GenericAdapter - parseResponse', () => {
       const adapter = new GenericAdapter(makeProvider({ apiFormat: 'openai' }));
       mockFetchResponse({ error: 'bad request' });
 
-      await expect(adapter.complete(makeModel(), { prompt: 'Hi' }))
-        .rejects.toThrow('invalid response format');
+      await expect(adapter.complete(makeModel(), { prompt: 'Hi' })).rejects.toThrow('invalid response format');
     });
 
     it('should calculate cost when token counts available', async () => {
@@ -341,10 +350,9 @@ describe('GenericAdapter - parseResponse', () => {
         usage: { prompt_tokens: 1000, completion_tokens: 500, total_tokens: 1500 },
       });
 
-      const result = await adapter.complete(
-        makeModel({ costPer1kInput: 0.01, costPer1kOutput: 0.03 }),
-        { prompt: 'Hi' },
-      );
+      const result = await adapter.complete(makeModel({ costPer1kInput: 0.01, costPer1kOutput: 0.03 }), {
+        prompt: 'Hi',
+      });
 
       // cost = (1000 * 0.01/1000) + (500 * 0.03/1000) = 0.01 + 0.015 = 0.025
       expect(result.cost).toBeCloseTo(0.025, 6);
@@ -356,10 +364,12 @@ describe('GenericAdapter - parseResponse', () => {
       const adapter = new GenericAdapter(makeProvider({ apiFormat: 'google', apiKey: 'k' }));
 
       mockFetchResponse({
-        candidates: [{
-          content: { parts: [{ text: 'Hello from Gemini' }] },
-          finishReason: 'STOP',
-        }],
+        candidates: [
+          {
+            content: { parts: [{ text: 'Hello from Gemini' }] },
+            finishReason: 'STOP',
+          },
+        ],
         usageMetadata: {
           promptTokenCount: 8,
           candidatesTokenCount: 4,
@@ -384,16 +394,18 @@ describe('GenericAdapter - parseResponse', () => {
         candidates: [{ finishReason: 'SAFETY' }],
       });
 
-      await expect(adapter.complete(makeModel({ name: 'gemini-pro' }), { prompt: 'Hi' }))
-        .rejects.toThrow('content blocked by safety filters');
+      await expect(adapter.complete(makeModel({ name: 'gemini-pro' }), { prompt: 'Hi' })).rejects.toThrow(
+        'content blocked by safety filters',
+      );
     });
 
     it('should throw on invalid Google response', async () => {
       const adapter = new GenericAdapter(makeProvider({ apiFormat: 'google', apiKey: 'k' }));
       mockFetchResponse({ candidates: [] });
 
-      await expect(adapter.complete(makeModel({ name: 'gemini-pro' }), { prompt: 'Hi' }))
-        .rejects.toThrow('invalid response format');
+      await expect(adapter.complete(makeModel({ name: 'gemini-pro' }), { prompt: 'Hi' })).rejects.toThrow(
+        'invalid response format',
+      );
     });
   });
 
@@ -422,8 +434,7 @@ describe('GenericAdapter - parseResponse', () => {
       const adapter = new GenericAdapter(makeProvider({ apiFormat: 'anthropic' }));
       mockFetchResponse({ error: { message: 'invalid' } });
 
-      await expect(adapter.complete(makeModel(), { prompt: 'Hi' }))
-        .rejects.toThrow('invalid response format');
+      await expect(adapter.complete(makeModel(), { prompt: 'Hi' })).rejects.toThrow('invalid response format');
     });
   });
 
@@ -472,8 +483,7 @@ describe('GenericAdapter - parseResponse', () => {
       const adapter = new GenericAdapter(makeProvider({ apiFormat: 'custom' }));
       mockFetchResponse({ unexpected_field: 'nope' });
 
-      await expect(adapter.complete(makeModel(), { prompt: 'Hi' }))
-        .rejects.toThrow('could not parse response');
+      await expect(adapter.complete(makeModel(), { prompt: 'Hi' })).rejects.toThrow('could not parse response');
     });
   });
 
@@ -487,8 +497,7 @@ describe('GenericAdapter - parseResponse', () => {
         text: async () => 'Rate limit exceeded',
       } as any);
 
-      await expect(adapter.complete(makeModel(), { prompt: 'Hi' }))
-        .rejects.toThrow('HTTP 429');
+      await expect(adapter.complete(makeModel(), { prompt: 'Hi' })).rejects.toThrow('HTTP 429');
     });
   });
 });

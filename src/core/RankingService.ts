@@ -121,15 +121,17 @@ export class RankingService {
   }
 
   // Get all rankings sorted by score
-  async getAllRankings(): Promise<Array<{
-    modelId: string;
-    modelName: string;
-    providerName: string;
-    score: number;
-    successRate: number;
-    avgLatencyMs: number;
-    sampleSize: number;
-  }>> {
+  async getAllRankings(): Promise<
+    Array<{
+      modelId: string;
+      modelName: string;
+      providerName: string;
+      score: number;
+      successRate: number;
+      avgLatencyMs: number;
+      sampleSize: number;
+    }>
+  > {
     const rankings = await this.prisma.aIModelRanking.findMany({
       orderBy: { score: 'desc' },
       include: {

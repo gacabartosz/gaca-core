@@ -190,9 +190,9 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 
 ## Priority 10: Developer Experience
 
-### Task 10.1: Add ESLint + Prettier
-- [ ] Run: `npm install -D eslint @eslint/js typescript-eslint prettier eslint-config-prettier`
-- [ ] Create `eslint.config.mjs` (flat config format)
-- [ ] Create `.prettierrc`: `{ "singleQuote": true, "trailingComma": "all", "printWidth": 120 }`
-- [ ] Add scripts: `"lint": "eslint src/"`, `"format": "prettier --write src/"`
-- [ ] Run lint+format, fix errors, commit
+### Task 10.1: Add ESLint + Prettier (DONE)
+- [x] Run: `npm install -D eslint @eslint/js typescript-eslint prettier eslint-config-prettier`
+- [x] Create `eslint.config.mjs` (flat config format with typescript-eslint + prettier)
+- [x] Create `.prettierrc`: `{ "singleQuote": true, "trailingComma": "all", "printWidth": 120 }`
+- [x] Add scripts: `"lint": "eslint src/"`, `"format": "prettier --write src/"`
+- [x] Run lint+format, fix errors (removed useless catch blocks, disabled preserve-caught-error), 0 errors 8 warnings

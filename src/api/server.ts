@@ -115,12 +115,12 @@ app.get('/api/admin/sync-status', (req: Request, res: Response) => {
 
 // Admin: list configured providers from code (DEFAULT_PROVIDERS)
 app.get('/api/admin/default-providers', (req: Request, res: Response) => {
-  const summary = DEFAULT_PROVIDERS.map(p => ({
+  const summary = DEFAULT_PROVIDERS.map((p) => ({
     name: p.name,
     slug: p.slug,
     priority: p.priority,
     modelCount: p.models.length,
-    models: p.models.map(m => m.name),
+    models: p.models.map((m) => m.name),
   }));
   res.json({ providers: summary, total: DEFAULT_PROVIDERS.length });
 });

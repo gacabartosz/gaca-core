@@ -13,12 +13,12 @@ export function generateRequestId(): string {
 export interface AIRequest {
   prompt: string;
   systemPrompt?: string;
-  model?: string;          // Optional - will use best available
-  providerId?: string;     // Optional - will select best provider
+  model?: string; // Optional - will use best available
+  providerId?: string; // Optional - will select best provider
   temperature?: number;
   maxTokens?: number;
-  customBody?: Record<string, unknown>;  // For custom API formats
-  requestId?: string;      // Unique request ID for tracking/debugging
+  customBody?: Record<string, unknown>; // For custom API formats
+  requestId?: string; // Unique request ID for tracking/debugging
 }
 
 // Response from AI completion
@@ -33,8 +33,8 @@ export interface AIResponse {
   outputTokens?: number;
   latencyMs: number;
   finishReason?: string;
-  cost?: number;           // Estimated cost in USD
-  requestId?: string;      // Request ID for tracking/debugging
+  cost?: number; // Estimated cost in USD
+  requestId?: string; // Request ID for tracking/debugging
 }
 
 // Provider configuration (from database)
@@ -128,9 +128,9 @@ export interface FailoverEvent {
 
 // Ranking calculation params
 export interface RankingWeights {
-  successRate: number;      // Default: 0.4
-  latency: number;          // Default: 0.3
-  quality: number;          // Default: 0.3
+  successRate: number; // Default: 0.4
+  latency: number; // Default: 0.3
+  quality: number; // Default: 0.3
 }
 
 // Default provider configurations for seeding
@@ -176,7 +176,11 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     models: [
       { name: 'llama-3.1-8b-instant', displayName: 'Llama 3.1 8B', rateLimitRpd: 14400, isDefault: true },
       { name: 'llama-3.3-70b-versatile', displayName: 'Llama 3.3 70B', rateLimitRpd: 1000 },
-      { name: 'meta-llama/llama-4-maverick-17b-128e-instruct', displayName: 'Llama 4 Maverick 17B', rateLimitRpd: 1000 },
+      {
+        name: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+        displayName: 'Llama 4 Maverick 17B',
+        rateLimitRpd: 1000,
+      },
       { name: 'meta-llama/llama-4-scout-17b-16e-instruct', displayName: 'Llama 4 Scout 17B', rateLimitRpd: 1000 },
       { name: 'qwen/qwen3-32b', displayName: 'Qwen 3 32B', rateLimitRpd: 1000 },
       { name: 'moonshotai/kimi-k2-instruct', displayName: 'Kimi K2', rateLimitRpd: 1000 },
@@ -320,7 +324,13 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     rateLimitRpd: 10000,
     priority: 9,
     models: [
-      { name: 'deepseek-chat', displayName: 'DeepSeek Chat', costPer1kInput: 0.0001, costPer1kOutput: 0.0002, isDefault: true },
+      {
+        name: 'deepseek-chat',
+        displayName: 'DeepSeek Chat',
+        costPer1kInput: 0.0001,
+        costPer1kOutput: 0.0002,
+        isDefault: true,
+      },
       { name: 'deepseek-coder', displayName: 'DeepSeek Coder', costPer1kInput: 0.0001, costPer1kOutput: 0.0002 },
       { name: 'deepseek-reasoner', displayName: 'DeepSeek Reasoner', costPer1kInput: 0.0005, costPer1kOutput: 0.002 },
     ],
@@ -336,10 +346,39 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     rateLimitRpd: 10000,
     priority: 10,
     models: [
-      { name: 'claude-sonnet-4-20250514', displayName: 'Claude Sonnet 4', costPer1kInput: 0.003, costPer1kOutput: 0.015, maxTokens: 8192, contextWindow: 200000, isDefault: true },
-      { name: 'claude-3-5-sonnet-20241022', displayName: 'Claude 3.5 Sonnet', costPer1kInput: 0.003, costPer1kOutput: 0.015, maxTokens: 8192, contextWindow: 200000 },
-      { name: 'claude-3-5-haiku-20241022', displayName: 'Claude 3.5 Haiku', costPer1kInput: 0.0008, costPer1kOutput: 0.004, maxTokens: 8192, contextWindow: 200000 },
-      { name: 'claude-opus-4-20250514', displayName: 'Claude Opus 4', costPer1kInput: 0.015, costPer1kOutput: 0.075, maxTokens: 8192, contextWindow: 200000 },
+      {
+        name: 'claude-sonnet-4-20250514',
+        displayName: 'Claude Sonnet 4',
+        costPer1kInput: 0.003,
+        costPer1kOutput: 0.015,
+        maxTokens: 8192,
+        contextWindow: 200000,
+        isDefault: true,
+      },
+      {
+        name: 'claude-3-5-sonnet-20241022',
+        displayName: 'Claude 3.5 Sonnet',
+        costPer1kInput: 0.003,
+        costPer1kOutput: 0.015,
+        maxTokens: 8192,
+        contextWindow: 200000,
+      },
+      {
+        name: 'claude-3-5-haiku-20241022',
+        displayName: 'Claude 3.5 Haiku',
+        costPer1kInput: 0.0008,
+        costPer1kOutput: 0.004,
+        maxTokens: 8192,
+        contextWindow: 200000,
+      },
+      {
+        name: 'claude-opus-4-20250514',
+        displayName: 'Claude Opus 4',
+        costPer1kInput: 0.015,
+        costPer1kOutput: 0.075,
+        maxTokens: 8192,
+        contextWindow: 200000,
+      },
     ],
   },
   {
@@ -353,11 +392,47 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     rateLimitRpd: 10000,
     priority: 11,
     models: [
-      { name: 'gpt-4o', displayName: 'GPT-4o', costPer1kInput: 0.0025, costPer1kOutput: 0.01, maxTokens: 16384, contextWindow: 128000, isDefault: true },
-      { name: 'gpt-4o-mini', displayName: 'GPT-4o Mini', costPer1kInput: 0.00015, costPer1kOutput: 0.0006, maxTokens: 16384, contextWindow: 128000 },
-      { name: 'gpt-4-turbo', displayName: 'GPT-4 Turbo', costPer1kInput: 0.01, costPer1kOutput: 0.03, maxTokens: 4096, contextWindow: 128000 },
-      { name: 'o1', displayName: 'O1', costPer1kInput: 0.015, costPer1kOutput: 0.06, maxTokens: 100000, contextWindow: 200000 },
-      { name: 'o3-mini', displayName: 'O3 Mini', costPer1kInput: 0.00115, costPer1kOutput: 0.0044, maxTokens: 100000, contextWindow: 200000 },
+      {
+        name: 'gpt-4o',
+        displayName: 'GPT-4o',
+        costPer1kInput: 0.0025,
+        costPer1kOutput: 0.01,
+        maxTokens: 16384,
+        contextWindow: 128000,
+        isDefault: true,
+      },
+      {
+        name: 'gpt-4o-mini',
+        displayName: 'GPT-4o Mini',
+        costPer1kInput: 0.00015,
+        costPer1kOutput: 0.0006,
+        maxTokens: 16384,
+        contextWindow: 128000,
+      },
+      {
+        name: 'gpt-4-turbo',
+        displayName: 'GPT-4 Turbo',
+        costPer1kInput: 0.01,
+        costPer1kOutput: 0.03,
+        maxTokens: 4096,
+        contextWindow: 128000,
+      },
+      {
+        name: 'o1',
+        displayName: 'O1',
+        costPer1kInput: 0.015,
+        costPer1kOutput: 0.06,
+        maxTokens: 100000,
+        contextWindow: 200000,
+      },
+      {
+        name: 'o3-mini',
+        displayName: 'O3 Mini',
+        costPer1kInput: 0.00115,
+        costPer1kOutput: 0.0044,
+        maxTokens: 100000,
+        contextWindow: 200000,
+      },
     ],
   },
 ];

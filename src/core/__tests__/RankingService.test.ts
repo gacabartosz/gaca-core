@@ -12,9 +12,11 @@ vi.mock('../logger.js', () => ({
 }));
 
 // Helper: create a mock PrismaClient with just the methods RankingService uses
-function createMockPrisma(overrides: {
-  usageData?: { modelId: string; successCount: number; totalCalls: number; avgLatencyMs: number } | null;
-} = {}) {
+function createMockPrisma(
+  overrides: {
+    usageData?: { modelId: string; successCount: number; totalCalls: number; avgLatencyMs: number } | null;
+  } = {},
+) {
   const upsertSpy = vi.fn().mockResolvedValue({});
 
   return {

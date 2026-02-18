@@ -57,20 +57,19 @@ export default function ProviderForm({ provider, onSave, onClose }: Props) {
   };
 
   const generateSlug = (name: string) => {
-    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-lg font-semibold mb-4">
-          {provider ? 'Edit Provider' : 'Add Provider'}
-        </h2>
+        <h2 className="text-lg font-semibold mb-4">{provider ? 'Edit Provider' : 'Add Provider'}</h2>
 
         {error && (
-          <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300 text-sm">
-            {error}
-          </div>
+          <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300 text-sm">{error}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -14,7 +14,10 @@ export class ModelSelector {
   }
 
   // Select the best available model
-  async selectBestModel(preferredProviderId?: string, preferredModelId?: string): Promise<{
+  async selectBestModel(
+    preferredProviderId?: string,
+    preferredModelId?: string,
+  ): Promise<{
     model: ModelWithRanking;
     provider: ProviderWithModels;
   } | null> {
@@ -35,10 +38,12 @@ export class ModelSelector {
   }
 
   // Get all available models sorted by ranking
-  async getAvailableModels(): Promise<Array<{
-    model: ModelWithRanking;
-    provider: ProviderWithModels;
-  }>> {
+  async getAvailableModels(): Promise<
+    Array<{
+      model: ModelWithRanking;
+      provider: ProviderWithModels;
+    }>
+  > {
     const providers = await this.getProvidersWithModels();
     const available: Array<{ model: ModelWithRanking; provider: ProviderWithModels }> = [];
 
@@ -118,7 +123,9 @@ export class ModelSelector {
     }
 
     // Check limits
-    if (!this.usageTracker.canUseProvider(model.provider.id, model.provider.rateLimitRpm, model.provider.rateLimitRpd)) {
+    if (
+      !this.usageTracker.canUseProvider(model.provider.id, model.provider.rateLimitRpm, model.provider.rateLimitRpd)
+    ) {
       return null;
     }
 

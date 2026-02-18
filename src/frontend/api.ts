@@ -117,22 +117,17 @@ export const api = {
     request<Provider>('/providers', { method: 'POST', body: JSON.stringify(data) }),
   updateProvider: (id: string, data: Partial<Provider>) =>
     request<Provider>(`/providers/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteProvider: (id: string) =>
-    request<void>(`/providers/${id}`, { method: 'DELETE' }),
-  testProvider: (id: string) =>
-    request<TestResult>(`/providers/${id}/test`, { method: 'POST' }),
+  deleteProvider: (id: string) => request<void>(`/providers/${id}`, { method: 'DELETE' }),
+  testProvider: (id: string) => request<TestResult>(`/providers/${id}/test`, { method: 'POST' }),
   getUsageSummary: () => request<any>('/providers/stats/usage'),
 
   // Models
-  getModels: (providerId?: string) =>
-    request<Model[]>(`/models${providerId ? `?providerId=${providerId}` : ''}`),
+  getModels: (providerId?: string) => request<Model[]>(`/models${providerId ? `?providerId=${providerId}` : ''}`),
   getModel: (id: string) => request<Model>(`/models/${id}`),
-  createModel: (data: Partial<Model>) =>
-    request<Model>('/models', { method: 'POST', body: JSON.stringify(data) }),
+  createModel: (data: Partial<Model>) => request<Model>('/models', { method: 'POST', body: JSON.stringify(data) }),
   updateModel: (id: string, data: Partial<Model>) =>
     request<Model>(`/models/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
-  deleteModel: (id: string) =>
-    request<void>(`/models/${id}`, { method: 'DELETE' }),
+  deleteModel: (id: string) => request<void>(`/models/${id}`, { method: 'DELETE' }),
 
   // Ranking
   getRankings: () => request<Ranking[]>('/ranking'),
@@ -145,8 +140,7 @@ export const api = {
   getPrompt: (name: string) => request<{ name: string; content: string }>(`/prompts/${name}`),
   savePrompt: (name: string, content: string) =>
     request<Prompt>('/prompts', { method: 'POST', body: JSON.stringify({ name, content }) }),
-  deletePrompt: (name: string) =>
-    request<void>(`/prompts/${name}`, { method: 'DELETE' }),
+  deletePrompt: (name: string) => request<void>(`/prompts/${name}`, { method: 'DELETE' }),
 
   // Completion
   complete: (data: {
@@ -159,12 +153,9 @@ export const api = {
     modelId?: string;
   }) => request<CompletionResponse>('/complete', { method: 'POST', body: JSON.stringify(data) }),
   getAvailableModels: () => request<any[]>('/complete/available'),
-  getFailovers: (limit?: number) =>
-    request<any[]>(`/complete/failovers${limit ? `?limit=${limit}` : ''}`),
+  getFailovers: (limit?: number) => request<any[]>(`/complete/failovers${limit ? `?limit=${limit}` : ''}`),
 
   // Admin
-  syncProviders: () =>
-    request<{ success: boolean; output: string }>('/admin/sync-providers', { method: 'POST' }),
-  getSyncStatus: () =>
-    request<{ lastSync: any; message?: string }>('/admin/sync-status'),
+  syncProviders: () => request<{ success: boolean; output: string }>('/admin/sync-providers', { method: 'POST' }),
+  getSyncStatus: () => request<{ lastSync: any; message?: string }>('/admin/sync-status'),
 };

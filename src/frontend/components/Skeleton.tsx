@@ -47,13 +47,27 @@ export function RankingTableSkeleton() {
         <tbody>
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <tr key={i}>
-              <td><Bar className="h-4 w-6" /></td>
-              <td><Bar className="h-4 w-36" /></td>
-              <td><Bar className="h-4 w-24" /></td>
-              <td className="text-right"><Bar className="h-4 w-14 ml-auto" /></td>
-              <td className="text-right"><Bar className="h-4 w-14 ml-auto" /></td>
-              <td className="text-right"><Bar className="h-4 w-16 ml-auto" /></td>
-              <td className="text-right"><Bar className="h-4 w-8 ml-auto" /></td>
+              <td>
+                <Bar className="h-4 w-6" />
+              </td>
+              <td>
+                <Bar className="h-4 w-36" />
+              </td>
+              <td>
+                <Bar className="h-4 w-24" />
+              </td>
+              <td className="text-right">
+                <Bar className="h-4 w-14 ml-auto" />
+              </td>
+              <td className="text-right">
+                <Bar className="h-4 w-14 ml-auto" />
+              </td>
+              <td className="text-right">
+                <Bar className="h-4 w-16 ml-auto" />
+              </td>
+              <td className="text-right">
+                <Bar className="h-4 w-8 ml-auto" />
+              </td>
             </tr>
           ))}
         </tbody>

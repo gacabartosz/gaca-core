@@ -102,18 +102,14 @@ export default function ProviderList() {
   };
 
   const handleSave = async (data: Partial<Provider>) => {
-    try {
-      if (editingProvider) {
-        await api.updateProvider(editingProvider.id, data);
-      } else {
-        await api.createProvider(data);
-      }
-      setShowForm(false);
-      setEditingProvider(null);
-      loadProviders();
-    } catch (e: any) {
-      throw e;
+    if (editingProvider) {
+      await api.updateProvider(editingProvider.id, data);
+    } else {
+      await api.createProvider(data);
     }
+    setShowForm(false);
+    setEditingProvider(null);
+    loadProviders();
   };
 
   const getStatusDot = (provider: Provider) => {
@@ -138,11 +134,7 @@ export default function ProviderList() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">AI Providers</h2>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleTestAll}
-            disabled={testingAll}
-            className="btn btn-secondary btn-sm"
-          >
+          <button onClick={handleTestAll} disabled={testingAll} className="btn btn-secondary btn-sm">
             {testingAll ? 'Testing All...' : 'Test All Providers'}
           </button>
           <button
@@ -157,11 +149,7 @@ export default function ProviderList() {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">{error}</div>}
 
       {/* Latency comparison */}
       {testedLatencies.length > 1 && (
@@ -213,18 +201,14 @@ export default function ProviderList() {
                 <div>
                   <h3 className="font-medium">{provider.name}</h3>
                   <p className="text-sm text-gray-400">
-                    {provider.apiKey ? '✓ API Key configured' : '⚠ No API key'} •{' '}
-                    {provider.models.length} models • Priority: {provider.priority}
+                    {provider.apiKey ? '✓ API Key configured' : '⚠ No API key'} • {provider.models.length} models •
+                    Priority: {provider.priority}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 {testResults[provider.id] && (
-                  <span
-                    className={`badge ${
-                      testResults[provider.id].success ? 'badge-success' : 'badge-danger'
-                    }`}
-                  >
+                  <span className={`badge ${testResults[provider.id].success ? 'badge-success' : 'badge-danger'}`}>
                     {testResults[provider.id].success
                       ? `OK ${testResults[provider.id].latencyMs}ms`
                       : testResults[provider.id].error?.substring(0, 30)}
@@ -238,11 +222,7 @@ export default function ProviderList() {
                   {testing === provider.id ? 'Testing...' : 'Test'}
                 </button>
                 <button
-                  onClick={() =>
-                    setExpandedProvider(
-                      expandedProvider === provider.id ? null : provider.id
-                    )
-                  }
+                  onClick={() => setExpandedProvider(expandedProvider === provider.id ? null : provider.id)}
                   className="btn btn-secondary btn-sm"
                 >
                   {expandedProvider === provider.id ? 'Hide' : 'Models'}
@@ -256,10 +236,7 @@ export default function ProviderList() {
                 >
                   Edit
                 </button>
-                <button
-                  onClick={() => handleDelete(provider.id)}
-                  className="btn btn-danger btn-sm"
-                >
+                <button onClick={() => handleDelete(provider.id)} className="btn btn-danger btn-sm">
                   Delete
                 </button>
               </div>
@@ -278,10 +255,7 @@ export default function ProviderList() {
                   <div
                     className="progress-bar-fill bg-blue-500"
                     style={{
-                      width: `${Math.min(
-                        ((provider.usage?.requestsToday || 0) / provider.rateLimitRpd) * 100,
-                        100
-                      )}%`,
+                      width: `${Math.min(((provider.usage?.requestsToday || 0) / provider.rateLimitRpd) * 100, 100)}%`,
                     }}
                   />
                 </div>

@@ -66,17 +66,11 @@ function AppContent() {
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <button
-                  onClick={handleSync}
-                  disabled={syncing}
-                  className="btn btn-secondary btn-sm"
-                >
+                <button onClick={handleSync} disabled={syncing} className="btn btn-secondary btn-sm">
                   {syncing ? 'Syncing...' : 'Sync Providers'}
                 </button>
                 {lastSyncTime && (
-                  <span className="text-xs text-gray-500">
-                    Last: {new Date(lastSyncTime).toLocaleTimeString()}
-                  </span>
+                  <span className="text-xs text-gray-500">Last: {new Date(lastSyncTime).toLocaleTimeString()}</span>
                 )}
               </div>
               <a

@@ -51,8 +51,12 @@ export class UsageTracker {
     modelCache.lastRequestAt = new Date();
 
     // Update DB asynchronously (don't await to not block)
-    this.updateProviderUsageInDb(providerId, success, latencyMs, tokensUsed).catch((err) => logger.error({ err }, 'Failed to update provider usage in DB'));
-    this.updateModelUsageInDb(modelId, success, latencyMs, tokensUsed).catch((err) => logger.error({ err }, 'Failed to update model usage in DB'));
+    this.updateProviderUsageInDb(providerId, success, latencyMs, tokensUsed).catch((err) =>
+      logger.error({ err }, 'Failed to update provider usage in DB'),
+    );
+    this.updateModelUsageInDb(modelId, success, latencyMs, tokensUsed).catch((err) =>
+      logger.error({ err }, 'Failed to update model usage in DB'),
+    );
   }
 
   // Load usage from DB into cache
@@ -181,7 +185,12 @@ export class UsageTracker {
     return cache;
   }
 
-  private checkLimits(cache: UsageCache, rateLimitRpm: number | null, rateLimitRpd: number | null, name: string): boolean {
+  private checkLimits(
+    cache: UsageCache,
+    rateLimitRpm: number | null,
+    rateLimitRpd: number | null,
+    name: string,
+  ): boolean {
     if (rateLimitRpm && cache.requestsThisMinute >= rateLimitRpm) {
       logger.warn({ name, used: cache.requestsThisMinute, limit: rateLimitRpm }, 'RPM limit hit');
       return false;
@@ -195,7 +204,12 @@ export class UsageTracker {
     return true;
   }
 
-  private async updateProviderUsageInDb(providerId: string, success: boolean, latencyMs: number, tokensUsed?: number): Promise<void> {
+  private async updateProviderUsageInDb(
+    providerId: string,
+    success: boolean,
+    latencyMs: number,
+    tokensUsed?: number,
+  ): Promise<void> {
     const cache = this.providerUsageCache.get(providerId);
 
     await this.prisma.aIProviderUsage.upsert({
@@ -218,7 +232,12 @@ export class UsageTracker {
     });
   }
 
-  private async updateModelUsageInDb(modelId: string, success: boolean, latencyMs: number, tokensUsed?: number): Promise<void> {
+  private async updateModelUsageInDb(
+    modelId: string,
+    success: boolean,
+    latencyMs: number,
+    tokensUsed?: number,
+  ): Promise<void> {
     const cache = this.modelUsageCache.get(modelId);
 
     await this.prisma.aIModelUsage.upsert({

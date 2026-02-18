@@ -66,7 +66,20 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   // POST /api/providers - Create provider
   router.post('/', validateBody(CreateProviderSchema), async (req: Request, res: Response) => {
     try {
-      const { name, slug, baseUrl, apiKey, apiFormat, authHeader, authPrefix, customHeaders, rateLimitRpm, rateLimitRpd, priority, isEnabled } = req.body;
+      const {
+        name,
+        slug,
+        baseUrl,
+        apiKey,
+        apiFormat,
+        authHeader,
+        authPrefix,
+        customHeaders,
+        rateLimitRpm,
+        rateLimitRpd,
+        priority,
+        isEnabled,
+      } = req.body;
 
       const provider = await prisma.aIProvider.create({
         data: {
@@ -110,7 +123,20 @@ export function createProviderRoutes(prisma: PrismaClient, engine: AIEngine): Ro
   // PUT /api/providers/:id - Update provider
   router.put('/:id', validateBody(UpdateProviderSchema), async (req: Request, res: Response) => {
     try {
-      const { name, slug, baseUrl, apiKey, apiFormat, authHeader, authPrefix, customHeaders, rateLimitRpm, rateLimitRpd, priority, isEnabled } = req.body;
+      const {
+        name,
+        slug,
+        baseUrl,
+        apiKey,
+        apiFormat,
+        authHeader,
+        authPrefix,
+        customHeaders,
+        rateLimitRpm,
+        rateLimitRpd,
+        priority,
+        isEnabled,
+      } = req.body;
 
       const updateData: any = {};
 

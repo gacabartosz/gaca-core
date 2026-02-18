@@ -97,10 +97,7 @@ export default function PromptEditor() {
         <div className="card">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-medium">Prompts</h3>
-            <button
-              onClick={() => setShowNewForm(true)}
-              className="btn btn-secondary btn-sm"
-            >
+            <button onClick={() => setShowNewForm(true)} className="btn btn-secondary btn-sm">
               +
             </button>
           </div>
@@ -144,9 +141,7 @@ export default function PromptEditor() {
               >
                 <div className="flex items-center gap-2">
                   <span>{prompt.name}</span>
-                  {!prompt.isCustom && (
-                    <span className="badge badge-info text-xs">Default</span>
-                  )}
+                  {!prompt.isCustom && <span className="badge badge-info text-xs">Default</span>}
                 </div>
                 {prompt.isCustom && (
                   <button
@@ -167,22 +162,14 @@ export default function PromptEditor() {
 
       {/* Editor */}
       <div className="col-span-3">
-        {error && (
-          <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">
-            {error}
-          </div>
-        )}
+        {error && <div className="bg-red-900/50 border border-red-700 rounded-lg p-3 mb-4 text-red-300">{error}</div>}
 
         {selectedPrompt ? (
           <div className="card">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-medium">{selectedPrompt}</h3>
               {prompts.find((p) => p.name === selectedPrompt)?.isCustom && (
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  className="btn btn-primary btn-sm"
-                >
+                <button onClick={handleSave} disabled={saving} className="btn btn-primary btn-sm">
                   {saving ? 'Saving...' : 'Save'}
                 </button>
               )}
@@ -201,9 +188,7 @@ export default function PromptEditor() {
             )}
           </div>
         ) : (
-          <div className="card text-center py-16 text-gray-500">
-            Select a prompt to view or edit
-          </div>
+          <div className="card text-center py-16 text-gray-500">Select a prompt to view or edit</div>
         )}
       </div>
     </div>

@@ -85,7 +85,10 @@ export class GenericAdapter {
     }
   }
 
-  private buildRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     const format = this.provider.apiFormat as ApiFormat;
 
     switch (format) {
@@ -102,7 +105,10 @@ export class GenericAdapter {
     }
   }
 
-  private buildOpenAIRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildOpenAIRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     const messages: Array<{ role: string; content: string }> = [];
 
     if (request.systemPrompt) {
@@ -137,7 +143,10 @@ export class GenericAdapter {
     };
   }
 
-  private buildGoogleRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildGoogleRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     let fullPrompt = request.prompt;
     if (request.systemPrompt) {
       fullPrompt = `${request.systemPrompt}\n\n${request.prompt}`;
@@ -167,7 +176,10 @@ export class GenericAdapter {
     };
   }
 
-  private buildAnthropicRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildAnthropicRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'anthropic-version': '2023-06-01',
@@ -190,7 +202,10 @@ export class GenericAdapter {
     };
   }
 
-  private buildCustomRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildCustomRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...this.provider.customHeaders,
@@ -233,7 +248,9 @@ export class GenericAdapter {
 
   private parseOpenAIResponse(model: ModelConfig, data: any, latencyMs: number): AIResponse {
     if (!data.choices || !data.choices[0]?.message?.content) {
-      throw new Error(`${this.provider.name}/${model.name}: invalid response format (missing choices[0].message.content)`);
+      throw new Error(
+        `${this.provider.name}/${model.name}: invalid response format (missing choices[0].message.content)`,
+      );
     }
 
     const inputTokens = data.usage?.prompt_tokens;
@@ -260,7 +277,9 @@ export class GenericAdapter {
       if (data.candidates?.[0]?.finishReason === 'SAFETY') {
         throw new Error(`${this.provider.name}/${model.name}: content blocked by safety filters`);
       }
-      throw new Error(`${this.provider.name}/${model.name}: invalid response format (missing candidates[0].content.parts[0].text)`);
+      throw new Error(
+        `${this.provider.name}/${model.name}: invalid response format (missing candidates[0].content.parts[0].text)`,
+      );
     }
 
     const tokensUsed = data.usageMetadata?.totalTokenCount;
@@ -355,11 +374,7 @@ export class GenericAdapter {
   }
 
   // Streaming completion — calls onToken for each token, returns final AIResponse
-  async completeStream(
-    model: ModelConfig,
-    request: AIRequest,
-    onToken: (token: string) => void,
-  ): Promise<AIResponse> {
+  async completeStream(model: ModelConfig, request: AIRequest, onToken: (token: string) => void): Promise<AIResponse> {
     const startTime = Date.now();
     const label = `${this.provider.name}/${model.displayName || model.name}`;
     const format = this.provider.apiFormat as ApiFormat;
@@ -404,7 +419,10 @@ export class GenericAdapter {
     }
   }
 
-  private buildStreamRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildStreamRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     const format = this.provider.apiFormat as ApiFormat;
 
     switch (format) {
@@ -424,7 +442,10 @@ export class GenericAdapter {
     }
   }
 
-  private buildGoogleStreamRequest(model: ModelConfig, request: AIRequest): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
+  private buildGoogleStreamRequest(
+    model: ModelConfig,
+    request: AIRequest,
+  ): { url: string; headers: Record<string, string>; body: Record<string, unknown> } {
     let fullPrompt = request.prompt;
     if (request.systemPrompt) {
       fullPrompt = `${request.systemPrompt}\n\n${request.prompt}`;
