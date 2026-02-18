@@ -19,7 +19,7 @@ import { createCompleteRoutes } from './routes/complete.routes.js';
 // Load environment variables
 config();
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 const ADMIN_KEY = process.env.GACA_ADMIN_KEY;
 
 // Auth middleware: protects write operations when GACA_ADMIN_KEY is set
