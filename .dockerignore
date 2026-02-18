@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.ralph
+*.db
+*.db-journal
+.env
+logs
+*.log
+.vscode
+.idea

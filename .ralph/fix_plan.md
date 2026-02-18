@@ -87,42 +87,42 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 - [x] Add scripts: `"test": "vitest run"`, `"test:watch": "vitest"`
 - [x] Verify setup: create a trivial test, run `npm test`
 
-### Task 4.2: Write RankingService tests
-- [ ] Create `src/core/__tests__/RankingService.test.ts`
-- [ ] Test score calculation: known inputs → expected output
-- [ ] Test edge cases: 0 samples, all failures, perfect score, extreme latency
+### Task 4.2: Write RankingService tests (DONE)
+- [x] Create `src/core/__tests__/RankingService.test.ts`
+- [x] Test score calculation: known inputs → expected output
+- [x] Test edge cases: 0 samples, all failures, perfect score, extreme latency
 
-### Task 4.3: Write GenericAdapter request-building tests
-- [ ] Create `src/core/__tests__/GenericAdapter.test.ts`
-- [ ] Test `buildRequest()` for each format: openai, google, anthropic, custom
-- [ ] Test `parseResponse()` for each format
-- [ ] Mock fetch — don't make real API calls in tests
+### Task 4.3: Write GenericAdapter request-building tests (DONE)
+- [x] Create `src/core/__tests__/GenericAdapter.test.ts`
+- [x] Test `buildRequest()` for each format: openai, google, anthropic, custom
+- [x] Test `parseResponse()` for each format
+- [x] Mock fetch — don't make real API calls in tests
 
-### Task 4.4: Write ModelSelector tests
-- [ ] Create `src/core/__tests__/ModelSelector.test.ts`
-- [ ] Test model selection order (highest ranking first)
-- [ ] Test rate limit filtering (skip exhausted models)
-- [ ] Test that excluded models are skipped
+### Task 4.4: Write ModelSelector tests (DONE)
+- [x] Create `src/core/__tests__/ModelSelector.test.ts`
+- [x] Test model selection order (highest ranking first)
+- [x] Test rate limit filtering (skip exhausted models)
+- [x] Test that excluded models are skipped
 
 ---
 
 ## Priority 5: PM2 Ecosystem Config
 
-### Task 5.1: Create ecosystem.config.js
-- [ ] Create `ecosystem.config.js` in project root
-- [ ] Configure: name gaca-core, script npx tsx src/api/server.ts, port 3002, max_memory 200M, log files in logs/
-- [ ] Restart gaca-core with: `pm2 delete gaca-core && pm2 start ecosystem.config.js`
-- [ ] Verify with `pm2 list` and `curl localhost:3002/health`
+### Task 5.1: Create ecosystem.config.js (DONE)
+- [x] Create `ecosystem.config.js` in project root
+- [x] Configure: name gaca-core, script npx tsx src/api/server.ts, port 3002, max_memory 200M, log files in logs/
+- [x] Restart gaca-core with: `pm2 delete gaca-core && pm2 start ecosystem.config.js`
+- [x] Verify with `pm2 list` and `curl localhost:3002/health`
 
 ---
 
 ## Priority 6: Docker Support
 
-### Task 6.1: Create Dockerfile + docker-compose
-- [ ] Create `Dockerfile` (multi-stage: build + runtime with node:20-slim)
-- [ ] Create `.dockerignore` (node_modules, .git, .ralph, *.db, .env, logs)
-- [ ] Create `docker-compose.yml` with volume for SQLite persistence + .env file
-- [ ] DON'T test Docker (no Docker on this server) — just create the files
+### Task 6.1: Create Dockerfile + docker-compose (DONE)
+- [x] Create `Dockerfile` (multi-stage: build + runtime with node:20-slim)
+- [x] Create `.dockerignore` (node_modules, .git, .ralph, *.db, .env, logs)
+- [x] Create `docker-compose.yml` with volume for SQLite persistence + .env file
+- [x] DON'T test Docker (no Docker on this server) — just create the files
 
 ---
 

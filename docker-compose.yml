@@ -1,0 +1,19 @@
+services:
+  gaca-core:
+    build: .
+    container_name: gaca-core
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/data/gaca.db
+    volumes:
+      - gaca-data:/data
+      - ./logs:/app/logs
+    mem_limit: 512m
+
+volumes:
+  gaca-data:
