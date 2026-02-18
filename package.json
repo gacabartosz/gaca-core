@@ -1,9 +1,36 @@
 {
-  "name": "gaca-core",
-  "version": "1.0.0",
-  "description": "GACA-Core - Universal AI Bus with dynamic providers, models, ranking, and failover",
+  "name": "@gacabartosz/gaca-core",
+  "version": "2.0.0",
+  "description": "GACA-Core - Universal AI Bus with dynamic providers, models, ranking, and failover. Framework-agnostic with dependency injection.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./interfaces": {
+      "types": "./dist/core/interfaces/index.d.ts",
+      "import": "./dist/core/interfaces/index.js"
+    },
+    "./loggers": {
+      "types": "./dist/core/loggers/index.d.ts",
+      "import": "./dist/core/loggers/index.js"
+    },
+    "./persistence": {
+      "types": "./dist/core/persistence/index.d.ts",
+      "import": "./dist/core/persistence/index.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gacabartosz/gaca-core.git"
+  },
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:frontend\"",
     "dev:server": "tsx watch src/api/server.ts",

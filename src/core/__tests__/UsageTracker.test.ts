@@ -1,41 +1,54 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { UsageTracker } from '../UsageTracker.js';
+import type { GacaLogger } from '../interfaces/logger.interface.js';
+import type { GacaPersistence, ProviderUsageEntity, ModelUsageEntity } from '../interfaces/persistence.interface.js';
 
 // Mock logger
-vi.mock('../logger.js', () => ({
-  logger: {
+function createMockLogger(): GacaLogger {
+  return {
+    debug: vi.fn(),
+    log: vi.fn(),
     info: vi.fn(),
     warn: vi.fn(),
     error: vi.fn(),
-    debug: vi.fn(),
-  },
-}));
+  };
+}
 
-// Mock Prisma
-function createMockPrisma() {
+// Mock Persistence
+function createMockPersistence() {
+  const upsertProviderUsageSpy = vi.fn().mockResolvedValue(undefined);
+  const upsertModelUsageSpy = vi.fn().mockResolvedValue(undefined);
+  const resetProviderSpy = vi.fn().mockResolvedValue(undefined);
+  const resetModelSpy = vi.fn().mockResolvedValue(undefined);
+
+  const persistence: Partial<GacaPersistence> = {
+    getProviderUsage: vi.fn().mockResolvedValue(null),
+    upsertProviderUsage: upsertProviderUsageSpy,
+    getModelUsage: vi.fn().mockResolvedValue(null),
+    upsertModelUsage: upsertModelUsageSpy,
+    resetProviderDailyCounters: resetProviderSpy,
+    resetModelDailyCounters: resetModelSpy,
+  };
+
   return {
-    aIProviderUsage: {
-      findUnique: vi.fn(),
-      upsert: vi.fn().mockResolvedValue(undefined),
-      updateMany: vi.fn().mockResolvedValue(undefined),
-    },
-    aIModelUsage: {
-      findUnique: vi.fn().mockResolvedValue(null),
-      create: vi.fn().mockResolvedValue(undefined),
-      update: vi.fn().mockResolvedValue(undefined),
-      updateMany: vi.fn().mockResolvedValue(undefined),
-    },
-  } as any;
+    persistence: persistence as GacaPersistence,
+    upsertProviderUsageSpy,
+    upsertModelUsageSpy,
+    resetProviderSpy,
+    resetModelSpy,
+  };
 }
 
 describe('UsageTracker', () => {
   let tracker: UsageTracker;
-  let mockPrisma: ReturnType<typeof createMockPrisma>;
+  let mockPersistence: ReturnType<typeof createMockPersistence>;
+  let mockLogger: GacaLogger;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPrisma = createMockPrisma();
-    tracker = new UsageTracker(mockPrisma);
+    mockPersistence = createMockPersistence();
+    mockLogger = createMockLogger();
+    tracker = new UsageTracker(mockPersistence.persistence, mockLogger);
   });
 
   describe('canUseProvider()', () => {
@@ -165,7 +178,7 @@ describe('UsageTracker', () => {
       expect(stats!.lastRequestAt!.getTime()).toBeGreaterThanOrEqual(beforeTrack.getTime());
     });
 
-    it('calls DB update for provider and model', async () => {
+    it('calls persistence update for provider and model', async () => {
       await tracker.track({
         providerId: 'prov-1',
         modelId: 'model-1',
@@ -177,14 +190,18 @@ describe('UsageTracker', () => {
       // Give async DB calls a chance to run
       await new Promise((r) => setTimeout(r, 10));
 
-      expect(mockPrisma.aIProviderUsage.upsert).toHaveBeenCalledWith(
+      expect(mockPersistence.upsertProviderUsageSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: { providerId: 'prov-1' },
+          providerId: 'prov-1',
         }),
       );
 
-      // Model usage - should call create since findUnique returns null
-      expect(mockPrisma.aIModelUsage.create).toHaveBeenCalled();
+      expect(mockPersistence.upsertModelUsageSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          modelId: 'model-1',
+          success: true,
+        }),
+      );
     });
   });
 
@@ -227,7 +244,7 @@ describe('UsageTracker', () => {
   });
 
   describe('resetDailyCounters()', () => {
-    it('resets daily counters in cache and DB', async () => {
+    it('resets daily counters in cache and calls persistence', async () => {
       // Track some requests
       for (let i = 0; i < 5; i++) {
         await tracker.track({
@@ -251,8 +268,8 @@ describe('UsageTracker', () => {
 
       expect(tracker.getProviderStats('prov-1')!.requestsToday).toBe(0);
       expect(tracker.getModelStats('model-1')!.requestsToday).toBe(0);
-      expect(mockPrisma.aIProviderUsage.updateMany).toHaveBeenCalled();
-      expect(mockPrisma.aIModelUsage.updateMany).toHaveBeenCalled();
+      expect(mockPersistence.resetProviderSpy).toHaveBeenCalled();
+      expect(mockPersistence.resetModelSpy).toHaveBeenCalled();
     });
   });
 });

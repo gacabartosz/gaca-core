@@ -1,19 +1,44 @@
 // GACA-Core - Universal AI Bus
 // Main entry point and exports
+// Version 2.0 - Framework-agnostic with dependency injection
 
 import { PrismaClient } from '@prisma/client';
+import type { GacaLogger } from './core/interfaces/logger.interface.js';
+import type { GacaPersistence } from './core/interfaces/persistence.interface.js';
+import { PrismaPersistence } from './core/persistence/prisma.persistence.js';
+import { PinoLoggerFactory } from './core/loggers/pino.logger.js';
 
-// Core components
+// ==================== CORE COMPONENTS ====================
 export { AIEngine } from './core/AIEngine.js';
+export type { AIEngineConfig } from './core/AIEngine.js';
 export { GenericAdapter } from './core/GenericAdapter.js';
 export { ModelSelector } from './core/ModelSelector.js';
 export { RankingService } from './core/RankingService.js';
 export { UsageTracker } from './core/UsageTracker.js';
 
-// Types
+// ==================== INTERFACES ====================
+export type { GacaLogger, GacaLoggerFactory } from './core/interfaces/logger.interface.js';
+export type {
+  GacaPersistence,
+  ProviderEntity,
+  ModelEntity,
+  ModelRankingEntity,
+  ModelUsageEntity,
+  ProviderUsageEntity,
+  FailoverEventEntity,
+} from './core/interfaces/persistence.interface.js';
+
+// ==================== LOGGER IMPLEMENTATIONS ====================
+export { ConsoleLogger, ConsoleLoggerFactory } from './core/loggers/console.logger.js';
+export { PinoLogger, PinoLoggerFactory, createDefaultPinoLogger } from './core/loggers/pino.logger.js';
+
+// ==================== PERSISTENCE IMPLEMENTATIONS ====================
+export { PrismaPersistence } from './core/persistence/prisma.persistence.js';
+
+// ==================== TYPES ====================
 export * from './core/types.js';
 
-// Prompts
+// ==================== PROMPTS ====================
 export {
   loadPrompt,
   savePrompt,
@@ -23,12 +48,43 @@ export {
   loadPromptWithVariables,
 } from './prompts/loader.js';
 
-// Singleton instance
+// ==================== FACTORY FUNCTIONS ====================
+
+/**
+ * Create an AIEngine instance with custom logger and persistence
+ * This is the recommended way to create an AIEngine for framework integration
+ *
+ * @example
+ * // NestJS integration
+ * const engine = createAIEngine({
+ *   logger: new NestJsLoggerAdapter('GACA'),
+ *   persistence: new PrismaPersistenceAdapter(prismaService),
+ * });
+ *
+ * @example
+ * // Express/standalone (uses defaults)
+ * const engine = await createAIEngineWithDefaults();
+ */
+export function createAIEngine(config: {
+  logger: GacaLogger;
+  persistence: GacaPersistence;
+}): InstanceType<typeof import('./core/AIEngine.js').AIEngine> {
+  const { AIEngine } = require('./core/AIEngine.js');
+  return new AIEngine({
+    logger: config.logger,
+    persistence: config.persistence,
+  });
+}
+
+// ==================== SINGLETON INSTANCE (for backwards compatibility) ====================
+
 let engineInstance: InstanceType<typeof import('./core/AIEngine.js').AIEngine> | null = null;
 let prismaInstance: PrismaClient | null = null;
 
 /**
- * Initialize GACA-Core with database connection
+ * Initialize GACA-Core with database connection (backwards compatible)
+ * For new integrations, prefer createAIEngine() with explicit dependencies
+ *
  * @param databaseUrl - Optional database URL (defaults to DATABASE_URL env var)
  * @returns Initialized AIEngine instance
  */
@@ -46,9 +102,17 @@ export async function initGacaCore(
 
   await prismaInstance.$connect();
 
-  // Initialize engine
+  // Create logger and persistence
+  const loggerFactory = new PinoLoggerFactory();
+  const logger = loggerFactory.createLogger('GACA');
+  const persistence = new PrismaPersistence(prismaInstance);
+
+  // Initialize engine with new interface
   const { AIEngine } = await import('./core/AIEngine.js');
-  engineInstance = new AIEngine(prismaInstance);
+  engineInstance = new AIEngine({
+    logger,
+    persistence,
+  });
 
   return engineInstance;
 }

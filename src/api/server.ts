@@ -11,6 +11,8 @@ import { resolve, join } from 'path';
 import { AIEngine } from '../core/AIEngine.js';
 import { DEFAULT_PROVIDERS, generateRequestId } from '../core/types.js';
 import { logger } from '../core/logger.js';
+import { PinoLoggerFactory } from '../core/loggers/pino.logger.js';
+import { PrismaPersistence } from '../core/persistence/prisma.persistence.js';
 import { createProviderRoutes } from './routes/providers.routes.js';
 import { createModelRoutes } from './routes/models.routes.js';
 import { createRankingRoutes } from './routes/ranking.routes.js';
@@ -49,8 +51,16 @@ function authMiddleware(req: Request, res: Response, next: NextFunction) {
 // Initialize Prisma
 const prisma = new PrismaClient();
 
-// Initialize AI Engine
-const engine = new AIEngine(prisma);
+// Initialize logger and persistence
+const loggerFactory = new PinoLoggerFactory();
+const gacaLogger = loggerFactory.createLogger('AIEngine');
+const persistence = new PrismaPersistence(prisma);
+
+// Initialize AI Engine with new interface
+const engine = new AIEngine({
+  logger: gacaLogger,
+  persistence: persistence,
+});
 
 // Create Express app
 const app = express();

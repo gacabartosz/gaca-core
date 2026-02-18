@@ -1,8 +1,9 @@
 // UsageTracker - Tracks rate limits and usage for providers and models
+// Refactored to use GacaLogger and GacaPersistence interfaces
 
-import { PrismaClient } from '@prisma/client';
+import type { GacaLogger } from './interfaces/logger.interface.js';
+import type { GacaPersistence } from './interfaces/persistence.interface.js';
 import { UsageData } from './types.js';
-import { logger } from './logger.js';
 
 // In-memory cache for fast rate limit checking
 interface UsageCache {
@@ -14,12 +15,14 @@ interface UsageCache {
 }
 
 export class UsageTracker {
-  private prisma: PrismaClient;
+  private persistence: GacaPersistence;
+  private logger: GacaLogger;
   private providerUsageCache: Map<string, UsageCache> = new Map();
   private modelUsageCache: Map<string, UsageCache> = new Map();
 
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
+  constructor(persistence: GacaPersistence, logger: GacaLogger) {
+    this.persistence = persistence;
+    this.logger = logger;
   }
 
   // Check if provider can be used (rate limits)
@@ -52,18 +55,16 @@ export class UsageTracker {
 
     // Update DB asynchronously (don't await to not block)
     this.updateProviderUsageInDb(providerId, success, latencyMs, tokensUsed).catch((err) =>
-      logger.error({ err }, 'Failed to update provider usage in DB'),
+      this.logger.error('Failed to update provider usage in DB', { err: String(err) }),
     );
     this.updateModelUsageInDb(modelId, success, latencyMs, tokensUsed).catch((err) =>
-      logger.error({ err }, 'Failed to update model usage in DB'),
+      this.logger.error('Failed to update model usage in DB', { err: String(err) }),
     );
   }
 
   // Load usage from DB into cache
   async loadProviderUsage(providerId: string): Promise<void> {
-    const usage = await this.prisma.aIProviderUsage.findUnique({
-      where: { providerId },
-    });
+    const usage = await this.persistence.getProviderUsage(providerId);
 
     if (usage) {
       this.providerUsageCache.set(providerId, {
@@ -78,9 +79,7 @@ export class UsageTracker {
 
   // Load model usage from DB into cache
   async loadModelUsage(modelId: string): Promise<void> {
-    const usage = await this.prisma.aIModelUsage.findUnique({
-      where: { modelId },
-    });
+    const usage = await this.persistence.getModelUsage(modelId);
 
     if (usage) {
       this.modelUsageCache.set(modelId, {
@@ -124,15 +123,8 @@ export class UsageTracker {
     }
 
     // Reset in DB
-    await this.prisma.aIProviderUsage.updateMany({
-      where: { dayResetAt: { lt: todayMidnight } },
-      data: { requestsToday: 0, dayResetAt: todayMidnight },
-    });
-
-    await this.prisma.aIModelUsage.updateMany({
-      where: { dayResetAt: { lt: todayMidnight } },
-      data: { requestsToday: 0, dayResetAt: todayMidnight },
-    });
+    await this.persistence.resetProviderDailyCounters(todayMidnight);
+    await this.persistence.resetModelDailyCounters(todayMidnight);
   }
 
   private getOrCreateProviderCache(providerId: string): UsageCache {
@@ -192,12 +184,12 @@ export class UsageTracker {
     name: string,
   ): boolean {
     if (rateLimitRpm && cache.requestsThisMinute >= rateLimitRpm) {
-      logger.warn({ name, used: cache.requestsThisMinute, limit: rateLimitRpm }, 'RPM limit hit');
+      this.logger.warn('RPM limit hit', { name, used: cache.requestsThisMinute, limit: rateLimitRpm });
       return false;
     }
 
     if (rateLimitRpd && cache.requestsToday >= rateLimitRpd) {
-      logger.warn({ name, used: cache.requestsToday, limit: rateLimitRpd }, 'RPD limit hit');
+      this.logger.warn('RPD limit hit', { name, used: cache.requestsToday, limit: rateLimitRpd });
       return false;
     }
 
@@ -212,23 +204,11 @@ export class UsageTracker {
   ): Promise<void> {
     const cache = this.providerUsageCache.get(providerId);
 
-    await this.prisma.aIProviderUsage.upsert({
-      where: { providerId },
-      create: {
-        providerId,
-        requestsToday: 1,
-        requestsThisMinute: 1,
-        lastRequestAt: new Date(),
-        minuteResetAt: new Date(),
-        dayResetAt: new Date(),
-        totalTokensUsed: tokensUsed || 0,
-      },
-      update: {
-        requestsToday: { increment: 1 },
-        requestsThisMinute: cache?.requestsThisMinute || 1,
-        lastRequestAt: new Date(),
-        totalTokensUsed: tokensUsed ? { increment: tokensUsed } : undefined,
-      },
+    await this.persistence.upsertProviderUsage({
+      providerId,
+      incrementRequests: true,
+      requestsThisMinute: cache?.requestsThisMinute || 1,
+      tokensUsed,
     });
   }
 
@@ -240,47 +220,12 @@ export class UsageTracker {
   ): Promise<void> {
     const cache = this.modelUsageCache.get(modelId);
 
-    // Check if record exists
-    const existing = await this.prisma.aIModelUsage.findUnique({
-      where: { modelId },
+    await this.persistence.upsertModelUsage({
+      modelId,
+      success,
+      latencyMs,
+      tokensUsed,
+      requestsThisMinute: cache?.requestsThisMinute || 1,
     });
-
-    if (!existing) {
-      await this.prisma.aIModelUsage.create({
-        data: {
-          modelId,
-          requestsToday: 1,
-          requestsThisMinute: 1,
-          lastRequestAt: new Date(),
-          minuteResetAt: new Date(),
-          dayResetAt: new Date(),
-          totalCalls: 1,
-          successCount: success ? 1 : 0,
-          failureCount: success ? 0 : 1,
-          avgLatencyMs: latencyMs,
-          totalTokensUsed: tokensUsed || 0,
-        },
-      });
-    } else {
-      const newTotalCalls = existing.totalCalls + 1;
-      // Incremental average: newAvg = oldAvg + (latencyMs - oldAvg) / newTotalCalls
-      const newAvgLatency = success
-        ? Math.round(existing.avgLatencyMs + (latencyMs - existing.avgLatencyMs) / newTotalCalls)
-        : existing.avgLatencyMs;
-
-      await this.prisma.aIModelUsage.update({
-        where: { modelId },
-        data: {
-          requestsToday: { increment: 1 },
-          requestsThisMinute: cache?.requestsThisMinute || 1,
-          lastRequestAt: new Date(),
-          totalCalls: { increment: 1 },
-          successCount: success ? { increment: 1 } : undefined,
-          failureCount: success ? undefined : { increment: 1 },
-          totalTokensUsed: tokensUsed ? { increment: tokensUsed } : undefined,
-          avgLatencyMs: newAvgLatency,
-        },
-      });
-    }
   }
 }

@@ -1,6 +1,8 @@
 // AIEngine - Main AI completion engine with failover and ranking
+// Refactored to use GacaLogger and GacaPersistence interfaces
 
-import { PrismaClient } from '@prisma/client';
+import type { GacaLogger } from './interfaces/logger.interface.js';
+import type { GacaPersistence, ProviderEntity, ModelEntity } from './interfaces/persistence.interface.js';
 import {
   AIRequest,
   AIResponse,
@@ -9,27 +11,34 @@ import {
   ModelConfig,
   TestResult,
   generateRequestId,
+  ApiFormat,
 } from './types.js';
 import { GenericAdapter } from './GenericAdapter.js';
 import { ModelSelector } from './ModelSelector.js';
 import { RankingService } from './RankingService.js';
 import { UsageTracker } from './UsageTracker.js';
-import { logger } from './logger.js';
 
 const MAX_FAILOVER_ATTEMPTS = 30;
 
+export interface AIEngineConfig {
+  persistence: GacaPersistence;
+  logger: GacaLogger;
+}
+
 export class AIEngine {
-  private prisma: PrismaClient;
+  private persistence: GacaPersistence;
+  private logger: GacaLogger;
   private modelSelector: ModelSelector;
   private rankingService: RankingService;
   private usageTracker: UsageTracker;
   private adapterCache: Map<string, GenericAdapter> = new Map();
 
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-    this.usageTracker = new UsageTracker(prisma);
-    this.modelSelector = new ModelSelector(prisma, this.usageTracker);
-    this.rankingService = new RankingService(prisma);
+  constructor(config: AIEngineConfig) {
+    this.persistence = config.persistence;
+    this.logger = config.logger;
+    this.usageTracker = new UsageTracker(config.persistence, config.logger);
+    this.modelSelector = new ModelSelector(config.persistence, this.usageTracker);
+    this.rankingService = new RankingService(config.persistence, config.logger);
   }
 
   // Main completion method with automatic model selection and failover
@@ -54,7 +63,7 @@ export class AIEngine {
       excludeModelIds.push(model.id);
 
       try {
-        logger.info({ requestId, attempt: attempts, model: modelLabel }, 'Attempting completion');
+        this.logger.info('Attempting completion', { requestId, attempt: attempts, model: modelLabel });
 
         const adapter = this.getAdapter(provider);
         const response = await adapter.complete(model, { ...request, requestId });
@@ -73,7 +82,7 @@ export class AIEngine {
         // Maybe recalculate ranking
         await this.rankingService.maybeRecalculate(model.id);
 
-        logger.info({ requestId, model: modelLabel, latencyMs: response.latencyMs }, 'Completion OK');
+        this.logger.info('Completion OK', { requestId, model: modelLabel, latencyMs: response.latencyMs });
 
         return { ...response, requestId };
       } catch (error: any) {
@@ -96,10 +105,12 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        logger.warn(
-          { requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) },
-          'Completion failed, failing over',
-        );
+        this.logger.warn('Completion failed, failing over', {
+          requestId,
+          model: modelLabel,
+          reason,
+          err: error.message?.substring(0, 150),
+        });
       }
     }
 
@@ -122,7 +133,7 @@ export class AIEngine {
     const adapter = this.getAdapter(provider);
 
     try {
-      logger.info({ requestId, model: modelLabel }, 'Using model');
+      this.logger.info('Using model', { requestId, model: modelLabel });
       const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
@@ -162,7 +173,7 @@ export class AIEngine {
     const adapter = this.getAdapter(provider);
 
     try {
-      logger.info({ requestId, model: modelLabel }, 'Using model');
+      this.logger.info('Using model', { requestId, model: modelLabel });
       const response = await adapter.complete(model, { ...request, requestId });
 
       await this.usageTracker.track({
@@ -206,7 +217,7 @@ export class AIEngine {
       excludeModelIds.push(model.id);
 
       try {
-        logger.info({ requestId, attempt: attempts, model: modelLabel }, 'Stream attempt');
+        this.logger.info('Stream attempt', { requestId, attempt: attempts, model: modelLabel });
 
         const adapter = this.getAdapter(provider);
         const response = await adapter.completeStream(model, { ...request, requestId }, onToken);
@@ -223,7 +234,7 @@ export class AIEngine {
 
         await this.rankingService.maybeRecalculate(model.id);
 
-        logger.info({ requestId, model: modelLabel, latencyMs: response.latencyMs }, 'Stream OK');
+        this.logger.info('Stream OK', { requestId, model: modelLabel, latencyMs: response.latencyMs });
         return { ...response, requestId };
       } catch (error: any) {
         lastError = error;
@@ -243,10 +254,12 @@ export class AIEngine {
           errorMessage: error.message,
         });
 
-        logger.warn(
-          { requestId, model: modelLabel, reason, err: error.message?.substring(0, 150) },
-          'Stream failed, failing over',
-        );
+        this.logger.warn('Stream failed, failing over', {
+          requestId,
+          model: modelLabel,
+          reason,
+          err: error.message?.substring(0, 150),
+        });
       }
     }
 
@@ -257,12 +270,7 @@ export class AIEngine {
 
   // Test a provider connection
   async testProvider(providerId: string): Promise<TestResult> {
-    const provider = await this.prisma.aIProvider.findUnique({
-      where: { id: providerId },
-      include: {
-        models: { where: { isDefault: true }, take: 1 },
-      },
-    });
+    const provider = await this.persistence.findProviderById(providerId);
 
     if (!provider) {
       return { success: false, error: 'Provider not found' };
@@ -278,7 +286,7 @@ export class AIEngine {
       slug: provider.slug,
       baseUrl: provider.baseUrl,
       apiKey: provider.apiKey,
-      apiFormat: provider.apiFormat as any,
+      apiFormat: provider.apiFormat as ApiFormat,
       authHeader: provider.authHeader,
       authPrefix: provider.authPrefix,
       customHeaders: JSON.parse(provider.customHeaders || '{}'),
@@ -288,7 +296,7 @@ export class AIEngine {
       priority: provider.priority,
     };
 
-    const defaultModel = provider.models[0];
+    const defaultModel = provider.models.find(m => m.isDefault) || provider.models[0];
     const modelConfig: ModelConfig | undefined = defaultModel
       ? {
           id: defaultModel.id,
@@ -327,10 +335,7 @@ export class AIEngine {
 
   // Get failover events
   async getFailoverEvents(limit: number = 50): Promise<any[]> {
-    return this.prisma.aIFailoverEvent.findMany({
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-    });
+    return this.persistence.getFailoverEvents(limit);
   }
 
   // Get rate limit info for a provider/model after a request
@@ -347,8 +352,9 @@ export class AIEngine {
     modelUsedMinute: number;
     modelUsedDay: number;
   }> {
-    const provider = await this.prisma.aIProvider.findUnique({ where: { id: providerId } });
-    const model = await this.prisma.aIModel.findUnique({ where: { id: modelId } });
+    const providers = await this.persistence.getEnabledProvidersWithModels();
+    const provider = providers.find(p => p.id === providerId);
+    const model = provider?.models.find(m => m.id === modelId);
 
     const providerStats = this.usageTracker.getProviderStats(providerId);
     const modelStats = this.usageTracker.getModelStats(modelId);
@@ -402,17 +408,15 @@ export class AIEngine {
 
   private async logFailover(event: FailoverEvent): Promise<void> {
     try {
-      await this.prisma.aIFailoverEvent.create({
-        data: {
-          fromModelId: event.fromModelId,
-          toModelId: event.toModelId,
-          reason: event.reason,
-          errorMessage: event.errorMessage,
-          latencyMs: event.latencyMs,
-        },
+      await this.persistence.logFailoverEvent({
+        fromModelId: event.fromModelId,
+        toModelId: event.toModelId,
+        reason: event.reason,
+        errorMessage: event.errorMessage || null,
+        latencyMs: event.latencyMs || null,
       });
     } catch (error) {
-      logger.error({ err: error }, 'Failed to log failover');
+      this.logger.error('Failed to log failover', { err: String(error) });
     }
   }
 }

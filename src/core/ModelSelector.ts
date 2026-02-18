@@ -1,33 +1,16 @@
 // ModelSelector - Selects the best available model based on ranking and limits
+// Refactored to use GacaPersistence interface
 
-import { PrismaClient } from '@prisma/client';
-import type { AIProvider, AIModel, AIModelRanking, AIModelUsage, AIProviderUsage } from '@prisma/client';
+import type { GacaPersistence, ProviderEntity, ModelEntity, ModelRankingEntity, ModelUsageEntity, ProviderUsageEntity } from './interfaces/persistence.interface.js';
 import { ModelWithRanking, ProviderWithModels, ApiFormat } from './types.js';
 import { UsageTracker } from './UsageTracker.js';
 
-// Prisma query result types (what findMany/findUnique with includes returns)
-type DbModelWithRelations = AIModel & {
-  ranking: AIModelRanking | null;
-  usage: AIModelUsage | null;
-};
-
-type DbProviderWithRelations = AIProvider & {
-  models: DbModelWithRelations[];
-  usage: AIProviderUsage | null;
-};
-
-type DbModelWithProvider = AIModel & {
-  provider: AIProvider & { usage: AIProviderUsage | null };
-  ranking: AIModelRanking | null;
-  usage: AIModelUsage | null;
-};
-
 export class ModelSelector {
-  private prisma: PrismaClient;
+  private persistence: GacaPersistence;
   private usageTracker: UsageTracker;
 
-  constructor(prisma: PrismaClient, usageTracker: UsageTracker) {
-    this.prisma = prisma;
+  constructor(persistence: GacaPersistence, usageTracker: UsageTracker) {
+    this.persistence = persistence;
     this.usageTracker = usageTracker;
   }
 
@@ -125,16 +108,7 @@ export class ModelSelector {
     model: ModelWithRanking;
     provider: ProviderWithModels;
   } | null> {
-    const model = await this.prisma.aIModel.findUnique({
-      where: { id: modelId },
-      include: {
-        provider: {
-          include: { usage: true },
-        },
-        usage: true,
-        ranking: true,
-      },
-    });
+    const model = await this.persistence.findModelById(modelId);
 
     if (!model || !model.isEnabled || !model.provider.isEnabled || !model.provider.apiKey) {
       return null;
@@ -161,17 +135,8 @@ export class ModelSelector {
     model: ModelWithRanking;
     provider: ProviderWithModels;
   } | null> {
-    const provider = await this.prisma.aIProvider.findUnique({
-      where: { id: providerId },
-      include: {
-        models: {
-          where: { isEnabled: true },
-          include: { usage: true, ranking: true },
-          orderBy: [{ isDefault: 'desc' }],
-        },
-        usage: true,
-      },
-    });
+    const providers = await this.persistence.getEnabledProvidersWithModels();
+    const provider = providers.find(p => p.id === providerId);
 
     if (!provider || !provider.isEnabled || !provider.apiKey) {
       return null;
@@ -184,8 +149,14 @@ export class ModelSelector {
 
     const formattedProvider = this.formatProvider(provider);
 
-    // Find first available model
-    for (const model of provider.models) {
+    // Find first available model (sorted by isDefault desc)
+    const sortedModels = [...provider.models].sort((a, b) => {
+      if (a.isDefault && !b.isDefault) return -1;
+      if (!a.isDefault && b.isDefault) return 1;
+      return 0;
+    });
+
+    for (const model of sortedModels) {
       if (!this.usageTracker.canUseModel(model.id, model.rateLimitRpm, model.rateLimitRpd)) {
         continue;
       }
@@ -208,23 +179,14 @@ export class ModelSelector {
   }
 
   private async getProvidersWithModels(): Promise<ProviderWithModels[]> {
-    const providers = await this.prisma.aIProvider.findMany({
-      where: { isEnabled: true },
-      orderBy: { priority: 'asc' },
-      include: {
-        models: {
-          where: { isEnabled: true },
-          include: { usage: true, ranking: true },
-          orderBy: [{ isDefault: 'desc' }],
-        },
-        usage: true,
-      },
-    });
-
+    const providers = await this.persistence.getEnabledProvidersWithModels();
     return providers.map((p) => this.formatProvider(p));
   }
 
-  private formatProvider(provider: DbProviderWithRelations): ProviderWithModels {
+  private formatProvider(provider: ProviderEntity & {
+    models: Array<ModelEntity & { ranking: ModelRankingEntity | null; usage: ModelUsageEntity | null }>;
+    usage?: ProviderUsageEntity | null;
+  }): ProviderWithModels {
     return {
       id: provider.id,
       name: provider.name,
@@ -251,7 +213,7 @@ export class ModelSelector {
     };
   }
 
-  private formatModel(model: DbModelWithRelations): ModelWithRanking {
+  private formatModel(model: ModelEntity & { ranking?: ModelRankingEntity | null; usage?: ModelUsageEntity | null }): ModelWithRanking {
     return {
       id: model.id,
       providerId: model.providerId,
