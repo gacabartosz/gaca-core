@@ -179,11 +179,12 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 - [x] getRateLimitInfo() method added to AIEngine for rate limit lookups
 - Verified: Mistral AI 1 RPM / 500 RPD correctly reported in headers
 
-### Task 9.2: Add API key authentication for admin endpoints
-- [ ] Add `GACA_ADMIN_KEY` to `.env` and `.env.example`
-- [ ] Create `authMiddleware` that checks `Authorization: Bearer <key>`
-- [ ] Apply to: POST/PUT/DELETE on providers, models, prompts, and admin endpoints
-- [ ] Leave GET endpoints and POST /api/complete publicly accessible
+### Task 9.2: Add API key authentication for admin endpoints (DONE)
+- [x] Add `GACA_ADMIN_KEY` to `.env` and `.env.example`
+- [x] Create `authMiddleware` that checks `Authorization: Bearer <key>`
+- [x] Apply to: POST/PUT/DELETE on providers, models, prompts, ranking, and admin endpoints
+- [x] Leave GET endpoints and POST /api/complete publicly accessible
+- [x] Dev mode: when GACA_ADMIN_KEY is empty, all requests pass through
 
 ---
 

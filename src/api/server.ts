@@ -20,6 +20,27 @@ import { createCompleteRoutes } from './routes/complete.routes.js';
 config();
 
 const PORT = process.env.PORT || 3001;
+const ADMIN_KEY = process.env.GACA_ADMIN_KEY;
+
+// Auth middleware: protects write operations when GACA_ADMIN_KEY is set
+function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  // Skip if no admin key configured (dev mode)
+  if (!ADMIN_KEY) return next();
+  // Allow read-only methods without auth
+  if (req.method === 'GET') return next();
+
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authorization required. Use: Authorization: Bearer <GACA_ADMIN_KEY>' });
+  }
+
+  const token = authHeader.slice(7);
+  if (token !== ADMIN_KEY) {
+    return res.status(403).json({ error: 'Invalid admin key' });
+  }
+
+  next();
+}
 
 // Initialize Prisma
 const prisma = new PrismaClient();
@@ -66,8 +87,8 @@ app.get('/health', async (req: Request, res: Response) => {
   });
 });
 
-// Admin: trigger provider sync
-app.post('/api/admin/sync-providers', async (req: Request, res: Response) => {
+// Admin: trigger provider sync (auth required)
+app.post('/api/admin/sync-providers', authMiddleware, async (req: Request, res: Response) => {
   try {
     const { execSync } = await import('child_process');
     const output = execSync('npx tsx scripts/sync-providers.ts', {
@@ -104,11 +125,12 @@ app.get('/api/admin/default-providers', (req: Request, res: Response) => {
   res.json({ providers: summary, total: DEFAULT_PROVIDERS.length });
 });
 
-// API Routes
-app.use('/api/providers', createProviderRoutes(prisma, engine));
-app.use('/api/models', createModelRoutes(prisma, engine));
-app.use('/api/ranking', createRankingRoutes(prisma, engine));
-app.use('/api/prompts', createPromptRoutes());
+// API Routes (auth middleware protects write operations on CRUD routes)
+app.use('/api/providers', authMiddleware, createProviderRoutes(prisma, engine));
+app.use('/api/models', authMiddleware, createModelRoutes(prisma, engine));
+app.use('/api/ranking', authMiddleware, createRankingRoutes(prisma, engine));
+app.use('/api/prompts', authMiddleware, createPromptRoutes());
+// Complete endpoints are publicly accessible (no auth)
 app.use('/api/complete', createCompleteRoutes(prisma, engine));
 
 // Serve frontend static files (production build)
