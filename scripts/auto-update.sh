@@ -86,6 +86,12 @@ if git diff "$LOCAL" "$REMOTE_REF" --name-only | grep -q "src/core/types.ts"; th
   npx tsx scripts/sync-providers.ts
 fi
 
+# Check if frontend changed — rebuild
+if git diff "$LOCAL" "$REMOTE_REF" --name-only | grep -q "src/frontend/"; then
+  log "Frontend changed — rebuilding..."
+  npm run build
+fi
+
 # Restart service
 if pm2 list 2>/dev/null | grep -q "gaca-core"; then
   log "Restarting gaca-core PM2 process..."
