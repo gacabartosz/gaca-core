@@ -6,8 +6,9 @@ import RankingTable from './components/RankingTable';
 import PromptEditor from './components/PromptEditor';
 import TestPanel from './components/TestPanel';
 import UsageStats from './components/UsageStats';
+import OpenClawPanel from './components/OpenClawPanel';
 
-type Tab = 'providers' | 'ranking' | 'prompts' | 'test' | 'usage';
+type Tab = 'providers' | 'ranking' | 'prompts' | 'test' | 'usage' | 'openclaw';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState<Tab>('providers');
@@ -21,6 +22,7 @@ function AppContent() {
     { id: 'prompts', label: 'Prompts' },
     { id: 'test', label: 'Test' },
     { id: 'usage', label: 'Usage' },
+    { id: 'openclaw', label: '🦞 OpenClaw' },
   ];
 
   useEffect(() => {
@@ -110,6 +112,7 @@ function AppContent() {
         {activeTab === 'prompts' && <PromptEditor />}
         {activeTab === 'test' && <TestPanel />}
         {activeTab === 'usage' && <UsageStats />}
+        {activeTab === 'openclaw' && <OpenClawPanel />}
       </main>
     </div>
   );

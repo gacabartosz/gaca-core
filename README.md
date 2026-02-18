@@ -1,4 +1,4 @@
-# G.A.C.A. — Generative AI Arbitrage Engine
+# G.A.C.A. — Generative AI Cost Arbitrage
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
@@ -7,7 +7,7 @@
 
 > Universal AI Bus with automatic failover, performance ranking, rate limiting, and **50+ free LLM models** from 11 providers.
 
-**G.A.C.A.** (Generative AI Completion Architecture) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently.
+**G.A.C.A.** (**G**enerative **A**I **C**ost **A**rbitrage) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently. The "arbitrage" comes from exploiting free tier limits across multiple providers to get unlimited AI completions at zero cost.
 
 ## Key Features
 
@@ -394,6 +394,23 @@ PUT    /api/prompts/:name          # Update prompt
 DELETE /api/prompts/:name          # Delete prompt
 ```
 
+### OpenAI-Compatible (for OpenClaw / any OpenAI client)
+
+```bash
+POST   /v1/chat/completions        # OpenAI-compatible chat completion
+GET    /v1/models                   # List available models
+```
+
+### OpenClaw Bridge
+
+```bash
+GET    /api/openclaw/status         # Bridge connection status
+POST   /api/openclaw/connect        # Connect to OpenClaw Gateway
+POST   /api/openclaw/disconnect     # Disconnect from Gateway
+POST   /api/openclaw/message        # Send message to Claw
+GET    /api/openclaw/history        # Get message history
+```
+
 ### Admin
 
 ```bash
@@ -489,6 +506,7 @@ gaca-core/
 │   │   ├── ModelSelector.ts       # Model selection logic
 │   │   ├── RankingService.ts      # Performance ranking
 │   │   ├── UsageTracker.ts        # Rate limit tracking
+│   │   ├── OpenClawBridge.ts      # WebSocket bridge to OpenClaw Gateway
 │   │   └── types.ts               # Types + DEFAULT_PROVIDERS
 │   ├── frontend/                  # React admin dashboard
 │   └── prompts/                   # Prompt templates
@@ -501,6 +519,86 @@ gaca-core/
 │   └── test-providers.ts          # Provider testing
 └── examples/                      # Usage examples
 ```
+
+## 🦞 OpenClaw Integration — FREE LLM Routing
+
+G.A.C.A. can serve as a **free LLM routing layer** for [OpenClaw](https://github.com/nicepkg/openclaw) — an AI assistant that runs on WhatsApp, Telegram, and other messaging platforms:
+
+- **50+ free models** from Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks
+- **Automatic failover** — if one model hits rate limit, next one picks up seamlessly
+- **Smart ranking** — best model selected by latency, success rate, and quality score
+- **Zero cost** — all free tier providers, no API fees
+- **OpenAI-compatible** — `POST /v1/chat/completions` — drop-in replacement for any OpenAI endpoint
+
+### Quick Setup with OpenClaw
+
+```bash
+# 1. Start gaca-core
+npm start
+
+# 2. Add gaca-core as provider in OpenClaw
+openclaw config set models.providers.gacacore.baseUrl "http://localhost:3002/v1"
+openclaw config set models.providers.gacacore.apiKey "local"
+openclaw config set models.providers.gacacore.api "openai-completions"
+
+# 3. Add as fallback model
+openclaw models fallbacks add gacacore/gacacore-auto
+
+# Done! Claw now uses 50+ free models as fallback.
+```
+
+### OpenAI-Compatible Endpoint
+
+Any OpenAI-compatible client can use G.A.C.A. as a drop-in replacement:
+
+```bash
+curl -X POST http://localhost:3002/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant"},
+      {"role": "user", "content": "Hello!"}
+    ],
+    "temperature": 0.7,
+    "max_tokens": 500
+  }'
+
+# Response includes standard OpenAI format + _gacacore metadata:
+# {
+#   "choices": [{"message": {"role": "assistant", "content": "..."}}],
+#   "model": "llama-3.3-70b-versatile",
+#   "usage": {"prompt_tokens": 12, "completion_tokens": 42, "total_tokens": 54},
+#   "_gacacore": {"providerName": "Groq", "latencyMs": 286}
+# }
+```
+
+### OpenClaw Bridge (bidirectional)
+
+G.A.C.A. can also communicate directly with OpenClaw Gateway via WebSocket:
+
+```bash
+# Check bridge status
+curl http://localhost:3002/api/openclaw/status
+
+# Connect to gateway
+curl -X POST http://localhost:3002/api/openclaw/connect \
+  -H 'Content-Type: application/json' \
+  -d '{"url": "ws://127.0.0.1:18789", "token": "your-token"}'
+
+# Send message to Claw
+curl -X POST http://localhost:3002/api/openclaw/message \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "Hello from gaca-core!"}'
+
+# Get message history
+curl http://localhost:3002/api/openclaw/history
+```
+
+The admin dashboard also includes an **OpenClaw tab** for real-time chat with Claw.
+
+Set `OPENCLAW_GATEWAY_URL` and `OPENCLAW_GATEWAY_TOKEN` in `.env` for auto-connect on startup.
+
+---
 
 ## Integration
 

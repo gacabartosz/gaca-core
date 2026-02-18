@@ -19,6 +19,9 @@ import { createRankingRoutes } from './routes/ranking.routes.js';
 import { createPromptRoutes } from './routes/prompts.routes.js';
 import { createCompleteRoutes } from './routes/complete.routes.js';
 import { createCompatRoutes } from './routes/compat.routes.js';
+import { createOpenAICompatRoutes } from './routes/openai-compat.js';
+import { createOpenClawRoutes } from './routes/openclaw.js';
+import { getOpenClawBridge } from '../core/OpenClawBridge.js';
 
 // Load environment variables
 config();
@@ -162,6 +165,10 @@ const completionLimiter = rateLimit({
 app.use('/api/complete', completionLimiter, createCompleteRoutes(prisma, engine));
 // Compat endpoints for bartoszgaca.pl services (/api/gaca/*)
 app.use('/api/gaca', completionLimiter, createCompatRoutes(prisma, engine));
+// OpenAI-compatible endpoint (/v1/chat/completions) — for OpenClaw and other OpenAI-compat clients
+app.use('/v1', completionLimiter, createOpenAICompatRoutes(prisma, engine));
+// OpenClaw Bridge (/api/openclaw/*) — bidirectional communication with Claw
+app.use('/api/openclaw', authMiddleware, createOpenClawRoutes());
 
 // Serve frontend static files (production build)
 const frontendPath = resolve(process.cwd(), 'dist/frontend');
@@ -196,6 +203,18 @@ async function start() {
   try {
     await prisma.$connect();
     logger.info('Database connected');
+
+    // Auto-connect to OpenClaw Gateway if configured
+    const openclawUrl = process.env.OPENCLAW_GATEWAY_URL;
+    const openclawToken = process.env.OPENCLAW_GATEWAY_TOKEN;
+    if (openclawUrl && openclawToken) {
+      const bridge = getOpenClawBridge();
+      bridge.connect(openclawUrl, openclawToken).then(() => {
+        logger.info({ gatewayUrl: openclawUrl }, 'OpenClaw Bridge connected');
+      }).catch((err) => {
+        logger.warn({ err: err.message }, 'OpenClaw Bridge connection failed (will retry on demand)');
+      });
+    }
 
     app.listen(PORT, () => {
       logger.info({ port: PORT }, 'GACA-Core API server started');
