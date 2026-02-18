@@ -128,10 +128,10 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 
 ## Priority 7: GitHub Actions CI
 
-### Task 7.1: Create CI workflow
-- [ ] Create `.github/workflows/ci.yml`
-- [ ] Steps: checkout → setup node 20 → npm ci → prisma generate → build → test
-- [ ] Run on push and pull_request
+### Task 7.1: Create CI workflow (DONE)
+- [x] Create `.github/workflows/ci.yml`
+- [x] Steps: checkout → setup node 20 → npm ci → prisma generate → build → test
+- [x] Run on push and pull_request
 
 ---
 
