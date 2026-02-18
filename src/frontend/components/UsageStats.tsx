@@ -33,10 +33,17 @@ export default function UsageStats() {
   const [failovers, setFailovers] = useState<FailoverEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const interval = setInterval(() => loadData(), 10000);
+    return () => clearInterval(interval);
+  }, [autoRefresh]);
 
   const loadData = async () => {
     try {
@@ -180,10 +187,19 @@ export default function UsageStats() {
         </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex items-center gap-4">
         <button onClick={loadData} className="btn btn-secondary btn-sm">
           Refresh
         </button>
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={autoRefresh}
+            onChange={(e) => setAutoRefresh(e.target.checked)}
+            className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+          />
+          <span className="text-sm text-gray-400">Auto-refresh (10s)</span>
+        </label>
       </div>
     </div>
   );

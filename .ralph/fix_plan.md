@@ -160,10 +160,10 @@ This is the #1 missing feature. Modern AI apps MUST stream tokens.
 - [x] Add "Test All Providers" button → tests each enabled provider sequentially, shows summary toast
 - [x] Show mini latency comparison bars (color-coded: green <1s, yellow <3s, red >3s)
 
-### Task 8.5: Add sync/admin controls to header
-- [ ] Add "Sync Providers" button to App header (calls POST /api/admin/sync-providers)
-- [ ] Show last sync status and time
-- [ ] Add auto-refresh toggle (10s interval) for Usage tab
+### Task 8.5: Add sync/admin controls to header (DONE)
+- [x] Add "Sync Providers" button to App header (calls POST /api/admin/sync-providers)
+- [x] Show last sync status and time
+- [x] Add auto-refresh toggle (10s interval) for Usage tab
 
 ### IMPORTANT: After ALL frontend tasks, run `npm run build` to rebuild dist/frontend/
 

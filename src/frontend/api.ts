@@ -161,4 +161,10 @@ export const api = {
   getAvailableModels: () => request<any[]>('/complete/available'),
   getFailovers: (limit?: number) =>
     request<any[]>(`/complete/failovers${limit ? `?limit=${limit}` : ''}`),
+
+  // Admin
+  syncProviders: () =>
+    request<{ success: boolean; output: string }>('/admin/sync-providers', { method: 'POST' }),
+  getSyncStatus: () =>
+    request<{ lastSync: any; message?: string }>('/admin/sync-status'),
 };
