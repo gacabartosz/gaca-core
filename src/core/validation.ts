@@ -44,8 +44,8 @@ export const GacaCompleteSchema = z
     maxTokens: z.number().int().min(1).max(100000).optional(),
     max_tokens: z.number().int().min(1).max(100000).optional(),
     providerId: z.string().optional(),
-    modelId: z.string().optional(),
-    model: z.string().optional(),
+    modelId: z.string().nullable().optional(),
+    model: z.string().nullable().optional(),
   })
   .refine((data) => data.prompt || data.messages, {
     message: 'Either "prompt" or "messages" is required',
@@ -53,7 +53,7 @@ export const GacaCompleteSchema = z
   .transform((data) => ({
     ...data,
     maxTokens: data.maxTokens ?? data.max_tokens,
-    modelId: data.modelId ?? data.model,
+    modelId: data.modelId ?? data.model ?? undefined,
   }));
 
 // ============================================

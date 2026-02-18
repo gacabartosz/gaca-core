@@ -55,7 +55,7 @@ function makeDbModel(overrides: Record<string, any> = {}) {
   };
 }
 
-// Create a mock Prisma + UsageTracker
+// Create a mock GacaPersistence + UsageTracker
 function createMocks(
   options: {
     providers?: any[];
@@ -65,23 +65,15 @@ function createMocks(
 ) {
   const { providers = [], canUseProvider = true, canUseModel = true } = options;
 
-  const prisma = {
-    aIProvider: {
-      findMany: vi.fn().mockResolvedValue(providers),
-      findUnique: vi.fn().mockImplementation(({ where }: any) => {
-        const found = providers.find((p: any) => p.id === where.id);
-        return Promise.resolve(found || null);
-      }),
-    },
-    aIModel: {
-      findUnique: vi.fn().mockImplementation(({ where }: any) => {
-        for (const p of providers) {
-          const m = p.models?.find((m: any) => m.id === where.id);
-          if (m) return Promise.resolve({ ...m, provider: p });
-        }
-        return Promise.resolve(null);
-      }),
-    },
+  const persistence = {
+    getEnabledProvidersWithModels: vi.fn().mockResolvedValue(providers),
+    findModelById: vi.fn().mockImplementation((modelId: string) => {
+      for (const p of providers) {
+        const m = p.models?.find((m: any) => m.id === modelId);
+        if (m) return Promise.resolve({ ...m, provider: p });
+      }
+      return Promise.resolve(null);
+    }),
   } as any;
 
   const usageTracker = {
@@ -90,7 +82,7 @@ function createMocks(
     canUseModel: typeof canUseModel === 'function' ? vi.fn(canUseModel) : vi.fn().mockReturnValue(canUseModel),
   } as unknown as UsageTracker;
 
-  return { prisma, usageTracker };
+  return { persistence, usageTracker };
 }
 
 describe('ModelSelector', () => {
@@ -113,8 +105,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -137,8 +129,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -161,8 +153,8 @@ describe('ModelSelector', () => {
       const provider1 = makeDbProvider({ id: 'prov-1', priority: 5, models: [model1] });
       const provider2 = makeDbProvider({ id: 'prov-2', priority: 1, models: [model2] });
 
-      const { prisma, usageTracker } = createMocks({ providers: [provider1, provider2] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider1, provider2] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -178,8 +170,8 @@ describe('ModelSelector', () => {
       const modelUnranked = makeDbModel({ id: 'model-unranked', ranking: null });
 
       const provider = makeDbProvider({ models: [modelUnranked, modelRanked] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -198,8 +190,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.selectBestModel();
 
@@ -224,11 +216,11 @@ describe('ModelSelector', () => {
       const provLimited = makeDbProvider({ id: 'prov-limited', models: [model1] });
       const provOk = makeDbProvider({ id: 'prov-ok', models: [model2] });
 
-      const { prisma, usageTracker } = createMocks({
+      const { persistence, usageTracker } = createMocks({
         providers: [provLimited, provOk],
         canUseProvider: (id: string) => id !== 'prov-limited',
       });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -248,11 +240,11 @@ describe('ModelSelector', () => {
 
       const provider = makeDbProvider({ models: [modelLimited, modelOk] });
 
-      const { prisma, usageTracker } = createMocks({
+      const { persistence, usageTracker } = createMocks({
         providers: [provider],
         canUseModel: (id: string) => id !== 'model-limited',
       });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
 
@@ -264,11 +256,11 @@ describe('ModelSelector', () => {
       const model1 = makeDbModel({ id: 'model-1' });
       const provider = makeDbProvider({ models: [model1] });
 
-      const { prisma, usageTracker } = createMocks({
+      const { persistence, usageTracker } = createMocks({
         providers: [provider],
         canUseModel: false,
       });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.selectBestModel();
       expect(result).toBeNull();
@@ -278,8 +270,8 @@ describe('ModelSelector', () => {
       const model = makeDbModel({ id: 'model-1' });
       const provider = makeDbProvider({ id: 'prov-disabled', isEnabled: false, models: [model] });
 
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
       expect(available).toHaveLength(0);
@@ -289,8 +281,8 @@ describe('ModelSelector', () => {
       const model = makeDbModel({ id: 'model-1' });
       const provider = makeDbProvider({ id: 'prov-nokey', apiKey: null, models: [model] });
 
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
       expect(available).toHaveLength(0);
@@ -301,8 +293,8 @@ describe('ModelSelector', () => {
       const disabledModel = makeDbModel({ id: 'disabled', isEnabled: false });
       const provider = makeDbProvider({ models: [enabledModel, disabledModel] });
 
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
       expect(available).toHaveLength(1);
@@ -326,8 +318,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.getNextModel(['model-a']);
 
@@ -350,8 +342,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB, modelC] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.getNextModel(['model-a', 'model-b']);
 
@@ -364,8 +356,8 @@ describe('ModelSelector', () => {
       const modelB = makeDbModel({ id: 'model-b' });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.getNextModel(['model-a', 'model-b']);
       expect(result).toBeNull();
@@ -382,8 +374,8 @@ describe('ModelSelector', () => {
       });
 
       const provider = makeDbProvider({ models: [modelA, modelB] });
-      const { prisma, usageTracker } = createMocks({ providers: [provider] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [provider] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.getNextModel([]);
 
@@ -394,16 +386,16 @@ describe('ModelSelector', () => {
 
   describe('empty state', () => {
     it('should return null when no providers exist', async () => {
-      const { prisma, usageTracker } = createMocks({ providers: [] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const result = await selector.selectBestModel();
       expect(result).toBeNull();
     });
 
     it('should return empty array from getAvailableModels when no providers', async () => {
-      const { prisma, usageTracker } = createMocks({ providers: [] });
-      const selector = new ModelSelector(prisma, usageTracker);
+      const { persistence, usageTracker } = createMocks({ providers: [] });
+      const selector = new ModelSelector(persistence, usageTracker);
 
       const available = await selector.getAvailableModels();
       expect(available).toEqual([]);

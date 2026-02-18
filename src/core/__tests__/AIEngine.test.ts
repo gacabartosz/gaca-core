@@ -125,11 +125,31 @@ function makeResponse(overrides: Partial<AIResponse> = {}): AIResponse {
   };
 }
 
-// Mock Prisma
-const mockPrisma = {
-  aIProvider: { findUnique: vi.fn(), count: vi.fn() },
-  aIModel: { findUnique: vi.fn(), count: vi.fn() },
-  aIFailoverEvent: { create: vi.fn().mockResolvedValue(undefined), findMany: vi.fn() },
+// Mock persistence
+const mockPersistence = {
+  findProviderById: vi.fn(),
+  findModelById: vi.fn(),
+  findEnabledProviders: vi.fn().mockResolvedValue([]),
+  countProviders: vi.fn(),
+  countModels: vi.fn(),
+  createFailoverEvent: vi.fn().mockResolvedValue(undefined),
+  findFailoverEvents: vi.fn().mockResolvedValue([]),
+  findModelRanking: vi.fn(),
+  upsertModelRanking: vi.fn(),
+  findModelUsage: vi.fn(),
+  createModelUsage: vi.fn(),
+  updateModelUsage: vi.fn(),
+  upsertProviderUsage: vi.fn(),
+  resetDailyUsage: vi.fn(),
+} as any;
+
+// Mock logger
+const mockLogger = {
+  debug: vi.fn(),
+  log: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
 } as any;
 
 describe('AIEngine', () => {
@@ -138,7 +158,7 @@ describe('AIEngine', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     adapterConstructorCallCount = 0;
-    engine = new AIEngine(mockPrisma);
+    engine = new AIEngine({ persistence: mockPersistence, logger: mockLogger });
   });
 
   describe('complete()', () => {
