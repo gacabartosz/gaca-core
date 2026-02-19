@@ -106,7 +106,7 @@ app.get('/health', async (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
     providers: providerCount,
     models: modelCount,
-    version: '1.0.0',
+    version: '2.0.0',
   });
 });
 

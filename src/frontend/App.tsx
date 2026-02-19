@@ -76,7 +76,7 @@ function AppContent() {
                 )}
               </div>
               <a
-                href="https://github.com/bartoszgaca/gaca-core"
+                href="https://github.com/gacabartosz/gaca-core"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-gray-400 hover:text-white"

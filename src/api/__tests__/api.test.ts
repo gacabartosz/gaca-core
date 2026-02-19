@@ -123,7 +123,7 @@ describe('API Integration Tests', () => {
       expect(res.body.timestamp).toBeDefined();
       expect(res.body.providers).toBe(5);
       expect(res.body.models).toBe(20);
-      expect(res.body.version).toBe('1.0.0');
+      expect(res.body.version).toBe('2.0.0');
     });
   });
 

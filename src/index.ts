@@ -7,6 +7,7 @@ import type { GacaLogger } from './core/interfaces/logger.interface.js';
 import type { GacaPersistence } from './core/interfaces/persistence.interface.js';
 import { PrismaPersistence } from './core/persistence/prisma.persistence.js';
 import { PinoLoggerFactory } from './core/loggers/pino.logger.js';
+import { AIEngine } from './core/AIEngine.js';
 
 // ==================== CORE COMPONENTS ====================
 export { AIEngine } from './core/AIEngine.js';
@@ -68,8 +69,7 @@ export {
 export function createAIEngine(config: {
   logger: GacaLogger;
   persistence: GacaPersistence;
-}): InstanceType<typeof import('./core/AIEngine.js').AIEngine> {
-  const { AIEngine } = require('./core/AIEngine.js');
+}): AIEngine {
   return new AIEngine({
     logger: config.logger,
     persistence: config.persistence,
@@ -78,7 +78,7 @@ export function createAIEngine(config: {
 
 // ==================== SINGLETON INSTANCE (for backwards compatibility) ====================
 
-let engineInstance: InstanceType<typeof import('./core/AIEngine.js').AIEngine> | null = null;
+let engineInstance: AIEngine | null = null;
 let prismaInstance: PrismaClient | null = null;
 
 /**
@@ -90,7 +90,7 @@ let prismaInstance: PrismaClient | null = null;
  */
 export async function initGacaCore(
   databaseUrl?: string,
-): Promise<InstanceType<typeof import('./core/AIEngine.js').AIEngine>> {
+): Promise<AIEngine> {
   if (engineInstance) {
     return engineInstance;
   }
@@ -121,7 +121,7 @@ export async function initGacaCore(
  * Get the initialized AIEngine instance
  * @throws Error if not initialized
  */
-export function getEngine(): InstanceType<typeof import('./core/AIEngine.js').AIEngine> {
+export function getEngine(): AIEngine {
   if (!engineInstance) {
     throw new Error('GACA-Core not initialized. Call initGacaCore() first.');
   }
