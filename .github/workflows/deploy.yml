@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          script: |
+            cd ${{ secrets.DEPLOY_PATH }}
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose up -d --build
+            sleep 10
+            docker compose ps
+            curl -f http://localhost:3002/health || exit 1
+            echo "Deploy OK"
