@@ -336,20 +336,50 @@ Rules:
 - Confidence <70: Unclear, needs human review`;
 
 async function callLLM(prompt: string): Promise<string> {
+  // Wait 10s before LLM call to let rate limits recover after testing phase
+  console.log('  [llm] Waiting 10s for rate limits to recover...');
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+
   // Cascade of free providers — try each until one works
   const FREE_LLM_PROVIDERS = [
+    { slug: 'cerebras', model: 'llama3.1-8b', baseUrl: 'https://api.cerebras.ai/v1/chat/completions' },
+    { slug: 'groq', model: 'llama-3.1-8b-instant', baseUrl: 'https://api.groq.com/openai/v1/chat/completions' },
     { slug: 'groq', model: 'llama-3.3-70b-versatile', baseUrl: 'https://api.groq.com/openai/v1/chat/completions' },
-    { slug: 'cerebras', model: 'qwen-3-235b-a22b-instruct-2507', baseUrl: 'https://api.cerebras.ai/v1/chat/completions' },
     { slug: 'openrouter', model: 'meta-llama/llama-3.3-70b-instruct:free', baseUrl: 'https://openrouter.ai/api/v1/chat/completions' },
+    { slug: 'google', model: 'gemini-2.0-flash', baseUrl: '' }, // handled separately
+    { slug: 'mistral', model: 'mistral-small-latest', baseUrl: 'https://api.mistral.ai/v1/chat/completions' },
   ];
 
   for (const { slug, model, baseUrl } of FREE_LLM_PROVIDERS) {
     const apiKey = getApiKey(slug);
-    if (!apiKey && slug !== 'openrouter') continue;
+    if (!apiKey) continue;
 
     try {
       console.log(`  [llm] Trying ${slug}/${model}...`);
 
+      // Google uses a different API format
+      if (slug === 'google') {
+        const googlePrompt = `${LLM_SYSTEM_PROMPT}\n\n${prompt}\n\nRespond ONLY with valid JSON.`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const res = await fetchWithTimeout(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: googlePrompt }] }],
+            generationConfig: { maxOutputTokens: 4096, temperature: 0.1 },
+          }),
+        }, 60000);
+        const data = await res.json();
+        const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (content) {
+          console.log(`  [llm] ✓ Response from ${slug}/${model}`);
+          return content;
+        }
+        console.warn(`  [llm] ⚠ Empty response from ${slug}/${model}`);
+        continue;
+      }
+
+      // OpenAI-compatible providers
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
@@ -361,7 +391,7 @@ async function callLLM(prompt: string): Promise<string> {
         headers['X-Title'] = 'GACA-Core Auto-Discover';
       }
 
-      const body = {
+      const body: Record<string, unknown> = {
         model,
         messages: [
           { role: 'system', content: LLM_SYSTEM_PROMPT },
@@ -369,8 +399,11 @@ async function callLLM(prompt: string): Promise<string> {
         ],
         max_tokens: 4096,
         temperature: 0.1,
-        response_format: { type: 'json_object' },
       };
+      // response_format not supported by all providers
+      if (slug !== 'mistral') {
+        body.response_format = { type: 'json_object' };
+      }
 
       const res = await fetchWithTimeout(baseUrl, {
         method: 'POST',
@@ -833,7 +866,18 @@ async function main() {
 
   // Phase 5: LLM Analysis
   console.log('[Phase 5] Analyzing with LLM...');
-  const llmResponse = await analyzeWithLLM(testResults, discoveryResults, knowledge);
+  let llmResponse: LLMResponse;
+  try {
+    llmResponse = await analyzeWithLLM(testResults, discoveryResults, knowledge);
+  } catch (err: any) {
+    console.error(`  [llm] ${err.message}`);
+    console.log('  Saving knowledge base and exiting gracefully.');
+    knowledge.stats.totalRuns++;
+    knowledge.stats.modelsDiscovered += testResults.length;
+    saveKnowledge(knowledge);
+    console.log('\n  Done (LLM unavailable — no changes applied).\n');
+    return;
+  }
   const modelsToAdd = llmResponse.decisions.filter((d) => d.action === 'add');
   console.log(`  LLM confidence: ${llmResponse.confidence}/100`);
   console.log(`  Decisions: ${modelsToAdd.length} to add, ${llmResponse.decisions.length - modelsToAdd.length} to skip`);
