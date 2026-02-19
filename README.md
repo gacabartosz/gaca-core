@@ -522,7 +522,7 @@ gaca-core/
 
 ## 🦞 OpenClaw Integration — FREE LLM Routing
 
-G.A.C.A. can serve as a **free LLM routing layer** for [OpenClaw](https://github.com/nicepkg/openclaw) — an AI assistant that runs on WhatsApp, Telegram, and other messaging platforms:
+G.A.C.A. can serve as a **free LLM routing layer** for [OpenClaw](https://github.com/openclaw/openclaw) — an AI assistant that runs on WhatsApp, Telegram, and other messaging platforms:
 
 - **50+ free models** from Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks
 - **Automatic failover** — if one model hits rate limit, next one picks up seamlessly

@@ -59,13 +59,7 @@ export function createOpenAICompatRoutes(prisma: PrismaClient, engine: AIEngine)
         });
       }
 
-      if (body.stream) {
-        return res.status(400).json({
-          error: { message: 'Streaming is not supported via this endpoint.', type: 'invalid_request_error' },
-        });
-      }
-
-      // Pass messages directly to the engine (v2 supports messages natively)
+      // Get completion from engine
       const response = await engine.complete({
         messages: body.messages,
         temperature: body.temperature,
@@ -78,11 +72,56 @@ export function createOpenAICompatRoutes(prisma: PrismaClient, engine: AIEngine)
 
       logger.info({ model: response.model, provider: response.providerName, latencyMs: response.latencyMs }, 'OpenAI-compat completion');
 
-      // Format response as OpenAI-compatible
+      const completionId = `chatcmpl-gaca-${response.id || Date.now()}`;
+      const created = Math.floor(Date.now() / 1000);
+
+      // SSE streaming mode — wrap full response in OpenAI SSE format
+      if (body.stream) {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        // Send content as a single chunk
+        const chunk = {
+          id: completionId,
+          object: 'chat.completion.chunk',
+          created,
+          model: response.model,
+          choices: [{
+            index: 0,
+            delta: { role: 'assistant', content: response.content },
+            finish_reason: null,
+          }],
+        };
+        res.write(`data: ${JSON.stringify(chunk)}\n\n`);
+
+        // Send stop chunk
+        const stopChunk = {
+          id: completionId,
+          object: 'chat.completion.chunk',
+          created,
+          model: response.model,
+          choices: [{
+            index: 0,
+            delta: {},
+            finish_reason: 'stop',
+          }],
+          usage: {
+            prompt_tokens: response.usage?.promptTokens || 0,
+            completion_tokens: response.usage?.completionTokens || 0,
+            total_tokens: response.usage?.totalTokens || 0,
+          },
+        };
+        res.write(`data: ${JSON.stringify(stopChunk)}\n\n`);
+        res.write('data: [DONE]\n\n');
+        return res.end();
+      }
+
+      // Non-streaming: standard JSON response
       res.json({
-        id: `chatcmpl-gaca-${response.id || Date.now()}`,
+        id: completionId,
         object: 'chat.completion',
-        created: Math.floor(Date.now() / 1000),
+        created,
         model: response.model,
         choices: [
           {
@@ -99,14 +138,12 @@ export function createOpenAICompatRoutes(prisma: PrismaClient, engine: AIEngine)
           completion_tokens: response.usage?.completionTokens || 0,
           total_tokens: response.usage?.totalTokens || 0,
         },
-        // gaca-core metadata (non-standard, for debugging)
         _gacacore: {
           providerId: response.providerId,
           providerName: response.providerName,
           modelId: response.modelId,
           latencyMs: response.latencyMs,
           cost: response.cost,
-          failoverAttempts: response.failoverAttempts,
         },
       });
     } catch (error: any) {
