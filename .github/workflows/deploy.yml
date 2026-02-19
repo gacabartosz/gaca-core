@@ -26,5 +26,5 @@ jobs:
             npm run build
             pm2 restart gaca-core 2>/dev/null || pm2 start dist/api/server.js --name gaca-core
             sleep 5
-            curl -f http://localhost:3002/health || exit 1
+            curl -sf http://localhost:3010/ || exit 1
             echo "Deploy OK"
