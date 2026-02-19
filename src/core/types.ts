@@ -242,6 +242,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'moonshotai/kimi-k2-instruct', displayName: 'Kimi K2', rateLimitRpd: 1000 },
       { name: 'openai/gpt-oss-120b', displayName: 'GPT-OSS 120B', rateLimitRpd: 1000 },
       { name: 'openai/gpt-oss-20b', displayName: 'GPT-OSS 20B', rateLimitRpd: 1000 },
+    
+      { name: 'allam-2-7b', displayName: 'Allam 2.7B', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -310,6 +312,21 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'alibaba/qwen-3-coder-480b:free', displayName: 'Qwen 3 Coder 480B (Free)' },
       { name: 'qwen/qwq-32b:free', displayName: 'QwQ 32B (Free)' },
       { name: 'google/gemini-2.0-flash-001:free', displayName: 'Gemini 2.0 Flash (Free)' },
+    
+      { name: 'openrouter/free', displayName: 'OpenRouter Free', rateLimitRpd: 1000 },
+      { name: 'arcee-ai/trinity-large-preview:free', displayName: 'Trinity Large Preview', rateLimitRpd: 1000 },
+      { name: 'qwen/qwen3-vl-30b-a3b-thinking', displayName: 'Qwen 3 VL 30B A3B Thinking', rateLimitRpd: 1000 },
+      { name: 'qwen/qwen3-vl-235b-a22b-thinking', displayName: 'Qwen 3 VL 235B A22B Thinking', rateLimitRpd: 1000 },
+      { name: 'qwen/qwen3-next-80b-a3b-instruct', displayName: 'Qwen 3 Next 80B A3B Instruct', rateLimitRpd: 1000 },
+      { name: 'nvidia/nemotron-3-nano-30b-a3b', displayName: 'Nemotron 3 Nano 30B A3B', rateLimitRpd: 1000 },
+      { name: 'nvidia/nemotron-nano-12b-v2-vl', displayName: 'Nemotron Nano 12B V2 VL', rateLimitRpd: 1000 },
+      { name: 'qwen/qwen3-235b-a22b-thinking-2507', displayName: 'Qwen 3 235B A22B Thinking 2507', rateLimitRpd: 1000 },
+      { name: 'cognitivecomputations/dolphin-mistral-24b-venice-edition', displayName: 'Dolphin Mistral 24B Venice Edition', rateLimitRpd: 1000 },
+      { name: 'google/gemma-3n-e2b-it', displayName: 'Gemma 3N E2B IT', rateLimitRpd: 1000 },
+      { name: 'google/gemma-3n-e4b-it', displayName: 'Gemma 3N E4B IT', rateLimitRpd: 1000 },
+      { name: 'google/gemma-3-4b-it', displayName: 'Gemma 3 4B IT', rateLimitRpd: 1000 },
+      { name: 'meta-llama/llama-3.2-3b-instruct', displayName: 'Llama 3.2 3B Instruct', rateLimitRpd: 1000 },
+      { name: 'nousresearch/hermes-3-llama-3.1-405b', displayName: 'Hermes 3 Llama 3.1 405B', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -325,6 +342,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     models: [
       { name: 'mistral-small-latest', displayName: 'Mistral Small', isDefault: true },
       { name: 'devstral-small-2502', displayName: 'Devstral Small 24B' },
+    
+      { name: 'mistral-medium-2505', displayName: 'Mistral Medium 2505', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-2508', displayName: 'Mistral Medium 2508', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-latest', displayName: 'Mistral Medium Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-medium', displayName: 'Mistral Medium', rateLimitRpd: 1000 },
+      { name: 'mistral-vibe-cli-with-tools', displayName: 'Mistral Vibe CLI with Tools', rateLimitRpd: 1000 },
     ],
   },
   {

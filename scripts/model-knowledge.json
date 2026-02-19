@@ -1,15 +1,425 @@
 {
   "version": 1,
-  "lastRun": null,
-  "models": {},
-  "providerReliability": {},
+  "lastRun": "2026-02-19T11:51:07.113Z",
+  "models": {
+    "groq:meta-llama/llama-guard-4-12b": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "rejected",
+      "reason": "Failed testing",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 141
+        }
+      ]
+    },
+    "groq:allam-2-7b": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 244
+        }
+      ]
+    },
+    "groq:canopylabs/orpheus-arabic-saudi": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 44
+        }
+      ]
+    },
+    "groq:whisper-large-v3-turbo": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 43
+        }
+      ]
+    },
+    "groq:whisper-large-v3": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 43
+        }
+      ]
+    },
+    "google:gemini-2.0-flash-001": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 76
+        }
+      ]
+    },
+    "google:gemini-2.0-flash-exp-image-generation": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 59
+        }
+      ]
+    },
+    "google:gemini-2.0-flash-lite-001": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 61
+        }
+      ]
+    },
+    "google:gemini-2.0-flash-lite": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 63
+        }
+      ]
+    },
+    "google:gemini-exp-1206": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 52
+        }
+      ]
+    },
+    "openrouter:openrouter/aurora-alpha": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 565
+        }
+      ]
+    },
+    "openrouter:openrouter/free": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 828
+        }
+      ]
+    },
+    "openrouter:stepfun/step-3.5-flash:free": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 4356
+        }
+      ]
+    },
+    "openrouter:arcee-ai/trinity-large-preview:free": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 668
+        }
+      ]
+    },
+    "openrouter:upstage/solar-pro-3:free": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": false,
+          "latencyMs": 722
+        }
+      ]
+    },
+    "mistral:mistral-medium-2505": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 322
+        }
+      ]
+    },
+    "mistral:mistral-medium-2508": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 248
+        }
+      ]
+    },
+    "mistral:mistral-medium-latest": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 252
+        }
+      ]
+    },
+    "mistral:mistral-medium": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 270
+        }
+      ]
+    },
+    "mistral:mistral-vibe-cli-with-tools": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": [
+        {
+          "date": "2026-02-19",
+          "success": true,
+          "latencyMs": 279
+        }
+      ]
+    },
+    "openrouter:qwen/qwen3-vl-30b-a3b-thinking": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:qwen/qwen3-vl-235b-a22b-thinking": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:qwen/qwen3-next-80b-a3b-instruct": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:nvidia/nemotron-3-nano-30b-a3b": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:nvidia/nemotron-nano-12b-v2-vl": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:qwen/qwen3-235b-a22b-thinking-2507": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:cognitivecomputations/dolphin-mistral-24b-venice-edition": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:google/gemma-3n-e2b-it": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:google/gemma-3n-e4b-it": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:google/gemma-3-4b-it": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:meta-llama/llama-3.2-3b-instruct": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    },
+    "openrouter:nousresearch/hermes-3-llama-3.1-405b": {
+      "firstSeen": "2026-02-19",
+      "lastSeen": "2026-02-19",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 85,
+      "testHistory": []
+    }
+  },
+  "providerReliability": {
+    "groq": {
+      "lastSuccess": "2026-02-19T11:50:01.834Z",
+      "consecutiveFails": 0
+    },
+    "cerebras": {
+      "lastSuccess": "2026-02-19T11:50:01.951Z",
+      "consecutiveFails": 0
+    },
+    "google": {
+      "lastSuccess": "2026-02-19T11:50:02.022Z",
+      "consecutiveFails": 0
+    },
+    "openrouter": {
+      "lastSuccess": "2026-02-19T11:50:02.294Z",
+      "consecutiveFails": 0
+    },
+    "mistral": {
+      "lastSuccess": "2026-02-19T11:50:02.576Z",
+      "consecutiveFails": 0
+    },
+    "huggingface": {
+      "lastSuccess": null,
+      "consecutiveFails": 1
+    },
+    "together": {
+      "lastSuccess": null,
+      "consecutiveFails": 1
+    },
+    "fireworks": {
+      "lastSuccess": null,
+      "consecutiveFails": 1
+    }
+  },
   "stats": {
-    "totalRuns": 0,
-    "modelsDiscovered": 0,
-    "modelsAdded": 0,
-    "modelsRejected": 0,
-    "prsCreated": 0,
-    "prsAutoMerged": 0,
+    "totalRuns": 1,
+    "modelsDiscovered": 20,
+    "modelsAdded": 20,
+    "modelsRejected": 1,
+    "prsCreated": 1,
+    "prsAutoMerged": 1,
     "failedValidations": 0
   }
 }
