@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "lastRun": null,
+  "models": {},
+  "providerReliability": {},
+  "stats": {
+    "totalRuns": 0,
+    "modelsDiscovered": 0,
+    "modelsAdded": 0,
+    "modelsRejected": 0,
+    "prsCreated": 0,
+    "prsAutoMerged": 0,
+    "failedValidations": 0
+  }
+}

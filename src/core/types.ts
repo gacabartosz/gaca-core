@@ -278,6 +278,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'gemma-3-1b-it', displayName: 'Gemma 3 1B', rateLimitRpd: 14400 },
       { name: 'gemini-2.0-flash', displayName: 'Gemini 2.0 Flash', rateLimitRpd: 1500 },
       { name: 'gemini-2.5-flash-lite', displayName: 'Gemini 2.5 Flash Lite', rateLimitRpd: 1500 },
+      { name: 'gemini-2.5-flash', displayName: 'Gemini 2.5 Flash', rateLimitRpd: 1500 },
+      { name: 'gemini-2.5-pro', displayName: 'Gemini 2.5 Pro', rateLimitRpd: 500 },
     ],
   },
   {
@@ -301,6 +303,13 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'moonshotai/kimi-k2:free', displayName: 'Kimi K2 (Free)' },
       { name: 'openai/gpt-oss-120b:free', displayName: 'GPT-OSS 120B (Free)' },
       { name: 'openai/gpt-oss-20b:free', displayName: 'GPT-OSS 20B (Free)' },
+      { name: 'meta-llama/llama-4-maverick:free', displayName: 'Llama 4 Maverick (Free)' },
+      { name: 'meta-llama/llama-4-scout:free', displayName: 'Llama 4 Scout (Free)' },
+      { name: 'deepseek/deepseek-chat-v3-0324:free', displayName: 'DeepSeek V3 (Free)' },
+      { name: 'alibaba/qwen-3-235b-a22b-thinking-2507:free', displayName: 'Qwen 3 235B Thinking (Free)' },
+      { name: 'alibaba/qwen-3-coder-480b:free', displayName: 'Qwen 3 Coder 480B (Free)' },
+      { name: 'qwen/qwq-32b:free', displayName: 'QwQ 32B (Free)' },
+      { name: 'google/gemini-2.0-flash-001:free', displayName: 'Gemini 2.0 Flash (Free)' },
     ],
   },
   {
@@ -315,8 +324,7 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     priority: 5,
     models: [
       { name: 'mistral-small-latest', displayName: 'Mistral Small', isDefault: true },
-      { name: 'open-mistral-nemo', displayName: 'Mistral Nemo' },
-      { name: 'codestral-latest', displayName: 'Codestral' },
+      { name: 'devstral-small-2502', displayName: 'Devstral Small 24B' },
     ],
   },
   {
@@ -333,6 +341,7 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'meta-llama/Llama-3.3-70B-Instruct', displayName: 'Llama 3.3 70B', isDefault: true },
       { name: 'mistralai/Mixtral-8x7B-Instruct-v0.1', displayName: 'Mixtral 8x7B' },
       { name: 'Qwen/Qwen2.5-72B-Instruct', displayName: 'Qwen 2.5 72B' },
+      { name: 'mistralai/Mistral-Large-Instruct-2411', displayName: 'Mistral Large' },
     ],
   },
   {
@@ -349,6 +358,7 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'meta-llama/Llama-3.3-70B-Instruct-Turbo', displayName: 'Llama 3.3 70B Turbo', isDefault: true },
       { name: 'Qwen/Qwen2.5-Coder-32B-Instruct', displayName: 'Qwen 2.5 Coder 32B' },
       { name: 'deepseek-ai/DeepSeek-R1', displayName: 'DeepSeek R1' },
+      { name: 'meta-llama/llama-vision-free', displayName: 'Llama Vision (Free)' },
     ],
   },
   {

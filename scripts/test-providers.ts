@@ -1,4 +1,10 @@
 // Test all configured providers
+// Usage: npx tsx scripts/test-providers.ts [--all] [--provider <slug>] [--model <name>]
+//
+// Default: tests default model per provider (original behavior)
+// --all: test ALL enabled models
+// --provider <slug>: test all models of a specific provider
+// --model <name>: test a specific model by name
 
 import { PrismaClient } from '@prisma/client';
 import { config } from 'dotenv';
@@ -9,12 +15,40 @@ config();
 const prisma = new PrismaClient();
 const engine = new AIEngine(prisma);
 
+// Parse CLI args
+const args = process.argv.slice(2);
+const flagAll = args.includes('--all');
+const providerIdx = args.indexOf('--provider');
+const filterProvider = providerIdx !== -1 ? args[providerIdx + 1] : null;
+const modelIdx = args.indexOf('--model');
+const filterModel = modelIdx !== -1 ? args[modelIdx + 1] : null;
+
+interface TestEntry {
+  providerName: string;
+  modelName: string;
+  status: 'ok' | 'fail' | 'skip';
+  latencyMs: number;
+  error?: string;
+}
+
 async function testProviders() {
-  console.log('Testing GACA-Core providers...\n');
+  const mode = filterModel ? `model: ${filterModel}` : filterProvider ? `provider: ${filterProvider}` : flagAll ? 'all models' : 'default models';
+  console.log(`Testing GACA-Core providers (${mode})...\n`);
+
+  // Build query based on flags
+  const providerWhere: any = {};
+  if (filterProvider) {
+    providerWhere.slug = filterProvider;
+  }
 
   const providers = await prisma.aIProvider.findMany({
+    where: providerWhere,
     orderBy: { priority: 'asc' },
-    include: { models: { where: { isDefault: true }, take: 1 } },
+    include: {
+      models: flagAll || filterProvider || filterModel
+        ? { where: filterModel ? { name: filterModel } : { isEnabled: true } }
+        : { where: { isDefault: true }, take: 1 },
+    },
   });
 
   if (providers.length === 0) {
@@ -23,47 +57,88 @@ async function testProviders() {
     return;
   }
 
-  console.log(`Found ${providers.length} providers\n`);
-  console.log('═'.repeat(60));
+  const totalModels = providers.reduce((acc, p) => acc + p.models.length, 0);
+  console.log(`Found ${providers.length} providers, ${totalModels} models to test\n`);
+  console.log('═'.repeat(80));
+  console.log(`  ${'Provider'.padEnd(18)} ${'Model'.padEnd(35)} ${'Status'.padEnd(10)} Latency`);
+  console.log('─'.repeat(80));
 
-  let successCount = 0;
-  let failCount = 0;
+  const results: TestEntry[] = [];
 
   for (const provider of providers) {
-    process.stdout.write(`Testing ${provider.name.padEnd(20)}`);
-
     if (!provider.apiKey) {
-      console.log('⚠️  No API key configured');
-      failCount++;
+      for (const model of provider.models) {
+        const entry: TestEntry = {
+          providerName: provider.name,
+          modelName: model.name,
+          status: 'skip',
+          latencyMs: 0,
+          error: 'No API key',
+        };
+        results.push(entry);
+        printRow(entry);
+      }
       continue;
     }
 
     if (!provider.isEnabled) {
-      console.log('⏸️  Disabled');
+      for (const model of provider.models) {
+        const entry: TestEntry = {
+          providerName: provider.name,
+          modelName: model.name,
+          status: 'skip',
+          latencyMs: 0,
+          error: 'Disabled',
+        };
+        results.push(entry);
+        printRow(entry);
+      }
       continue;
     }
 
-    try {
-      const result = await engine.testProvider(provider.id);
+    for (const model of provider.models) {
+      const start = Date.now();
+      let entry: TestEntry;
 
-      if (result.success) {
-        console.log(`✅ OK (${result.latencyMs}ms)`);
-        successCount++;
-      } else {
-        console.log(`❌ ${result.error?.substring(0, 40)}`);
-        failCount++;
+      try {
+        const result = await engine.complete({
+          prompt: 'Say "OK" and nothing else.',
+          maxTokens: 10,
+          providerId: provider.id,
+          model: model.name,
+        });
+
+        entry = {
+          providerName: provider.name,
+          modelName: model.name,
+          status: result.content.length > 0 ? 'ok' : 'fail',
+          latencyMs: result.latencyMs || (Date.now() - start),
+        };
+      } catch (error: any) {
+        entry = {
+          providerName: provider.name,
+          modelName: model.name,
+          status: 'fail',
+          latencyMs: Date.now() - start,
+          error: error.message?.substring(0, 50),
+        };
       }
-    } catch (error: any) {
-      console.log(`❌ ${error.message?.substring(0, 40)}`);
-      failCount++;
+
+      results.push(entry);
+      printRow(entry);
     }
   }
 
-  console.log('═'.repeat(60));
-  console.log(`\nResults: ${successCount} passed, ${failCount} failed\n`);
+  console.log('═'.repeat(80));
 
-  // Test full completion with failover
-  if (successCount > 0) {
+  const okCount = results.filter((r) => r.status === 'ok').length;
+  const failCount = results.filter((r) => r.status === 'fail').length;
+  const skipCount = results.filter((r) => r.status === 'skip').length;
+
+  console.log(`\nResults: ${okCount} passed, ${failCount} failed, ${skipCount} skipped\n`);
+
+  // Test full completion with failover (only in default mode)
+  if (!flagAll && !filterProvider && !filterModel && okCount > 0) {
     console.log('Testing AI completion with failover...\n');
 
     try {
@@ -83,6 +158,30 @@ async function testProviders() {
   }
 
   await prisma.$disconnect();
+}
+
+function printRow(entry: TestEntry) {
+  const provider = entry.providerName.padEnd(18);
+  const modelShort = entry.modelName.length > 33
+    ? entry.modelName.substring(0, 30) + '...'
+    : entry.modelName;
+  const model = modelShort.padEnd(35);
+
+  let status: string;
+  switch (entry.status) {
+    case 'ok':
+      status = `✅ OK`.padEnd(10);
+      break;
+    case 'fail':
+      status = `❌ FAIL`.padEnd(10);
+      break;
+    case 'skip':
+      status = `⏸️  SKIP`.padEnd(10);
+      break;
+  }
+
+  const latency = entry.status === 'ok' ? `${entry.latencyMs}ms` : entry.error || '';
+  console.log(`  ${provider} ${model} ${status} ${latency}`);
 }
 
 testProviders().catch((error) => {

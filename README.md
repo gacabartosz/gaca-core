@@ -5,14 +5,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gacabartosz/gaca-core/pulls)
 
-> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **50+ free LLM models** from 11 providers.
+> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **60+ free LLM models** from 11 providers.
 
 **G.A.C.A.** (**G**enerative **A**I **C**ost **A**rbitrage) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently. The "arbitrage" comes from exploiting free tier limits across multiple providers to get unlimited AI completions at zero cost.
 
 ## Key Features
 
 - **11 AI Providers** — Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks AI, DeepSeek, Anthropic, OpenAI
-- **50+ Models** — Including 36+ completely free models
+- **60+ Models** — Including 49+ completely free models
 - **Automatic Failover** — Up to 30 fallback attempts when a provider fails
 - **Performance Ranking** — Auto-calculated scores based on success rate, latency, and quality
 - **Rate Limit Tracking** — Per-provider AND per-model RPM/RPD tracking with in-memory cache
@@ -102,7 +102,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Google AI Studio (FREE — 30 RPM, 14,400 RPD)
 
-**Models:** Gemini 2.0 Flash, Gemini 2.5 Flash Lite, Gemma 3 (27B, 12B, 4B, 1B)
+**Models:** Gemini 2.5 Flash, Gemini 2.5 Pro, Gemini 2.0 Flash, Gemini 2.5 Flash Lite, Gemma 3 (27B, 12B, 4B, 1B)
 
 1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 2. Sign in with your Google account
@@ -116,7 +116,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### OpenRouter (FREE — 20 RPM, 50 RPD on free models)
 
-**Models:** Llama 3.3 70B, DeepSeek R1, Gemma 3, Kimi K2, GPT-OSS (all `:free` suffix)
+**Models:** Llama 3.3 70B, Llama 4 Maverick/Scout, DeepSeek R1/V3, Gemma 3, Kimi K2, GPT-OSS, Qwen 3 235B/Coder 480B, QwQ 32B, Gemini 2.0 Flash (all `:free` suffix)
 
 1. Go to [openrouter.ai](https://openrouter.ai/)
 2. Click **"Sign Up"** — use Google, GitHub, or email
@@ -132,7 +132,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Mistral AI (FREE — 1 RPM, 500 RPD)
 
-**Models:** Mistral Small, Mistral Nemo, Codestral
+**Models:** Mistral Small, Devstral Small 24B
 
 1. Go to [console.mistral.ai](https://console.mistral.ai/)
 2. Click **"Sign Up"** — use email or GitHub
@@ -146,7 +146,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### HuggingFace (FREE — Inference API)
 
-**Models:** Llama 3.3 70B, Mixtral 8x7B, Qwen 2.5 72B
+**Models:** Llama 3.3 70B, Mixtral 8x7B, Qwen 2.5 72B, Mistral Large
 
 1. Go to [huggingface.co](https://huggingface.co/)
 2. Click **"Sign Up"** — use email, Google, or GitHub
@@ -161,7 +161,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Together AI (FREE — $25 credits, 60 RPM)
 
-**Models:** Llama 3.3 70B Turbo, Qwen 2.5 Coder 32B, DeepSeek R1
+**Models:** Llama 3.3 70B Turbo, Qwen 2.5 Coder 32B, DeepSeek R1, Llama Vision
 
 1. Go to [api.together.xyz](https://api.together.xyz/)
 2. Click **"Sign Up"** — use Google, GitHub, or email
@@ -234,7 +234,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ---
 
-## Available Free Models (36+)
+## Available Free Models (49+)
 
 <details>
 <summary>Click to expand full model list</summary>
@@ -259,7 +259,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `gpt-oss-120b` | GPT-OSS 120B | 14,400 |
 | `zai-glm-4.7` | ZAI GLM 4.7 | 14,400 |
 
-### Google AI Studio (6 models)
+### Google AI Studio (8 models)
 | Model | Display Name | RPD |
 |-------|-------------|-----|
 | `gemma-3-27b-it` | Gemma 3 27B | 14,400 |
@@ -268,8 +268,10 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `gemma-3-1b-it` | Gemma 3 1B | 14,400 |
 | `gemini-2.0-flash` | Gemini 2.0 Flash | 1,500 |
 | `gemini-2.5-flash-lite` | Gemini 2.5 Flash Lite | 1,500 |
+| `gemini-2.5-flash` | Gemini 2.5 Flash | 1,500 |
+| `gemini-2.5-pro` | Gemini 2.5 Pro | 500 |
 
-### OpenRouter (10 free models)
+### OpenRouter (17 free models)
 | Model | Display Name |
 |-------|-------------|
 | `meta-llama/llama-3.3-70b-instruct:free` | Llama 3.3 70B |
@@ -282,27 +284,35 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `moonshotai/kimi-k2:free` | Kimi K2 |
 | `openai/gpt-oss-120b:free` | GPT-OSS 120B |
 | `openai/gpt-oss-20b:free` | GPT-OSS 20B |
+| `meta-llama/llama-4-maverick:free` | Llama 4 Maverick |
+| `meta-llama/llama-4-scout:free` | Llama 4 Scout |
+| `deepseek/deepseek-chat-v3-0324:free` | DeepSeek V3 |
+| `alibaba/qwen-3-235b-a22b-thinking-2507:free` | Qwen 3 235B Thinking |
+| `alibaba/qwen-3-coder-480b:free` | Qwen 3 Coder 480B |
+| `qwen/qwq-32b:free` | QwQ 32B |
+| `google/gemini-2.0-flash-001:free` | Gemini 2.0 Flash |
 
-### Mistral AI (3 models)
+### Mistral AI (2 models)
 | Model | Display Name |
 |-------|-------------|
 | `mistral-small-latest` | Mistral Small |
-| `open-mistral-nemo` | Mistral Nemo |
-| `codestral-latest` | Codestral |
+| `devstral-small-2502` | Devstral Small 24B |
 
-### HuggingFace (3 models)
+### HuggingFace (4 models)
 | Model | Display Name |
 |-------|-------------|
 | `meta-llama/Llama-3.3-70B-Instruct` | Llama 3.3 70B |
 | `mistralai/Mixtral-8x7B-Instruct-v0.1` | Mixtral 8x7B |
 | `Qwen/Qwen2.5-72B-Instruct` | Qwen 2.5 72B |
+| `mistralai/Mistral-Large-Instruct-2411` | Mistral Large |
 
-### Together AI (3 models)
+### Together AI (4 models)
 | Model | Display Name |
 |-------|-------------|
 | `meta-llama/Llama-3.3-70B-Instruct-Turbo` | Llama 3.3 70B Turbo |
 | `Qwen/Qwen2.5-Coder-32B-Instruct` | Qwen 2.5 Coder 32B |
 | `deepseek-ai/DeepSeek-R1` | DeepSeek R1 |
+| `meta-llama/llama-vision-free` | Llama Vision (Free) |
 
 ### Fireworks AI (2 models)
 | Model | Display Name |
@@ -464,6 +474,57 @@ curl -X POST http://localhost:3002/api/admin/sync-providers
 curl http://localhost:3002/api/admin/sync-status
 ```
 
+## Auto-Discovery System
+
+G.A.C.A. features an **autonomous, self-learning model discovery pipeline** that continuously finds and adds new free LLM models — no human intervention needed.
+
+### How It Works
+
+```
+GitHub Action (cron: Monday 6:00 UTC)
+         │
+         ▼
+┌─────────────────────────────────────────┐
+│  auto-discover.ts pipeline:             │
+│                                         │
+│  1. Load knowledge base                 │
+│  2. Fetch models from provider APIs     │
+│  3. Filter (skip rejected/failed)       │
+│  4. Test candidates (POST "Say OK")     │
+│  5. LLM analysis (dogfooding GACA)      │
+│  6. Modify types.ts + README.md         │
+│  7. Validate (tsc --noEmit)             │
+│  8. Update knowledge base               │
+│  9. Create PR (auto-merge if ≥80%)      │
+└─────────────────────────────────────────┘
+```
+
+### Self-Learning Knowledge Base
+
+The pipeline maintains a knowledge base (`scripts/model-knowledge.json`) that learns from every run:
+
+- **Rejected models** are remembered and auto-skipped in future runs
+- **Failed models** (3+ test failures) are auto-rejected
+- **Unreliable providers** (3+ consecutive API failures) are temporarily skipped
+- **Past decisions** are fed to the LLM as context for better future decisions
+
+### Auto-Merge
+
+When the LLM's confidence score is **≥ 80** and CI passes, the PR is automatically merged via `gh pr merge --auto --squash`. Below 80 confidence, the PR waits for manual review.
+
+### Manual Usage
+
+```bash
+# Dry run — discover & analyze without applying changes
+npm run auto-discover:dry
+
+# Full local run — applies changes to code
+npm run auto-discover
+
+# CI mode — outputs PR artifacts for GitHub Action
+npm run auto-discover:ci
+```
+
 ## Ranking System
 
 Models are ranked automatically based on three metrics:
@@ -513,10 +574,19 @@ gaca-core/
 ├── prisma/
 │   └── schema.prisma              # Database schema (SQLite)
 ├── scripts/
+│   ├── lib/
+│   │   └── provider-fetchers.ts   # Shared provider API fetchers
 │   ├── seed.ts                    # Database seeding
 │   ├── sync-providers.ts          # Smart provider sync
+│   ├── discover-models.ts         # Model discovery from provider APIs
+│   ├── auto-discover.ts           # Autonomous model discovery pipeline
+│   ├── model-knowledge.json       # Self-learning knowledge base
 │   ├── auto-update.sh             # Git-based auto-update
 │   └── test-providers.ts          # Provider testing
+├── .github/workflows/
+│   ├── ci.yml                     # CI: build + test
+│   ├── deploy.yml                 # CD: SSH deploy
+│   └── auto-discover.yml          # Cron: weekly model discovery
 └── examples/                      # Usage examples
 ```
 
@@ -524,7 +594,7 @@ gaca-core/
 
 G.A.C.A. can serve as a **free LLM routing layer** for [OpenClaw](https://github.com/openclaw/openclaw) — an AI assistant that runs on WhatsApp, Telegram, and other messaging platforms:
 
-- **50+ free models** from Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks
+- **60+ free models** from Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks
 - **Automatic failover** — if one model hits rate limit, next one picks up seamlessly
 - **Smart ranking** — best model selected by latency, success rate, and quality score
 - **Zero cost** — all free tier providers, no API fees
@@ -652,6 +722,13 @@ console.log(`Provider: ${response.providerName}, Model: ${response.model}`);
 | `npm run sync:dry` | Preview sync changes without applying |
 | `npm run auto-update` | Check git for updates, sync, restart |
 | `npm run test:providers` | Test all configured providers |
+| `npm run test:providers -- --all` | Test ALL enabled models |
+| `npm run test:providers -- --provider groq` | Test all models of a specific provider |
+| `npm run discover` | Discover new models from provider APIs |
+| `npm run discover:test` | Discover + test new models |
+| `npm run auto-discover` | Run autonomous model discovery pipeline |
+| `npm run auto-discover:dry` | Dry run — analyze without applying changes |
+| `npm run auto-discover:ci` | CI mode — output PR artifacts |
 | `npm run db:studio` | Open Prisma Studio (DB GUI) |
 | `npm run db:push` | Push schema changes to database |
 
