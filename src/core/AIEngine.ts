@@ -48,6 +48,33 @@ export class AIEngine {
     let lastError: Error | null = null;
     let attempts = 0;
 
+    // If specific model requested, try it first before failover loop
+    if (request.model && request.model !== 'gacacore-auto') {
+      const preferred = await this.modelSelector.selectBestModel(undefined, request.model);
+      if (preferred) {
+        const { model, provider } = preferred;
+        const modelLabel = `${provider.name}/${model.displayName || model.name}`;
+        try {
+          this.logger.info('Using requested model', { requestId, model: modelLabel });
+          const adapter = this.getAdapter(provider);
+          const response = await adapter.complete(model, { ...request, requestId });
+          await this.usageTracker.track({
+            providerId: provider.id, modelId: model.id,
+            success: true, latencyMs: response.latencyMs,
+            tokensUsed: response.tokensUsed, inputTokens: response.inputTokens, outputTokens: response.outputTokens,
+          });
+          await this.rankingService.maybeRecalculate(model.id);
+          this.logger.info('Completion OK (requested model)', { requestId, model: modelLabel, latencyMs: response.latencyMs });
+          return { ...response, requestId };
+        } catch (error: any) {
+          lastError = error;
+          excludeModelIds.push(model.id);
+          await this.usageTracker.track({ providerId: provider.id, modelId: model.id, success: false, latencyMs: 0 });
+          this.logger.warn('Requested model failed, falling back to auto-selector', { requestId, model: modelLabel, err: error.message?.substring(0, 150) });
+        }
+      }
+    }
+
     while (attempts < MAX_FAILOVER_ATTEMPTS) {
       attempts++;
 

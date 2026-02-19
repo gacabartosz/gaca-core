@@ -115,6 +115,13 @@ export interface GacaPersistence {
     usage: ModelUsageEntity | null;
   }) | null>;
 
+  /** Find model by provider slug and model name */
+  findModelByProviderAndName(providerSlug: string, modelName: string): Promise<(ModelEntity & {
+    provider: ProviderEntity & { usage: ProviderUsageEntity | null };
+    ranking: ModelRankingEntity | null;
+    usage: ModelUsageEntity | null;
+  }) | null>;
+
   /** Get all enabled models */
   getEnabledModels(): Promise<Array<ModelEntity & { usage: ModelUsageEntity | null }>>;
 

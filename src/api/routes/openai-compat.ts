@@ -62,6 +62,7 @@ export function createOpenAICompatRoutes(prisma: PrismaClient, engine: AIEngine)
       // Get completion from engine
       const response = await engine.complete({
         messages: body.messages,
+        model: body.model, // Pass model to engine for targeted selection
         temperature: body.temperature,
         maxTokens: body.max_tokens,
         topP: body.top_p,

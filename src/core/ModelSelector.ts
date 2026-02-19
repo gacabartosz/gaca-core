@@ -108,7 +108,35 @@ export class ModelSelector {
     model: ModelWithRanking;
     provider: ProviderWithModels;
   } | null> {
-    const model = await this.persistence.findModelById(modelId);
+    // Support UUID, "provider_slug/model_name", and "provider_slug:model_name" formats
+    let model;
+    if (modelId.match(/^[0-9a-f]{8}-/)) {
+      // UUID format
+      model = await this.persistence.findModelById(modelId);
+    } else {
+      // Parse provider_slug/model_name or provider_slug:model_name
+      let providerSlug: string;
+      let modelName: string;
+      const colonIdx = modelId.indexOf(':');
+      const slashIdx = modelId.indexOf('/');
+      if (colonIdx > 0 && (slashIdx < 0 || colonIdx < slashIdx)) {
+        // "groq:llama-3.3-70b-versatile" format (OpenClaw style)
+        providerSlug = modelId.substring(0, colonIdx);
+        modelName = modelId.substring(colonIdx + 1);
+      } else if (slashIdx > 0) {
+        // "groq/llama-3.3-70b-versatile" format (native gaca-core style)
+        providerSlug = modelId.substring(0, slashIdx);
+        modelName = modelId.substring(slashIdx + 1);
+      } else {
+        // Unknown format, try as UUID
+        model = await this.persistence.findModelById(modelId);
+        providerSlug = '';
+        modelName = '';
+      }
+      if (!model && providerSlug && modelName) {
+        model = await this.persistence.findModelByProviderAndName(providerSlug, modelName);
+      }
+    }
 
     if (!model || !model.isEnabled || !model.provider.isEnabled || !model.provider.apiKey) {
       return null;

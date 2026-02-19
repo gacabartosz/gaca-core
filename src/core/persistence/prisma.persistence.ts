@@ -56,6 +56,20 @@ export class PrismaPersistence implements GacaPersistence {
     });
   }
 
+  async findModelByProviderAndName(providerSlug: string, modelName: string) {
+    return this.prisma.aIModel.findFirst({
+      where: {
+        name: modelName,
+        provider: { slug: providerSlug },
+      },
+      include: {
+        provider: { include: { usage: true } },
+        ranking: true,
+        usage: true,
+      },
+    });
+  }
+
   async getEnabledModels() {
     return this.prisma.aIModel.findMany({
       where: { isEnabled: true },
