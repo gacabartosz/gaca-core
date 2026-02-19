@@ -35,13 +35,26 @@ jobs:
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
         run: npx tsx scripts/auto-discover.ts --ci
 
-      - name: Check for changes
+      - name: Check for code changes
         id: changes
         run: |
-          if git diff --quiet; then
+          # Only check types.ts and README.md — not knowledge base alone
+          if git diff --quiet src/core/types.ts README.md; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit knowledge base updates
+        if: steps.changes.outputs.has_changes == 'false'
+        run: |
+          # Even without model changes, persist knowledge base updates
+          if ! git diff --quiet scripts/model-knowledge.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add scripts/model-knowledge.json
+            git commit -m "chore: update model knowledge base (no new models)"
+            git push
           fi
 
       - name: Create PR
