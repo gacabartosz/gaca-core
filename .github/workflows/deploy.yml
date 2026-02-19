@@ -17,11 +17,14 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
+            export PATH=$PATH:/root/.npm-global/bin
             cd ${{ secrets.DEPLOY_PATH }}
             git fetch origin main
             git reset --hard origin/main
-            docker compose up -d --build
-            sleep 10
-            docker compose ps
+            npm ci
+            npx prisma generate
+            npm run build
+            pm2 restart gaca-core 2>/dev/null || pm2 start dist/api/server.js --name gaca-core
+            sleep 5
             curl -f http://localhost:3002/health || exit 1
             echo "Deploy OK"
