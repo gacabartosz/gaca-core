@@ -244,6 +244,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'openai/gpt-oss-20b', displayName: 'GPT-OSS 20B', rateLimitRpd: 1000 },
     
       { name: 'allam-2-7b', displayName: 'Allam 2.7B', rateLimitRpd: 1000 },
+    
+      { name: 'groq/compound-mini', displayName: 'Groq Compound Mini', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -327,6 +329,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'google/gemma-3-4b-it', displayName: 'Gemma 3 4B IT', rateLimitRpd: 1000 },
       { name: 'meta-llama/llama-3.2-3b-instruct', displayName: 'Llama 3.2 3B Instruct', rateLimitRpd: 1000 },
       { name: 'nousresearch/hermes-3-llama-3.1-405b', displayName: 'Hermes 3 Llama 3.1 405B', rateLimitRpd: 1000 },
+    
+      { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -348,6 +352,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'mistral-medium-latest', displayName: 'Mistral Medium Latest', rateLimitRpd: 1000 },
       { name: 'mistral-medium', displayName: 'Mistral Medium', rateLimitRpd: 1000 },
       { name: 'mistral-vibe-cli-with-tools', displayName: 'Mistral Vibe CLI with Tools', rateLimitRpd: 1000 },
+    
+      { name: 'open-mistral-nemo', displayName: 'Open Mistral Nemo', rateLimitRpd: 1000 },
+      { name: 'open-mistral-nemo-2407', displayName: 'Open Mistral Nemo 2407', rateLimitRpd: 1000 },
+      { name: 'mistral-tiny-2407', displayName: 'Mistral Tiny 2407', rateLimitRpd: 1000 },
+      { name: 'mistral-tiny-latest', displayName: 'Mistral Tiny Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-large-2411', displayName: 'Mistral Large 2411', rateLimitRpd: 1000 },
     ],
   },
   {
