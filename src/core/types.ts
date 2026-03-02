@@ -246,6 +246,10 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'allam-2-7b', displayName: 'Allam 2.7B', rateLimitRpd: 1000 },
     
       { name: 'groq/compound-mini', displayName: 'Groq Compound Mini', rateLimitRpd: 1000 },
+    
+      { name: 'groq/compound', displayName: 'Groq Compound', rateLimitRpd: 1000 },
+      { name: 'moonshotai/kimi-k2-instruct-0905', displayName: 'Moonshot AI Kimi K2 Instruct 0905', rateLimitRpd: 1000 },
+      { name: 'meta-llama/llama-prompt-guard-2-86m', displayName: 'Meta Llama Prompt Guard 2 86M', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -284,6 +288,9 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'gemini-2.5-flash-lite', displayName: 'Gemini 2.5 Flash Lite', rateLimitRpd: 1500 },
       { name: 'gemini-2.5-flash', displayName: 'Gemini 2.5 Flash', rateLimitRpd: 1500 },
       { name: 'gemini-2.5-pro', displayName: 'Gemini 2.5 Pro', rateLimitRpd: 500 },
+    
+      { name: 'gemma-3n-e4b-it', displayName: 'Gemma 3N E4B IT', rateLimitRpd: 1000 },
+      { name: 'gemma-3n-e2b-it', displayName: 'Gemma 3N E2B IT', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -331,6 +338,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'nousresearch/hermes-3-llama-3.1-405b', displayName: 'Hermes 3 Llama 3.1 405B', rateLimitRpd: 1000 },
     
       { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
+    
+      { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -358,6 +367,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'mistral-tiny-2407', displayName: 'Mistral Tiny 2407', rateLimitRpd: 1000 },
       { name: 'mistral-tiny-latest', displayName: 'Mistral Tiny Latest', rateLimitRpd: 1000 },
       { name: 'mistral-large-2411', displayName: 'Mistral Large 2411', rateLimitRpd: 1000 },
+    
+      { name: 'pixtral-large-2411', displayName: 'Pixtral Large 2411', rateLimitRpd: 1000 },
+      { name: 'pixtral-large-latest', displayName: 'Pixtral Large Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-large-pixtral-2411', displayName: 'Mistral Large Pixtral 2411', rateLimitRpd: 1000 },
+      { name: 'codestral-2508', displayName: 'Codestral 2508', rateLimitRpd: 1000 },
+      { name: 'codestral-latest', displayName: 'Codestral Latest', rateLimitRpd: 1000 },
     ],
   },
   {
