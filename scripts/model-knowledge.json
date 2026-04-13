@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-04-06T07:58:08.144Z",
+  "lastRun": "2026-04-13T08:18:21.337Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -32,7 +32,7 @@
     },
     "groq:canopylabs/orpheus-arabic-saudi": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-03-09",
+      "lastSeen": "2026-04-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -51,6 +51,11 @@
           "date": "2026-03-09",
           "success": false,
           "latencyMs": 45
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 24
         }
       ]
     },
@@ -529,7 +534,7 @@
     },
     "groq:openai/gpt-oss-safeguard-20b": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-03-09",
+      "lastSeen": "2026-04-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -548,6 +553,11 @@
           "date": "2026-03-09",
           "success": false,
           "latencyMs": 135
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 47
         }
       ]
     },
@@ -744,7 +754,7 @@
     },
     "groq:canopylabs/orpheus-v1-english": {
       "firstSeen": "2026-02-23",
-      "lastSeen": "2026-03-09",
+      "lastSeen": "2026-04-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -763,12 +773,17 @@
           "date": "2026-03-09",
           "success": false,
           "latencyMs": 47
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 24
         }
       ]
     },
     "openrouter:nvidia/nemotron-3-nano-30b-a3b:free": {
       "firstSeen": "2026-02-23",
-      "lastSeen": "2026-03-09",
+      "lastSeen": "2026-04-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -787,6 +802,11 @@
           "date": "2026-03-09",
           "success": false,
           "latencyMs": 525
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 495
         }
       ]
     },
@@ -1014,10 +1034,10 @@
     },
     "groq:meta-llama/llama-prompt-guard-2-22m": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-09",
@@ -1043,6 +1063,11 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 139
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 121
         }
       ]
     },
@@ -1072,7 +1097,7 @@
     },
     "google:gemini-flash-lite-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1101,6 +1126,11 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 4638
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 8899
         }
       ]
     },
@@ -1178,7 +1208,7 @@
     },
     "mistral:devstral-small-2507": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1192,7 +1222,7 @@
     },
     "mistral:devstral-medium-2507": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1206,10 +1236,10 @@
     },
     "mistral:devstral-2512": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-09",
@@ -1235,15 +1265,20 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 523
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 765
         }
       ]
     },
     "mistral:mistral-vibe-cli-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-09",
@@ -1269,15 +1304,20 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 273
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 287
         }
       ]
     },
     "mistral:devstral-medium-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-09",
@@ -1303,6 +1343,11 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 516
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 318
         }
       ]
     },
@@ -1384,10 +1429,10 @@
     },
     "mistral:devstral-latest": {
       "firstSeen": "2026-03-16",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-16",
@@ -1408,12 +1453,17 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 313
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 308
         }
       ]
     },
     "mistral:mistral-small-2506": {
       "firstSeen": "2026-03-16",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1446,10 +1496,10 @@
     },
     "mistral:mistral-small-2603": {
       "firstSeen": "2026-03-23",
-      "lastSeen": "2026-04-06",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-04-13",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-23",
@@ -1465,12 +1515,17 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 486
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 764
         }
       ]
     },
     "openrouter:z-ai/glm-4.5-air:free": {
       "firstSeen": "2026-03-30",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1489,7 +1544,7 @@
     },
     "google:gemma-4-26b-a4b-it": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1498,12 +1553,17 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 1019
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 959
         }
       ]
     },
     "google:gemma-4-31b-it": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1512,12 +1572,17 @@
           "date": "2026-04-06",
           "success": true,
           "latencyMs": 1337
+        },
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 1370
         }
       ]
     },
     "google:gemini-3-pro-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1526,6 +1591,11 @@
           "date": "2026-04-06",
           "success": false,
           "latencyMs": 52
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 54
         }
       ]
     },
@@ -1545,7 +1615,7 @@
     },
     "openrouter:google/lyria-3-pro-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1554,12 +1624,17 @@
           "date": "2026-04-06",
           "success": false,
           "latencyMs": 1538
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 2183
         }
       ]
     },
     "openrouter:google/lyria-3-clip-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-04-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1568,29 +1643,76 @@
           "date": "2026-04-06",
           "success": false,
           "latencyMs": 773
+        },
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 1341
+        }
+      ]
+    },
+    "google:gemini-3-flash-preview": {
+      "firstSeen": "2026-04-13",
+      "lastSeen": "2026-04-13",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 15001
+        }
+      ]
+    },
+    "openrouter:google/gemma-4-26b-a4b-it:free": {
+      "firstSeen": "2026-04-13",
+      "lastSeen": "2026-04-13",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-04-13",
+          "success": true,
+          "latencyMs": 728
+        }
+      ]
+    },
+    "openrouter:google/gemma-4-31b-it:free": {
+      "firstSeen": "2026-04-13",
+      "lastSeen": "2026-04-13",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-04-13",
+          "success": false,
+          "latencyMs": 159
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-04-06T07:56:39.207Z",
+      "lastSuccess": "2026-04-13T08:16:50.462Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-04-06T07:56:39.383Z",
+      "lastSuccess": "2026-04-13T08:16:50.748Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-04-06T07:56:39.526Z",
+      "lastSuccess": "2026-04-13T08:16:50.845Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-04-06T07:56:39.604Z",
+      "lastSuccess": "2026-04-13T08:16:51.096Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-04-06T07:56:40.017Z",
+      "lastSuccess": "2026-04-13T08:16:51.796Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -1607,12 +1729,12 @@
     }
   },
   "stats": {
-    "totalRuns": 9,
-    "modelsDiscovered": 165,
-    "modelsAdded": 46,
+    "totalRuns": 10,
+    "modelsDiscovered": 184,
+    "modelsAdded": 52,
     "modelsRejected": 1,
-    "prsCreated": 3,
-    "prsAutoMerged": 3,
+    "prsCreated": 4,
+    "prsAutoMerged": 4,
     "failedValidations": 0
   }
 }

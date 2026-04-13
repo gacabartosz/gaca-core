@@ -250,6 +250,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'groq/compound', displayName: 'Groq Compound', rateLimitRpd: 1000 },
       { name: 'moonshotai/kimi-k2-instruct-0905', displayName: 'Moonshot AI Kimi K2 Instruct 0905', rateLimitRpd: 1000 },
       { name: 'meta-llama/llama-prompt-guard-2-86m', displayName: 'Meta Llama Prompt Guard 2 86M', rateLimitRpd: 1000 },
+    
+      { name: 'meta-llama/llama-prompt-guard-2-22m', displayName: 'Llama Guard 4 22M', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -373,6 +375,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'mistral-large-pixtral-2411', displayName: 'Mistral Large Pixtral 2411', rateLimitRpd: 1000 },
       { name: 'codestral-2508', displayName: 'Codestral 2508', rateLimitRpd: 1000 },
       { name: 'codestral-latest', displayName: 'Codestral Latest', rateLimitRpd: 1000 },
+    
+      { name: 'devstral-2512', displayName: 'Devstral 2512', rateLimitRpd: 1000 },
+      { name: 'devstral-medium-latest', displayName: 'Devstral Medium Latest', rateLimitRpd: 1000 },
+      { name: 'devstral-latest', displayName: 'Devstral Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-vibe-cli-latest', displayName: 'Mistral Vibe CLI Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-small-2603', displayName: 'Mistral Small 2603', rateLimitRpd: 1000 },
     ],
   },
   {
