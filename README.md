@@ -5,14 +5,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gacabartosz/gaca-core/pulls)
 
-> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **93+ free LLM models** from 11 providers.
+> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **97+ free LLM models** from 11 providers.
 
 **G.A.C.A.** (**G**enerative **A**I **C**ost **A**rbitrage) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently. The "arbitrage" comes from exploiting free tier limits across multiple providers to get unlimited AI completions at zero cost.
 
 ## Key Features
 
 - **11 AI Providers** — Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks AI, DeepSeek, Anthropic, OpenAI
-- **105+ Models** — Including 49+ completely free models
+- **109+ Models** — Including 49+ completely free models
 - **Automatic Failover** — Up to 30 fallback attempts when a provider fails
 - **Performance Ranking** — Auto-calculated scores based on success rate, latency, and quality
 - **Rate Limit Tracking** — Per-provider AND per-model RPM/RPD tracking with in-memory cache
@@ -132,7 +132,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Mistral AI (FREE — 1 RPM, 500 RPD)
 
-**Models:** Mistral Small, Devstral Small 24B, Mistral Medium 2505, Mistral Medium 2508, Mistral Medium Latest, Mistral Medium, Mistral Vibe CLI with Tools, Open Mistral Nemo, Open Mistral Nemo 2407, Mistral Tiny 2407, Mistral Tiny Latest, Mistral Large 2411, Pixtral Large 2411, Pixtral Large Latest, Mistral Large Pixtral 2411, Codestral 2508, Codestral Latest, Devstral 2512, Devstral Medium Latest, Devstral Latest, Mistral Vibe CLI Latest, Mistral Small 2603
+**Models:** Mistral Small, Devstral Small 24B, Mistral Medium 2505, Mistral Medium 2508, Mistral Medium Latest, Mistral Medium, Mistral Vibe CLI with Tools, Open Mistral Nemo, Open Mistral Nemo 2407, Mistral Tiny 2407, Mistral Tiny Latest, Mistral Large 2411, Pixtral Large 2411, Pixtral Large Latest, Mistral Large Pixtral 2411, Codestral 2508, Codestral Latest, Devstral 2512, Devstral Medium Latest, Devstral Latest, Mistral Vibe CLI Latest, Mistral Small 2603, Mistral Large Latest, Ministral 3B 2512, Ministral 3B Latest, Ministral 8B 2512
 
 1. Go to [console.mistral.ai](https://console.mistral.ai/)
 2. Click **"Sign Up"** — use email or GitHub
@@ -234,7 +234,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ---
 
-## Available Free Models (93+)
+## Available Free Models (97+)
 
 <details>
 <summary>Click to expand full model list</summary>
@@ -292,7 +292,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `qwen/qwq-32b:free` | QwQ 32B |
 | `google/gemini-2.0-flash-001:free` | Gemini 2.0 Flash |
 
-### Mistral AI (22 models)
+### Mistral AI (26 models)
 | Model | Display Name |
 |-------|-------------|
 | `mistral-small-latest` | Mistral Small |
