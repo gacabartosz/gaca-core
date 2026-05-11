@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-05-04T08:40:36.916Z",
+  "lastRun": "2026-05-11T09:57:10.668Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -61,7 +61,7 @@
     },
     "groq:whisper-large-v3-turbo": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-05-11",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -85,6 +85,11 @@
           "date": "2026-04-06",
           "success": false,
           "latencyMs": 25
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 64
         }
       ]
     },
@@ -602,7 +607,7 @@
     },
     "google:gemini-2.5-flash-preview-tts": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-05-11",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -626,12 +631,17 @@
           "date": "2026-04-06",
           "success": false,
           "latencyMs": 220
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 222
         }
       ]
     },
     "openrouter:liquid/lfm-2.5-1.2b-thinking:free": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-04-06",
+      "lastSeen": "2026-05-11",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1258,7 +1268,7 @@
     },
     "mistral:devstral-small-2507": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1272,7 +1282,7 @@
     },
     "mistral:devstral-medium-2507": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1580,7 +1590,7 @@
     },
     "openrouter:z-ai/glm-4.5-air:free": {
       "firstSeen": "2026-03-30",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1734,8 +1744,8 @@
     "google:gemini-3-flash-preview": {
       "firstSeen": "2026-04-13",
       "lastSeen": "2026-05-04",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -1865,7 +1875,7 @@
     },
     "google:gemini-3.1-pro-preview": {
       "firstSeen": "2026-04-27",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -1879,6 +1889,11 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 73
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 113
         }
       ]
     },
@@ -1987,7 +2002,7 @@
     },
     "mistral:labs-leanstral-2603": {
       "firstSeen": "2026-04-27",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2001,6 +2016,11 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 221
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 231
         }
       ]
     },
@@ -2020,7 +2040,7 @@
     },
     "openrouter:openrouter/owl-alpha": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2029,12 +2049,17 @@
           "date": "2026-05-04",
           "success": true,
           "latencyMs": 1628
+        },
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 3661
         }
       ]
     },
     "openrouter:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2043,12 +2068,17 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 380
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 887
         }
       ]
     },
     "openrouter:poolside/laguna-xs.2:free": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2057,12 +2087,17 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 516
+        },
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 380
         }
       ]
     },
     "openrouter:poolside/laguna-m.1:free": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-05-11",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2076,80 +2111,170 @@
     },
     "mistral:mistral-large-latest": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-05-11",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-05-04",
           "success": true,
           "latencyMs": 1028
+        },
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 542
         }
       ]
     },
     "mistral:ministral-3b-2512": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-05-11",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-05-04",
           "success": true,
           "latencyMs": 255
+        },
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 280
         }
       ]
     },
     "mistral:ministral-3b-latest": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-05-11",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-05-04",
           "success": true,
           "latencyMs": 261
+        },
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 277
         }
       ]
     },
     "mistral:ministral-8b-2512": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-05-04",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-05-11",
+      "status": "added",
+      "reason": "Passed testing and is a chat model",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-05-04",
           "success": true,
           "latencyMs": 278
+        },
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 351
+        }
+      ]
+    },
+    "google:gemini-3.1-pro-preview-customtools": {
+      "firstSeen": "2026-05-11",
+      "lastSeen": "2026-05-11",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 101
+        }
+      ]
+    },
+    "google:gemini-3.1-flash-lite-preview": {
+      "firstSeen": "2026-05-11",
+      "lastSeen": "2026-05-11",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-05-11",
+          "success": true,
+          "latencyMs": 685
+        }
+      ]
+    },
+    "google:gemini-3.1-flash-lite": {
+      "firstSeen": "2026-05-11",
+      "lastSeen": "2026-05-11",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 3450
+        }
+      ]
+    },
+    "openrouter:inclusionai/ring-2.6-1t:free": {
+      "firstSeen": "2026-05-11",
+      "lastSeen": "2026-05-11",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 904
+        }
+      ]
+    },
+    "openrouter:baidu/cobuddy:free": {
+      "firstSeen": "2026-05-11",
+      "lastSeen": "2026-05-11",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-05-11",
+          "success": false,
+          "latencyMs": 5848
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-05-04T08:39:42.982Z",
+      "lastSuccess": "2026-05-11T09:55:59.942Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-05-04T08:39:43.249Z",
+      "lastSuccess": "2026-05-11T09:56:00.052Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-05-04T08:39:43.496Z",
+      "lastSuccess": "2026-05-11T09:56:00.238Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-05-04T08:39:43.629Z",
+      "lastSuccess": "2026-05-11T09:56:00.378Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-05-04T08:39:43.963Z",
+      "lastSuccess": "2026-05-11T09:56:01.015Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -2166,12 +2291,12 @@
     }
   },
   "stats": {
-    "totalRuns": 13,
-    "modelsDiscovered": 230,
-    "modelsAdded": 52,
+    "totalRuns": 14,
+    "modelsDiscovered": 246,
+    "modelsAdded": 56,
     "modelsRejected": 21,
-    "prsCreated": 4,
-    "prsAutoMerged": 4,
+    "prsCreated": 5,
+    "prsAutoMerged": 5,
     "failedValidations": 0
   }
 }

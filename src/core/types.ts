@@ -381,6 +381,11 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'devstral-latest', displayName: 'Devstral Latest', rateLimitRpd: 1000 },
       { name: 'mistral-vibe-cli-latest', displayName: 'Mistral Vibe CLI Latest', rateLimitRpd: 1000 },
       { name: 'mistral-small-2603', displayName: 'Mistral Small 2603', rateLimitRpd: 1000 },
+    
+      { name: 'mistral-large-latest', displayName: 'Mistral Large Latest', rateLimitRpd: 1000 },
+      { name: 'ministral-3b-2512', displayName: 'Ministral 3B 2512', rateLimitRpd: 1000 },
+      { name: 'ministral-3b-latest', displayName: 'Ministral 3B Latest', rateLimitRpd: 1000 },
+      { name: 'ministral-8b-2512', displayName: 'Ministral 8B 2512', rateLimitRpd: 1000 },
     ],
   },
   {
