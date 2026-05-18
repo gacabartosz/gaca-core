@@ -293,6 +293,9 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     
       { name: 'gemma-3n-e4b-it', displayName: 'Gemma 3N E4B IT', rateLimitRpd: 1000 },
       { name: 'gemma-3n-e2b-it', displayName: 'Gemma 3N E2B IT', rateLimitRpd: 1000 },
+    
+      { name: 'gemini-3.1-flash-lite-preview', displayName: 'Gemini 3.1 Flash Lite Preview', rateLimitRpd: 1000 },
+      { name: 'gemini-3.1-flash-lite', displayName: 'Gemini 3.1 Flash Lite', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -342,6 +345,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
     
       { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
+    
+      { name: 'openrouter/owl-alpha', displayName: 'OWL Alpha', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -386,6 +391,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'ministral-3b-2512', displayName: 'Ministral 3B 2512', rateLimitRpd: 1000 },
       { name: 'ministral-3b-latest', displayName: 'Ministral 3B Latest', rateLimitRpd: 1000 },
       { name: 'ministral-8b-2512', displayName: 'Ministral 8B 2512', rateLimitRpd: 1000 },
+    
+      { name: 'ministral-8b-latest', displayName: 'Ministral 8B', rateLimitRpd: 1000 },
+      { name: 'ministral-14b-2512', displayName: 'Ministral 14B', rateLimitRpd: 1000 },
+      { name: 'ministral-14b-latest', displayName: 'Ministral 14B Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-3-5', displayName: 'Mistral Medium 3.5', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-3.5', displayName: 'Mistral Medium 3.5', rateLimitRpd: 1000 },
     ],
   },
   {
