@@ -397,6 +397,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'ministral-14b-latest', displayName: 'Ministral 14B Latest', rateLimitRpd: 1000 },
       { name: 'mistral-medium-3-5', displayName: 'Mistral Medium 3.5', rateLimitRpd: 1000 },
       { name: 'mistral-medium-3.5', displayName: 'Mistral Medium 3.5', rateLimitRpd: 1000 },
+    
+      { name: 'mistral-vibe-cli-fast', displayName: 'Mistral Vibe CLI Fast', rateLimitRpd: 1000 },
+      { name: 'magistral-medium-2509', displayName: 'Magistral Medium 2509', rateLimitRpd: 1000 },
+      { name: 'magistral-medium-latest', displayName: 'Magistral Medium Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-3', displayName: 'Mistral Medium 3', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-2604', displayName: 'Mistral Medium 2604', rateLimitRpd: 1000 },
     ],
   },
   {
