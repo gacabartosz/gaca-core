@@ -403,6 +403,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'magistral-medium-latest', displayName: 'Magistral Medium Latest', rateLimitRpd: 1000 },
       { name: 'mistral-medium-3', displayName: 'Mistral Medium 3', rateLimitRpd: 1000 },
       { name: 'mistral-medium-2604', displayName: 'Mistral Medium 2604', rateLimitRpd: 1000 },
+    
+      { name: 'magistral-small-latest', displayName: 'Mistral Magistral Small', rateLimitRpd: 1000 },
+      { name: 'voxtral-small-2507', displayName: 'Mistral Voxtral Small 2507', rateLimitRpd: 1000 },
+      { name: 'voxtral-small-latest', displayName: 'Mistral Voxtral Small Latest', rateLimitRpd: 1000 },
+      { name: 'mistral-large-2512', displayName: 'Mistral Large 2512', rateLimitRpd: 1000 },
+      { name: 'mistral-medium-c21211-r0-75', displayName: 'Mistral Medium C21211 R0 75', rateLimitRpd: 1000 },
     ],
   },
   {
