@@ -5,14 +5,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gacabartosz/gaca-core/pulls)
 
-> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **115+ free LLM models** from 11 providers.
+> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **122+ free LLM models** from 11 providers.
 
 **G.A.C.A.** (**G**enerative **A**I **C**ost **A**rbitrage) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently. The "arbitrage" comes from exploiting free tier limits across multiple providers to get unlimited AI completions at zero cost.
 
 ## Key Features
 
 - **11 AI Providers** — Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks AI, DeepSeek, Anthropic, OpenAI
-- **127+ Models** — Including 49+ completely free models
+- **134+ Models** — Including 49+ completely free models
 - **Automatic Failover** — Up to 30 fallback attempts when a provider fails
 - **Performance Ranking** — Auto-calculated scores based on success rate, latency, and quality
 - **Rate Limit Tracking** — Per-provider AND per-model RPM/RPD tracking with in-memory cache
@@ -116,7 +116,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### OpenRouter (FREE — 20 RPM, 50 RPD on free models)
 
-**Models:** Llama 3.3 70B, Llama 4 Maverick/Scout, DeepSeek R1/V3, Gemma 3, Kimi K2, GPT-OSS, Qwen 3 235B/Coder 480B, QwQ 32B, Gemini 2.0 Flash (all `:free` suffix), OpenRouter Free, Trinity Large Preview, Qwen 3 VL 30B A3B Thinking, Qwen 3 VL 235B A22B Thinking, Qwen 3 Next 80B A3B Instruct, Nemotron 3 Nano 30B A3B, Nemotron Nano 12B V2 VL, Qwen 3 235B A22B Thinking 2507, Dolphin Mistral 24B Venice Edition, Gemma 3N E2B IT, Gemma 3N E4B IT, Gemma 3 4B IT, Llama 3.2 3B Instruct, Hermes 3 Llama 3.1 405B, Liquid LFM 2.5 1.2B Instruct, Liquid LFM 2.5 1.2B Instruct, OWL Alpha
+**Models:** Llama 3.3 70B, Llama 4 Maverick/Scout, DeepSeek R1/V3, Gemma 3, Kimi K2, GPT-OSS, Qwen 3 235B/Coder 480B, QwQ 32B, Gemini 2.0 Flash (all `:free` suffix), OpenRouter Free, Trinity Large Preview, Qwen 3 VL 30B A3B Thinking, Qwen 3 VL 235B A22B Thinking, Qwen 3 Next 80B A3B Instruct, Nemotron 3 Nano 30B A3B, Nemotron Nano 12B V2 VL, Qwen 3 235B A22B Thinking 2507, Dolphin Mistral 24B Venice Edition, Gemma 3N E2B IT, Gemma 3N E4B IT, Gemma 3 4B IT, Llama 3.2 3B Instruct, Hermes 3 Llama 3.1 405B, Liquid LFM 2.5 1.2B Instruct, Liquid LFM 2.5 1.2B Instruct, OWL Alpha, Nemotron 3 Ultra 550B, Nemotron 3 Super 120B
 
 1. Go to [openrouter.ai](https://openrouter.ai/)
 2. Click **"Sign Up"** — use Google, GitHub, or email
@@ -132,7 +132,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Mistral AI (FREE — 1 RPM, 500 RPD)
 
-**Models:** Mistral Small, Devstral Small 24B, Mistral Medium 2505, Mistral Medium 2508, Mistral Medium Latest, Mistral Medium, Mistral Vibe CLI with Tools, Open Mistral Nemo, Open Mistral Nemo 2407, Mistral Tiny 2407, Mistral Tiny Latest, Mistral Large 2411, Pixtral Large 2411, Pixtral Large Latest, Mistral Large Pixtral 2411, Codestral 2508, Codestral Latest, Devstral 2512, Devstral Medium Latest, Devstral Latest, Mistral Vibe CLI Latest, Mistral Small 2603, Mistral Large Latest, Ministral 3B 2512, Ministral 3B Latest, Ministral 8B 2512, Ministral 8B, Ministral 14B, Ministral 14B Latest, Mistral Medium 3.5, Mistral Medium 3.5, Mistral Vibe CLI Fast, Magistral Medium 2509, Magistral Medium Latest, Mistral Medium 3, Mistral Medium 2604, Mistral Magistral Small, Mistral Voxtral Small 2507, Mistral Voxtral Small Latest, Mistral Large 2512, Mistral Medium C21211 R0 75
+**Models:** Mistral Small, Devstral Small 24B, Mistral Medium 2505, Mistral Medium 2508, Mistral Medium Latest, Mistral Medium, Mistral Vibe CLI with Tools, Open Mistral Nemo, Open Mistral Nemo 2407, Mistral Tiny 2407, Mistral Tiny Latest, Mistral Large 2411, Pixtral Large 2411, Pixtral Large Latest, Mistral Large Pixtral 2411, Codestral 2508, Codestral Latest, Devstral 2512, Devstral Medium Latest, Devstral Latest, Mistral Vibe CLI Latest, Mistral Small 2603, Mistral Large Latest, Ministral 3B 2512, Ministral 3B Latest, Ministral 8B 2512, Ministral 8B, Ministral 14B, Ministral 14B Latest, Mistral Medium 3.5, Mistral Medium 3.5, Mistral Vibe CLI Fast, Magistral Medium 2509, Magistral Medium Latest, Mistral Medium 3, Mistral Medium 2604, Mistral Magistral Small, Mistral Voxtral Small 2507, Mistral Voxtral Small Latest, Mistral Large 2512, Mistral Medium C21211 R0 75, Mistral Code, Mistral Code FIM, Mistral Code Agent, Voxtral Mini 2507, Voxtral Mini Latest
 
 1. Go to [console.mistral.ai](https://console.mistral.ai/)
 2. Click **"Sign Up"** — use email or GitHub
@@ -234,7 +234,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ---
 
-## Available Free Models (115+)
+## Available Free Models (122+)
 
 <details>
 <summary>Click to expand full model list</summary>
@@ -271,7 +271,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `gemini-2.5-flash` | Gemini 2.5 Flash | 1,500 |
 | `gemini-2.5-pro` | Gemini 2.5 Pro | 500 |
 
-### OpenRouter (34 free models)
+### OpenRouter (36 free models)
 | Model | Display Name |
 |-------|-------------|
 | `meta-llama/llama-3.3-70b-instruct:free` | Llama 3.3 70B |
@@ -292,7 +292,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 | `qwen/qwq-32b:free` | QwQ 32B |
 | `google/gemini-2.0-flash-001:free` | Gemini 2.0 Flash |
 
-### Mistral AI (41 models)
+### Mistral AI (46 models)
 | Model | Display Name |
 |-------|-------------|
 | `mistral-small-latest` | Mistral Small |
