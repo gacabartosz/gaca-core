@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-06-01T11:51:21.872Z",
+  "lastRun": "2026-06-08T11:12:56.555Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -100,7 +100,7 @@
     },
     "groq:whisper-large-v3": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -129,12 +129,17 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 78
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 79
         }
       ]
     },
     "google:gemini-2.0-flash-001": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -163,6 +168,11 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 89
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 87
         }
       ]
     },
@@ -192,7 +202,7 @@
     },
     "google:gemini-2.0-flash-lite-001": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -221,12 +231,17 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 122
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 85
         }
       ]
     },
     "google:gemini-2.0-flash-lite": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -255,6 +270,11 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 79
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 88
         }
       ]
     },
@@ -1294,7 +1314,7 @@
     },
     "openrouter:nvidia/nemotron-nano-9b-v2:free": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1313,6 +1333,11 @@
           "date": "2026-03-30",
           "success": false,
           "latencyMs": 130702
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 455
         }
       ]
     },
@@ -1491,10 +1516,10 @@
     },
     "openrouter:nvidia/nemotron-3-super-120b-a12b:free": {
       "firstSeen": "2026-03-16",
-      "lastSeen": "2026-05-04",
-      "status": "rejected",
-      "reason": "Auto-rejected after 3+ test failures",
-      "confidence": 0,
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Nemotron)",
+      "confidence": 95,
       "testHistory": [
         {
           "date": "2026-03-16",
@@ -1510,6 +1535,11 @@
           "date": "2026-03-30",
           "success": false,
           "latencyMs": 5114
+        },
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 4138
         }
       ]
     },
@@ -1641,8 +1671,8 @@
     "openrouter:z-ai/glm-4.5-air:free": {
       "firstSeen": "2026-03-30",
       "lastSeen": "2026-06-01",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -1813,7 +1843,7 @@
     },
     "google:gemini-3-flash-preview": {
       "firstSeen": "2026-04-13",
-      "lastSeen": "2026-05-04",
+      "lastSeen": "2026-06-08",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1832,6 +1862,11 @@
           "date": "2026-05-04",
           "success": false,
           "latencyMs": 825
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 669
         }
       ]
     },
@@ -2328,8 +2363,8 @@
     "google:gemini-3.1-pro-preview-customtools": {
       "firstSeen": "2026-05-11",
       "lastSeen": "2026-06-01",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -2427,7 +2462,7 @@
     },
     "google:gemini-3-pro-image-preview": {
       "firstSeen": "2026-05-18",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-06-08",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2441,12 +2476,17 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 85
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 80
         }
       ]
     },
     "google:nano-banana-pro-preview": {
       "firstSeen": "2026-05-18",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-06-08",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2572,7 +2612,7 @@
     },
     "openrouter:moonshotai/kimi-k2.6:free": {
       "firstSeen": "2026-06-01",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-06-08",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2581,12 +2621,17 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 474
+        },
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 539
         }
       ]
     },
     "openrouter:cognitivecomputations/dolphin-mistral-24b-venice-edition:free": {
       "firstSeen": "2026-06-01",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-06-08",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2611,27 +2656,125 @@
           "latencyMs": 332
         }
       ]
+    },
+    "openrouter:nvidia/nemotron-3.5-content-safety:free": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": false,
+          "latencyMs": 472
+        }
+      ]
+    },
+    "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Nemotron)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 526
+        }
+      ]
+    },
+    "mistral:mistral-code-latest": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Mistral)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 345
+        }
+      ]
+    },
+    "mistral:mistral-code-fim-latest": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Mistral)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 298
+        }
+      ]
+    },
+    "mistral:mistral-code-agent-latest": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Mistral)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 521
+        }
+      ]
+    },
+    "mistral:voxtral-mini-2507": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Mistral)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 322
+        }
+      ]
+    },
+    "mistral:voxtral-mini-latest": {
+      "firstSeen": "2026-06-08",
+      "lastSeen": "2026-06-08",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Mistral)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-06-08",
+          "success": true,
+          "latencyMs": 316
+        }
+      ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-06-01T11:50:26.929Z",
+      "lastSuccess": "2026-06-08T11:11:56.845Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-06-01T11:50:26.985Z",
+      "lastSuccess": "2026-06-08T11:11:56.942Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-06-01T11:50:27.090Z",
+      "lastSuccess": "2026-06-08T11:11:57.100Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-06-01T11:50:27.242Z",
+      "lastSuccess": "2026-06-08T11:11:57.277Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-06-01T11:50:27.833Z",
+      "lastSuccess": "2026-06-08T11:11:57.797Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -2648,12 +2791,12 @@
     }
   },
   "stats": {
-    "totalRuns": 17,
-    "modelsDiscovered": 294,
-    "modelsAdded": 74,
+    "totalRuns": 18,
+    "modelsDiscovered": 310,
+    "modelsAdded": 81,
     "modelsRejected": 21,
-    "prsCreated": 8,
-    "prsAutoMerged": 8,
+    "prsCreated": 9,
+    "prsAutoMerged": 9,
     "failedValidations": 0
   }
 }

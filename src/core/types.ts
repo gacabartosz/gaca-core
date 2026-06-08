@@ -347,6 +347,9 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'liquid/lfm-2.5-1.2b-instruct:free', displayName: 'Liquid LFM 2.5 1.2B Instruct', rateLimitRpd: 1000 },
     
       { name: 'openrouter/owl-alpha', displayName: 'OWL Alpha', rateLimitRpd: 1000 },
+    
+      { name: 'nvidia/nemotron-3-ultra-550b-a55b:free', displayName: 'Nemotron 3 Ultra 550B', rateLimitRpd: 1000 },
+      { name: 'nvidia/nemotron-3-super-120b-a12b:free', displayName: 'Nemotron 3 Super 120B', rateLimitRpd: 1000 },
     ],
   },
   {
@@ -409,6 +412,12 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'voxtral-small-latest', displayName: 'Mistral Voxtral Small Latest', rateLimitRpd: 1000 },
       { name: 'mistral-large-2512', displayName: 'Mistral Large 2512', rateLimitRpd: 1000 },
       { name: 'mistral-medium-c21211-r0-75', displayName: 'Mistral Medium C21211 R0 75', rateLimitRpd: 1000 },
+    
+      { name: 'mistral-code-latest', displayName: 'Mistral Code', rateLimitRpd: 1000 },
+      { name: 'mistral-code-fim-latest', displayName: 'Mistral Code FIM', rateLimitRpd: 1000 },
+      { name: 'mistral-code-agent-latest', displayName: 'Mistral Code Agent', rateLimitRpd: 1000 },
+      { name: 'voxtral-mini-2507', displayName: 'Voxtral Mini 2507', rateLimitRpd: 1000 },
+      { name: 'voxtral-mini-latest', displayName: 'Voxtral Mini Latest', rateLimitRpd: 1000 },
     ],
   },
   {
