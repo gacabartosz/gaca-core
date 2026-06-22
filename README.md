@@ -5,14 +5,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/gacabartosz/gaca-core/pulls)
 
-> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **122+ free LLM models** from 11 providers.
+> Universal AI Bus with automatic failover, performance ranking, rate limiting, and **123+ free LLM models** from 11 providers.
 
 **G.A.C.A.** (**G**enerative **A**I **C**ost **A**rbitrage) acts as a smart proxy between your application and multiple AI providers. It automatically selects the best available model, handles rate limits, tracks performance, and fails over to alternative providers — all transparently. The "arbitrage" comes from exploiting free tier limits across multiple providers to get unlimited AI completions at zero cost.
 
 ## Key Features
 
 - **11 AI Providers** — Groq, Cerebras, Google AI, OpenRouter, Mistral, HuggingFace, Together AI, Fireworks AI, DeepSeek, Anthropic, OpenAI
-- **134+ Models** — Including 49+ completely free models
+- **135+ Models** — Including 49+ completely free models
 - **Automatic Failover** — Up to 30 fallback attempts when a provider fails
 - **Performance Ranking** — Auto-calculated scores based on success rate, latency, and quality
 - **Rate Limit Tracking** — Per-provider AND per-model RPM/RPD tracking with in-memory cache
@@ -74,7 +74,7 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ### Groq (FREE — 30 RPM, 14,400 RPD)
 
-**Models:** Llama 3.3 70B, Llama 3.1 8B, Llama 4 Maverick/Scout, Qwen 3 32B, Kimi K2, GPT-OSS 120B/20B, Allam 2.7B, Groq Compound Mini, Groq Compound, Moonshot AI Kimi K2 Instruct 0905, Meta Llama Prompt Guard 2 86M, Llama Guard 4 22M
+**Models:** Llama 3.3 70B, Llama 3.1 8B, Llama 4 Maverick/Scout, Qwen 3 32B, Kimi K2, GPT-OSS 120B/20B, Allam 2.7B, Groq Compound Mini, Groq Compound, Moonshot AI Kimi K2 Instruct 0905, Meta Llama Prompt Guard 2 86M, Llama Guard 4 22M, Qwen 3.6 27B
 
 1. Go to [console.groq.com](https://console.groq.com)
 2. Click **"Sign Up"** — use Google or GitHub (no credit card needed)
@@ -234,12 +234,12 @@ All free providers require **no credit card**. You can set up all 8 free provide
 
 ---
 
-## Available Free Models (122+)
+## Available Free Models (123+)
 
 <details>
 <summary>Click to expand full model list</summary>
 
-### Groq (14 models)
+### Groq (15 models)
 | Model | Display Name | RPD |
 |-------|-------------|-----|
 | `llama-3.1-8b-instant` | Llama 3.1 8B | 14,400 |

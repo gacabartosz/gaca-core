@@ -252,6 +252,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'meta-llama/llama-prompt-guard-2-86m', displayName: 'Meta Llama Prompt Guard 2 86M', rateLimitRpd: 1000 },
     
       { name: 'meta-llama/llama-prompt-guard-2-22m', displayName: 'Llama Guard 4 22M', rateLimitRpd: 1000 },
+    
+      { name: 'qwen/qwen3.6-27b', displayName: 'Qwen 3.6 27B', rateLimitRpd: 1000 },
     ],
   },
   {
