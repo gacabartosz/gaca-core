@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-06-29T08:04:10.430Z",
+  "lastRun": "2026-07-06T07:49:00.779Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -1198,7 +1198,7 @@
     },
     "google:gemini-flash-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-07-06",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1227,6 +1227,11 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 690
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 11029
         }
       ]
     },
@@ -1286,7 +1291,7 @@
     },
     "google:gemini-pro-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-07-06",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1315,12 +1320,17 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 81
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 61
         }
       ]
     },
     "google:gemini-2.5-flash-image": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-07-06",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1349,6 +1359,11 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 81
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 63
         }
       ]
     },
@@ -2462,7 +2477,7 @@
     },
     "google:gemini-3.1-pro-preview-customtools": {
       "firstSeen": "2026-05-11",
-      "lastSeen": "2026-06-01",
+      "lastSeen": "2026-07-06",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -2481,6 +2496,11 @@
           "date": "2026-06-01",
           "success": false,
           "latencyMs": 70
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 66
         }
       ]
     },
@@ -2882,7 +2902,7 @@
     },
     "google:gemini-3-pro-image": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -2896,12 +2916,17 @@
           "date": "2026-06-22",
           "success": false,
           "latencyMs": 103
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 47
         }
       ]
     },
     "google:gemini-3.1-flash-image-preview": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3020,7 +3045,7 @@
     },
     "mistral:codestral-embed-2505": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3034,6 +3059,11 @@
           "date": "2026-06-22",
           "success": false,
           "latencyMs": 157
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 179
         }
       ]
     },
@@ -3053,7 +3083,7 @@
     },
     "google:gemini-3.1-flash-image": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3067,7 +3097,7 @@
     },
     "google:gemini-3.5-flash": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3081,7 +3111,7 @@
     },
     "openrouter:cohere/north-mini-code:free": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3095,12 +3125,17 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 598
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 336
         }
       ]
     },
     "openrouter:nousresearch/hermes-3-llama-3.1-405b:free": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3114,12 +3149,17 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 229
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 132
         }
       ]
     },
     "mistral:mistral-moderation-2603": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-07-06",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3128,29 +3168,104 @@
           "date": "2026-06-22",
           "success": false,
           "latencyMs": 162
+        },
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 175
+        }
+      ]
+    },
+    "cerebras:gemma-4-31b": {
+      "firstSeen": "2026-07-06",
+      "lastSeen": "2026-07-06",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Gemma)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-07-06",
+          "success": true,
+          "latencyMs": 90
+        }
+      ]
+    },
+    "openrouter:poolside/laguna-xs-2.1:free": {
+      "firstSeen": "2026-07-06",
+      "lastSeen": "2026-07-06",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 132
+        }
+      ]
+    },
+    "mistral:labs-leanstral-1-5-1": {
+      "firstSeen": "2026-07-06",
+      "lastSeen": "2026-07-06",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 159
+        }
+      ]
+    },
+    "mistral:labs-leanstral-1-5": {
+      "firstSeen": "2026-07-06",
+      "lastSeen": "2026-07-06",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 150
+        }
+      ]
+    },
+    "mistral:mistral-ocr-2512": {
+      "firstSeen": "2026-07-06",
+      "lastSeen": "2026-07-06",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 170
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-06-29T08:03:15.686Z",
+      "lastSuccess": "2026-07-06T07:48:03.728Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-06-29T08:03:15.853Z",
+      "lastSuccess": "2026-07-06T07:48:03.800Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-06-29T08:03:15.962Z",
+      "lastSuccess": "2026-07-06T07:48:03.911Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-06-29T08:03:16.067Z",
+      "lastSuccess": "2026-07-06T07:48:04.011Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-06-29T08:03:16.438Z",
+      "lastSuccess": "2026-07-06T07:48:04.459Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -3167,12 +3282,12 @@
     }
   },
   "stats": {
-    "totalRuns": 21,
-    "modelsDiscovered": 360,
-    "modelsAdded": 82,
+    "totalRuns": 22,
+    "modelsDiscovered": 374,
+    "modelsAdded": 83,
     "modelsRejected": 38,
-    "prsCreated": 10,
-    "prsAutoMerged": 10,
+    "prsCreated": 11,
+    "prsAutoMerged": 11,
     "failedValidations": 0
   }
 }
