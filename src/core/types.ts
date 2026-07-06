@@ -271,6 +271,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
       { name: 'qwen-3-235b-a22b-instruct-2507', displayName: 'Qwen 3 235B', rateLimitRpd: 14400 },
       { name: 'gpt-oss-120b', displayName: 'GPT-OSS 120B', rateLimitRpd: 14400 },
       { name: 'zai-glm-4.7', displayName: 'ZAI GLM 4.7', rateLimitRpd: 14400 },
+    
+      { name: 'gemma-4-31b', displayName: 'Gemma 4 31B', rateLimitRpd: 1000 },
     ],
   },
   {
