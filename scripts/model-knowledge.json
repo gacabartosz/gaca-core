@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-07-06T07:49:00.779Z",
+  "lastRun": "2026-07-13T07:21:19.091Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -110,7 +110,7 @@
     },
     "groq:whisper-large-v3": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -144,12 +144,17 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 79
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 55
         }
       ]
     },
     "google:gemini-2.0-flash-001": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -183,6 +188,11 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 87
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 66
         }
       ]
     },
@@ -212,7 +222,7 @@
     },
     "google:gemini-2.0-flash-lite-001": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -246,12 +256,17 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 85
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 56
         }
       ]
     },
     "google:gemini-2.0-flash-lite": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -285,6 +300,11 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 88
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 49
         }
       ]
     },
@@ -1369,7 +1389,7 @@
     },
     "openrouter:nvidia/nemotron-nano-9b-v2:free": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1393,6 +1413,11 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 455
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 973
         }
       ]
     },
@@ -1928,7 +1953,7 @@
     },
     "google:gemini-3-flash-preview": {
       "firstSeen": "2026-04-13",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1952,6 +1977,11 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 669
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 876
         }
       ]
     },
@@ -2582,7 +2612,7 @@
     },
     "google:gemini-3-pro-image-preview": {
       "firstSeen": "2026-05-18",
-      "lastSeen": "2026-06-08",
+      "lastSeen": "2026-07-13",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -2601,6 +2631,11 @@
           "date": "2026-06-08",
           "success": false,
           "latencyMs": 80
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 54
         }
       ]
     },
@@ -2903,8 +2938,8 @@
     "google:gemini-3-pro-image": {
       "firstSeen": "2026-06-15",
       "lastSeen": "2026-07-06",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -2926,7 +2961,7 @@
     },
     "google:gemini-3.1-flash-image-preview": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3046,8 +3081,8 @@
     "mistral:codestral-embed-2505": {
       "firstSeen": "2026-06-15",
       "lastSeen": "2026-07-06",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -3083,7 +3118,7 @@
     },
     "google:gemini-3.1-flash-image": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3097,7 +3132,7 @@
     },
     "google:gemini-3.5-flash": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3112,8 +3147,8 @@
     "openrouter:cohere/north-mini-code:free": {
       "firstSeen": "2026-06-22",
       "lastSeen": "2026-07-06",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -3136,8 +3171,8 @@
     "openrouter:nousresearch/hermes-3-llama-3.1-405b:free": {
       "firstSeen": "2026-06-22",
       "lastSeen": "2026-07-06",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -3159,7 +3194,7 @@
     },
     "mistral:mistral-moderation-2603": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3171,6 +3206,11 @@
         },
         {
           "date": "2026-07-06",
+          "success": false,
+          "latencyMs": 175
+        },
+        {
+          "date": "2026-07-13",
           "success": false,
           "latencyMs": 175
         }
@@ -3192,7 +3232,7 @@
     },
     "openrouter:poolside/laguna-xs-2.1:free": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3201,12 +3241,17 @@
           "date": "2026-07-06",
           "success": false,
           "latencyMs": 132
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 520
         }
       ]
     },
     "mistral:labs-leanstral-1-5-1": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3215,12 +3260,17 @@
           "date": "2026-07-06",
           "success": false,
           "latencyMs": 159
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 186
         }
       ]
     },
     "mistral:labs-leanstral-1-5": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3229,12 +3279,17 @@
           "date": "2026-07-06",
           "success": false,
           "latencyMs": 150
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 169
         }
       ]
     },
     "mistral:mistral-ocr-2512": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-07-06",
+      "lastSeen": "2026-07-13",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3243,29 +3298,62 @@
           "date": "2026-07-06",
           "success": false,
           "latencyMs": 170
+        },
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 171
+        }
+      ]
+    },
+    "openrouter:tencent/hy3:free": {
+      "firstSeen": "2026-07-13",
+      "lastSeen": "2026-07-13",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 1969
+        }
+      ]
+    },
+    "mistral:mistral-ocr-3-0": {
+      "firstSeen": "2026-07-13",
+      "lastSeen": "2026-07-13",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-07-13",
+          "success": false,
+          "latencyMs": 168
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-07-06T07:48:03.728Z",
+      "lastSuccess": "2026-07-13T07:20:45.068Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-07-06T07:48:03.800Z",
+      "lastSuccess": "2026-07-13T07:20:45.137Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-07-06T07:48:03.911Z",
+      "lastSuccess": "2026-07-13T07:20:45.248Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-07-06T07:48:04.011Z",
+      "lastSuccess": "2026-07-13T07:20:45.358Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-07-06T07:48:04.459Z",
+      "lastSuccess": "2026-07-13T07:20:45.593Z",
       "consecutiveFails": 0
     },
     "huggingface": {
