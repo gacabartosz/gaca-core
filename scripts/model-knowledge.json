@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-07-27T07:23:00.344Z",
+  "lastRun": "2026-08-03T07:21:54.445Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -985,7 +985,7 @@
     },
     "google:gemini-2.5-pro-preview-tts": {
       "firstSeen": "2026-03-02",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1019,6 +1019,11 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 99
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 86
         }
       ]
     },
@@ -1287,7 +1292,7 @@
     },
     "google:gemini-flash-lite-latest": {
       "firstSeen": "2026-03-09",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Failed testing in knowledge base",
       "confidence": 100,
@@ -1336,6 +1341,11 @@
           "date": "2026-06-29",
           "success": true,
           "latencyMs": 423
+        },
+        {
+          "date": "2026-08-03",
+          "success": true,
+          "latencyMs": 433
         }
       ]
     },
@@ -1809,7 +1819,7 @@
     },
     "google:gemma-4-26b-a4b-it": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Failed testing in knowledge base",
       "confidence": 100,
@@ -1838,12 +1848,17 @@
           "date": "2026-06-29",
           "success": true,
           "latencyMs": 667
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 15001
         }
       ]
     },
     "google:gemma-4-31b-it": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Failed testing in knowledge base",
       "confidence": 100,
@@ -1872,12 +1887,17 @@
           "date": "2026-06-29",
           "success": true,
           "latencyMs": 642
+        },
+        {
+          "date": "2026-08-03",
+          "success": true,
+          "latencyMs": 694
         }
       ]
     },
     "google:gemini-3-pro-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -1906,6 +1926,11 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 99
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 90
         }
       ]
     },
@@ -3063,7 +3088,7 @@
     },
     "mistral:mistral-embed-2312": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Embedding model (non-chat)",
       "confidence": 100,
@@ -3082,12 +3107,17 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 158
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 176
         }
       ]
     },
     "mistral:mistral-embed": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Embedding model (non-chat)",
       "confidence": 100,
@@ -3106,12 +3136,17 @@
           "date": "2026-06-29",
           "success": false,
           "latencyMs": 165
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 149
         }
       ]
     },
     "mistral:codestral-embed": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-06-29",
+      "lastSeen": "2026-08-03",
       "status": "rejected",
       "reason": "Embedding model (non-chat)",
       "confidence": 100,
@@ -3128,6 +3163,11 @@
         },
         {
           "date": "2026-06-29",
+          "success": false,
+          "latencyMs": 154
+        },
+        {
+          "date": "2026-08-03",
           "success": false,
           "latencyMs": 154
         }
@@ -3174,8 +3214,8 @@
     "google:gemini-3.1-flash-image": {
       "firstSeen": "2026-06-22",
       "lastSeen": "2026-07-27",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -3197,7 +3237,7 @@
     },
     "google:gemini-3.5-flash": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3418,8 +3458,8 @@
     "mistral:mistral-ocr-3-0": {
       "firstSeen": "2026-07-13",
       "lastSeen": "2026-07-27",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -3441,7 +3481,7 @@
     },
     "google:gemini-3.1-flash-lite-image": {
       "firstSeen": "2026-07-20",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3460,7 +3500,7 @@
     },
     "mistral:mistral-ocr-3": {
       "firstSeen": "2026-07-20",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3474,12 +3514,17 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 226
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 160
         }
       ]
     },
     "google:gemini-3.5-flash-lite": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3507,21 +3552,26 @@
     },
     "openrouter:poolside/laguna-s-2.1:free": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-07-27",
-      "status": "failed",
-      "reason": "",
-      "confidence": 0,
+      "lastSeen": "2026-08-03",
+      "status": "rejected",
+      "reason": "Failed testing",
+      "confidence": 100,
       "testHistory": [
         {
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 885
+        },
+        {
+          "date": "2026-08-03",
+          "success": true,
+          "latencyMs": 482
         }
       ]
     },
     "mistral:mistral-ocr-latest": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3530,12 +3580,17 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 236
+        },
+        {
+          "date": "2026-08-03",
+          "success": false,
+          "latencyMs": 155
         }
       ]
     },
     "mistral:mistral-ocr-4-0": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3549,7 +3604,7 @@
     },
     "mistral:mistral-ocr-4": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-03",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3564,23 +3619,23 @@
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-07-27T07:22:13.355Z",
+      "lastSuccess": "2026-08-03T07:21:01.569Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-07-27T07:22:13.475Z",
+      "lastSuccess": "2026-08-03T07:21:01.699Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-07-27T07:22:13.589Z",
+      "lastSuccess": "2026-08-03T07:21:01.835Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-07-27T07:22:13.664Z",
+      "lastSuccess": "2026-08-03T07:21:01.911Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-07-27T07:22:14.053Z",
+      "lastSuccess": "2026-08-03T07:21:02.320Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -3597,10 +3652,10 @@
     }
   },
   "stats": {
-    "totalRuns": 24,
-    "modelsDiscovered": 405,
+    "totalRuns": 25,
+    "modelsDiscovered": 416,
     "modelsAdded": 83,
-    "modelsRejected": 52,
+    "modelsRejected": 55,
     "prsCreated": 11,
     "prsAutoMerged": 11,
     "failedValidations": 0
