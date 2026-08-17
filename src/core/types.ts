@@ -354,6 +354,8 @@ export const DEFAULT_PROVIDERS: DefaultProviderConfig[] = [
     
       { name: 'nvidia/nemotron-3-ultra-550b-a55b:free', displayName: 'Nemotron 3 Ultra 550B', rateLimitRpd: 1000 },
       { name: 'nvidia/nemotron-3-super-120b-a12b:free', displayName: 'Nemotron 3 Super 120B', rateLimitRpd: 1000 },
+    
+      { name: 'nvidia/nemotron-3.5-lightning:free', displayName: 'Nemotron 3.5 Lightning', rateLimitRpd: 1000 },
     ],
   },
   {
