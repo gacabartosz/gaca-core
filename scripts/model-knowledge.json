@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-08-24T07:12:38.850Z",
+  "lastRun": "2026-08-31T13:26:59.789Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -32,7 +32,7 @@
     },
     "groq:canopylabs/orpheus-arabic-saudi": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -71,6 +71,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 60
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 116
         }
       ]
     },
@@ -634,7 +639,7 @@
     },
     "groq:openai/gpt-oss-safeguard-20b": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -673,6 +678,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 243
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 186
         }
       ]
     },
@@ -894,7 +904,7 @@
     },
     "groq:canopylabs/orpheus-v1-english": {
       "firstSeen": "2026-02-23",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -933,6 +943,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 59
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 122
         }
       ]
     },
@@ -2761,7 +2776,7 @@
     },
     "google:nano-banana-pro-preview": {
       "firstSeen": "2026-05-18",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -2785,6 +2800,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 85
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 136
         }
       ]
     },
@@ -3278,7 +3298,7 @@
     },
     "google:gemini-3.1-flash-image": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3297,6 +3317,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 78
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 88
         }
       ]
     },
@@ -3547,7 +3572,7 @@
     },
     "mistral:mistral-ocr-3-0": {
       "firstSeen": "2026-07-13",
-      "lastSeen": "2026-07-27",
+      "lastSeen": "2026-08-31",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3566,6 +3591,11 @@
           "date": "2026-07-27",
           "success": false,
           "latencyMs": 252
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 265
         }
       ]
     },
@@ -3619,7 +3649,7 @@
     },
     "google:gemini-3.5-flash-lite": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3638,6 +3668,11 @@
           "date": "2026-08-24",
           "success": true,
           "latencyMs": 405
+        },
+        {
+          "date": "2026-08-31",
+          "success": true,
+          "latencyMs": 504
         }
       ]
     },
@@ -3762,7 +3797,7 @@
     },
     "mistral:mistral-ocr-4-1": {
       "firstSeen": "2026-08-10",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3771,12 +3806,17 @@
           "date": "2026-08-10",
           "success": false,
           "latencyMs": 158
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 311
         }
       ]
     },
     "openrouter:dots-studio/dots-3-note-preview:free": {
       "firstSeen": "2026-08-17",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3790,12 +3830,17 @@
           "date": "2026-08-24",
           "success": false,
           "latencyMs": 820
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 800
         }
       ]
     },
     "openrouter:liquid/lfm-2.5-2.6b:free": {
       "firstSeen": "2026-08-17",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3809,6 +3854,11 @@
           "date": "2026-08-24",
           "success": false,
           "latencyMs": 694
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 502
         }
       ]
     },
@@ -3828,7 +3878,7 @@
     },
     "openrouter:z-ai/glm-5.2:free": {
       "firstSeen": "2026-08-17",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3880,7 +3930,7 @@
     },
     "google:gemini-omni-flash-preview": {
       "firstSeen": "2026-08-24",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3889,6 +3939,11 @@
           "date": "2026-08-24",
           "success": false,
           "latencyMs": 55
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 99
         }
       ]
     },
@@ -3908,7 +3963,7 @@
     },
     "openrouter:thinkingmachines/inkling-small:free": {
       "firstSeen": "2026-08-24",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3917,12 +3972,17 @@
           "date": "2026-08-24",
           "success": false,
           "latencyMs": 33
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 42
         }
       ]
     },
     "openrouter:thinkingmachines/inkling:free": {
       "firstSeen": "2026-08-24",
-      "lastSeen": "2026-08-24",
+      "lastSeen": "2026-08-31",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -3931,29 +3991,118 @@
           "date": "2026-08-24",
           "success": false,
           "latencyMs": 32
+        },
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 49
+        }
+      ]
+    },
+    "groq:qwen/qwen3.8-27b": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "added",
+      "reason": "Passed testing and is a chat model from a known architecture family (Qwen)",
+      "confidence": 95,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": true,
+          "latencyMs": 209
+        }
+      ]
+    },
+    "google:gemini-omni-1.1-flash": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 89
+        }
+      ]
+    },
+    "openrouter:inclusionai/ling-3.0-flash-fin:free": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 759
+        }
+      ]
+    },
+    "mistral:voxtral-mini-2602": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 263
+        }
+      ]
+    },
+    "mistral:voxtral-mini-transcribe-realtime-2602": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 206
+        }
+      ]
+    },
+    "mistral:voxtral-mini-realtime-2602": {
+      "firstSeen": "2026-08-31",
+      "lastSeen": "2026-08-31",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-08-31",
+          "success": false,
+          "latencyMs": 208
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-08-24T07:11:25.535Z",
+      "lastSuccess": "2026-08-31T13:25:58.975Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-08-24T07:11:25.658Z",
+      "lastSuccess": "2026-08-31T13:25:59.110Z",
       "consecutiveFails": 0
     },
     "google": {
-      "lastSuccess": "2026-08-24T07:11:25.783Z",
+      "lastSuccess": "2026-08-31T13:25:59.287Z",
       "consecutiveFails": 0
     },
     "openrouter": {
-      "lastSuccess": "2026-08-24T07:11:25.885Z",
+      "lastSuccess": "2026-08-31T13:25:59.436Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-08-24T07:11:26.199Z",
+      "lastSuccess": "2026-08-31T13:25:59.755Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -3970,12 +4119,12 @@
     }
   },
   "stats": {
-    "totalRuns": 27,
-    "modelsDiscovered": 447,
-    "modelsAdded": 84,
+    "totalRuns": 28,
+    "modelsDiscovered": 466,
+    "modelsAdded": 85,
     "modelsRejected": 55,
-    "prsCreated": 12,
-    "prsAutoMerged": 12,
+    "prsCreated": 13,
+    "prsAutoMerged": 13,
     "failedValidations": 0
   }
 }
