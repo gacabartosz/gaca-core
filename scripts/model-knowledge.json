@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-09-28T13:37:30.628Z",
+  "lastRun": "2026-10-05T14:21:15.060Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -32,7 +32,7 @@
     },
     "groq:canopylabs/orpheus-arabic-saudi": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -76,6 +76,11 @@
           "date": "2026-08-31",
           "success": false,
           "latencyMs": 116
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 77
         }
       ]
     },
@@ -649,7 +654,7 @@
     },
     "groq:openai/gpt-oss-safeguard-20b": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -693,6 +698,11 @@
           "date": "2026-08-31",
           "success": false,
           "latencyMs": 186
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 104
         }
       ]
     },
@@ -914,7 +924,7 @@
     },
     "groq:canopylabs/orpheus-v1-english": {
       "firstSeen": "2026-02-23",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -958,6 +968,11 @@
           "date": "2026-08-31",
           "success": false,
           "latencyMs": 122
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 89
         }
       ]
     },
@@ -3692,7 +3707,7 @@
     },
     "mistral:mistral-ocr-3-0": {
       "firstSeen": "2026-07-13",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3716,6 +3731,11 @@
           "date": "2026-08-31",
           "success": false,
           "latencyMs": 265
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 266
         }
       ]
     },
@@ -3981,7 +4001,7 @@
     },
     "openrouter:dots-studio/dots-3-note-preview:free": {
       "firstSeen": "2026-08-17",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -4000,12 +4020,17 @@
           "date": "2026-08-31",
           "success": false,
           "latencyMs": 800
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 866
         }
       ]
     },
     "openrouter:liquid/lfm-2.5-2.6b:free": {
       "firstSeen": "2026-08-17",
-      "lastSeen": "2026-08-31",
+      "lastSeen": "2026-10-05",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -4277,8 +4302,8 @@
     "mistral:voxtral-mini-realtime-2602": {
       "firstSeen": "2026-08-31",
       "lastSeen": "2026-09-28",
-      "status": "failed",
-      "reason": "",
+      "status": "rejected",
+      "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
       "testHistory": [
         {
@@ -4405,7 +4430,7 @@
     },
     "openrouter:qwen/qwen3.8-27b:free": {
       "firstSeen": "2026-09-21",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-10-05",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4419,12 +4444,17 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 103
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 415
         }
       ]
     },
     "openrouter:stealth/space-bunny-alpha": {
       "firstSeen": "2026-09-28",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-10-05",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4433,12 +4463,17 @@
           "date": "2026-09-28",
           "success": true,
           "latencyMs": 1229
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 891
         }
       ]
     },
     "mistral:voxtral-mini-realtime-latest": {
       "firstSeen": "2026-09-28",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-10-05",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4447,29 +4482,90 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 219
+        },
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 224
+        }
+      ]
+    },
+    "openrouter:inclusionai/ling-3.1-flash": {
+      "firstSeen": "2026-10-05",
+      "lastSeen": "2026-10-05",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 977
+        }
+      ]
+    },
+    "openrouter:apodex/apodex-1.1-mini:free": {
+      "firstSeen": "2026-10-05",
+      "lastSeen": "2026-10-05",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 683
+        }
+      ]
+    },
+    "mistral:voxtral-mini-tts-2603": {
+      "firstSeen": "2026-10-05",
+      "lastSeen": "2026-10-05",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 223
+        }
+      ]
+    },
+    "mistral:voxtral-mini-tts-latest": {
+      "firstSeen": "2026-10-05",
+      "lastSeen": "2026-10-05",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-05",
+          "success": false,
+          "latencyMs": 207
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-09-28T13:36:53.679Z",
+      "lastSuccess": "2026-10-05T14:20:45.071Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-09-28T13:36:53.830Z",
+      "lastSuccess": "2026-10-05T14:20:45.181Z",
       "consecutiveFails": 0
     },
     "google": {
       "lastSuccess": "2026-09-21T12:36:22.113Z",
-      "consecutiveFails": 1
+      "consecutiveFails": 2
     },
     "openrouter": {
-      "lastSuccess": "2026-09-28T13:36:54.052Z",
+      "lastSuccess": "2026-10-05T14:20:45.590Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-09-28T13:36:54.395Z",
+      "lastSuccess": "2026-10-05T14:20:46.027Z",
       "consecutiveFails": 0
     },
     "huggingface": {
