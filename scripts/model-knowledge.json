@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-10-12T15:08:42.324Z",
+  "lastRun": "2026-10-19T12:51:43.846Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -3365,7 +3365,7 @@
     },
     "mistral:codestral-embed-2505": {
       "firstSeen": "2026-06-15",
-      "lastSeen": "2026-09-14",
+      "lastSeen": "2026-10-19",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3394,6 +3394,11 @@
           "date": "2026-09-14",
           "success": false,
           "latencyMs": 291
+        },
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 262
         }
       ]
     },
@@ -3901,7 +3906,7 @@
     },
     "mistral:mistral-ocr-latest": {
       "firstSeen": "2026-07-27",
-      "lastSeen": "2026-09-14",
+      "lastSeen": "2026-10-19",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3925,6 +3930,11 @@
           "date": "2026-09-14",
           "success": false,
           "latencyMs": 214
+        },
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 219
         }
       ]
     },
@@ -4513,7 +4523,7 @@
     },
     "mistral:voxtral-mini-realtime-latest": {
       "firstSeen": "2026-09-28",
-      "lastSeen": "2026-10-12",
+      "lastSeen": "2026-10-19",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4527,6 +4537,11 @@
           "date": "2026-10-05",
           "success": false,
           "latencyMs": 224
+        },
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 213
         }
       ]
     },
@@ -4570,7 +4585,7 @@
     },
     "mistral:voxtral-mini-tts-2603": {
       "firstSeen": "2026-10-05",
-      "lastSeen": "2026-10-12",
+      "lastSeen": "2026-10-19",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4579,12 +4594,17 @@
           "date": "2026-10-05",
           "success": false,
           "latencyMs": 223
+        },
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 228
         }
       ]
     },
     "mistral:voxtral-mini-tts-latest": {
       "firstSeen": "2026-10-05",
-      "lastSeen": "2026-10-12",
+      "lastSeen": "2026-10-19",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4593,17 +4613,64 @@
           "date": "2026-10-05",
           "success": false,
           "latencyMs": 207
+        },
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 220
+        }
+      ]
+    },
+    "openrouter:minimax/minimax-m3.1-flash:free": {
+      "firstSeen": "2026-10-19",
+      "lastSeen": "2026-10-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 973
+        }
+      ]
+    },
+    "openrouter:xingchen-agi/xing4.0-29b-a4b:free": {
+      "firstSeen": "2026-10-19",
+      "lastSeen": "2026-10-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-19",
+          "success": true,
+          "latencyMs": 2019
+        }
+      ]
+    },
+    "openrouter:nvidia/nemotron-3.5-super-vl:free": {
+      "firstSeen": "2026-10-19",
+      "lastSeen": "2026-10-19",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-10-19",
+          "success": false,
+          "latencyMs": 1659
         }
       ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-10-12T15:08:14.178Z",
+      "lastSuccess": "2026-10-19T12:51:10.266Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-10-12T15:08:14.332Z",
+      "lastSuccess": "2026-10-19T12:51:10.395Z",
       "consecutiveFails": 0
     },
     "google": {
@@ -4611,11 +4678,11 @@
       "consecutiveFails": 3
     },
     "openrouter": {
-      "lastSuccess": "2026-10-12T15:08:19.148Z",
+      "lastSuccess": "2026-10-19T12:51:10.515Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-10-12T15:08:19.435Z",
+      "lastSuccess": "2026-10-19T12:51:10.951Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -4632,8 +4699,8 @@
     }
   },
   "stats": {
-    "totalRuns": 32,
-    "modelsDiscovered": 526,
+    "totalRuns": 33,
+    "modelsDiscovered": 534,
     "modelsAdded": 85,
     "modelsRejected": 55,
     "prsCreated": 13,
