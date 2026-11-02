@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastRun": "2026-10-26T12:43:58.051Z",
+  "lastRun": "2026-11-02T15:30:21.960Z",
   "models": {
     "groq:meta-llama/llama-guard-4-12b": {
       "firstSeen": "2026-02-19",
@@ -86,7 +86,7 @@
     },
     "groq:whisper-large-v3-turbo": {
       "firstSeen": "2026-02-19",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -135,6 +135,11 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 56
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 44
         }
       ]
     },
@@ -2055,7 +2060,7 @@
     },
     "openrouter:google/lyria-3-pro-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Already rejected in knowledge base",
       "confidence": 100,
@@ -2084,7 +2089,7 @@
     },
     "openrouter:google/lyria-3-clip-preview": {
       "firstSeen": "2026-04-06",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Already rejected in knowledge base",
       "confidence": 100,
@@ -2157,7 +2162,7 @@
     },
     "openrouter:google/gemma-4-26b-a4b-it:free": {
       "firstSeen": "2026-04-13",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Already rejected in knowledge base",
       "confidence": 100,
@@ -2186,7 +2191,7 @@
     },
     "openrouter:google/gemma-4-31b-it:free": {
       "firstSeen": "2026-04-13",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Already rejected in knowledge base",
       "confidence": 100,
@@ -2534,7 +2539,7 @@
     },
     "openrouter:nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
       "firstSeen": "2026-05-04",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Failed testing",
       "confidence": 100,
@@ -3049,7 +3054,7 @@
     },
     "openrouter:nvidia/nemotron-3.5-content-safety:free": {
       "firstSeen": "2026-06-08",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Failed testing",
       "confidence": 100,
@@ -3073,6 +3078,11 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 403
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 35
         }
       ]
     },
@@ -3481,7 +3491,7 @@
     },
     "openrouter:cohere/north-mini-code:free": {
       "firstSeen": "2026-06-22",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Failed testing",
       "confidence": 100,
@@ -3505,6 +3515,11 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 298
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 30
         }
       ]
     },
@@ -3616,7 +3631,7 @@
     },
     "mistral:labs-leanstral-1-5-1": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3645,12 +3660,17 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 228
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 221
         }
       ]
     },
     "mistral:labs-leanstral-1-5": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3679,12 +3699,17 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 208
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 224
         }
       ]
     },
     "mistral:mistral-ocr-2512": {
       "firstSeen": "2026-07-06",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -3713,6 +3738,11 @@
           "date": "2026-09-28",
           "success": false,
           "latencyMs": 218
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 286
         }
       ]
     },
@@ -4371,7 +4401,7 @@
     },
     "mistral:voxtral-mini-realtime-2602": {
       "firstSeen": "2026-08-31",
-      "lastSeen": "2026-09-28",
+      "lastSeen": "2026-11-02",
       "status": "rejected",
       "reason": "Auto-rejected after 3+ test failures",
       "confidence": 0,
@@ -4610,7 +4640,7 @@
     },
     "mistral:voxtral-mini-tts-2603": {
       "firstSeen": "2026-10-05",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4629,7 +4659,7 @@
     },
     "mistral:voxtral-mini-tts-latest": {
       "firstSeen": "2026-10-05",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4662,7 +4692,7 @@
     },
     "openrouter:xingchen-agi/xing4.0-29b-a4b:free": {
       "firstSeen": "2026-10-19",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4676,12 +4706,17 @@
           "date": "2026-10-26",
           "success": false,
           "latencyMs": 23
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 30
         }
       ]
     },
     "openrouter:nvidia/nemotron-3.5-super-vl:free": {
       "firstSeen": "2026-10-19",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4695,12 +4730,17 @@
           "date": "2026-10-26",
           "success": false,
           "latencyMs": 26
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 30
         }
       ]
     },
     "openrouter:recursive/flint-v1.0:free": {
       "firstSeen": "2026-10-26",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4709,12 +4749,17 @@
           "date": "2026-10-26",
           "success": false,
           "latencyMs": 110
+        },
+        {
+          "date": "2026-11-02",
+          "success": false,
+          "latencyMs": 105
         }
       ]
     },
     "mistral:voxtral-mini-transcribe-3": {
       "firstSeen": "2026-10-26",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4728,7 +4773,7 @@
     },
     "mistral:voxtral-mini-transcribe-3-0": {
       "firstSeen": "2026-10-26",
-      "lastSeen": "2026-10-26",
+      "lastSeen": "2026-11-02",
       "status": "failed",
       "reason": "",
       "confidence": 0,
@@ -4739,15 +4784,43 @@
           "latencyMs": 248
         }
       ]
+    },
+    "mistral:mistral-large-4": {
+      "firstSeen": "2026-11-02",
+      "lastSeen": "2026-11-02",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-11-02",
+          "success": true,
+          "latencyMs": 5857
+        }
+      ]
+    },
+    "mistral:mistral-large-4-0": {
+      "firstSeen": "2026-11-02",
+      "lastSeen": "2026-11-02",
+      "status": "failed",
+      "reason": "",
+      "confidence": 0,
+      "testHistory": [
+        {
+          "date": "2026-11-02",
+          "success": true,
+          "latencyMs": 1869
+        }
+      ]
     }
   },
   "providerReliability": {
     "groq": {
-      "lastSuccess": "2026-10-26T12:43:35.662Z",
+      "lastSuccess": "2026-11-02T15:29:39.477Z",
       "consecutiveFails": 0
     },
     "cerebras": {
-      "lastSuccess": "2026-10-26T12:43:35.813Z",
+      "lastSuccess": "2026-11-02T15:29:39.688Z",
       "consecutiveFails": 0
     },
     "google": {
@@ -4755,11 +4828,11 @@
       "consecutiveFails": 3
     },
     "openrouter": {
-      "lastSuccess": "2026-10-26T12:43:35.903Z",
+      "lastSuccess": "2026-11-02T15:29:39.779Z",
       "consecutiveFails": 0
     },
     "mistral": {
-      "lastSuccess": "2026-10-26T12:43:36.360Z",
+      "lastSuccess": "2026-11-02T15:29:40.116Z",
       "consecutiveFails": 0
     },
     "huggingface": {
@@ -4776,8 +4849,8 @@
     }
   },
   "stats": {
-    "totalRuns": 33,
-    "modelsDiscovered": 534,
+    "totalRuns": 34,
+    "modelsDiscovered": 545,
     "modelsAdded": 85,
     "modelsRejected": 55,
     "prsCreated": 13,
